@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>可配置化报表</title>
+
+    <link rel="stylesheet" href="http://libs.useso.com/js/font-awesome/4.2.0/css/font-awesome.min.css"/>
+    <!-- Bootstrap core CSS -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="lib/bootstrap/css/bootstrap.vertical-tabs.css" rel="stylesheet">
+	<!-- gridstack CSS -->
+	<link rel="stylesheet" href="lib/gridstack/dist/gridstack.css"/>
+	<link rel="stylesheet" type="text/css" href="lib/gridstack/css/default.css">
+	
+	<style type="text/css">
+        .grid-stack {
+            border : 1px solid rgb(200,200,200)
+        }
+
+        .grid-stack-item-content {
+            color: #2c3e50;
+            text-align: center;
+			border : 1px dashed rgb(180,180,180)
+        }
+		
+		img {
+			margin-top:20px;
+			margin-left:20px;
+		}
+        
+        #operate i {
+            font-size: 20px;
+            float:right;
+            padding-right:20px;
+            margin-top:10px
+        }
+        
+        input {
+            border:none;
+            outline:medium;
+            width:70px;
+        }
+        
+        tr {
+            height:20px;
+        }
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">报表设计器</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">主页</a></li>
+            <li><a href="#about">待开发..</a></li>
+            <li><a href="#contact">待开发..</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">待开发.. <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">功能1</a></li>
+                <li><a href="#">功能2</a></li>
+                <li><a href="#">功能3</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">功能4</li>
+                <li><a href="#">功能5</a></li>
+                <li><a href="#">功能6</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <!-- Begin page content -->
+    <div class="container"style="margin-top:50px;">
+      <div class="page-header">
+        <h1>可配置化报表</h1>
+      </div>
+      
+      <p class="lead"><code>配置基本布局</code></p>
+      
+	  <div class="htmleaf-content bgcolor-3">
+			<div class="container-fluid">
+		        <div style="float:left">
+		            <a class="btn btn-default" id="add-new-widget" href="#">添加报表容器</a>
+		        </div>
+				<div class="col-md-offset-2">
+		            <a class="btn btn-default" id="exportHtml" href="#">导出</a>
+		        </div>
+
+		        <br/>
+
+		        <div class="grid-stack">
+		        </div>
+		    </div>
+	  </div>
+      
+	  <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myModal">
+		  <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">图表选择</h4>
+				</div>
+				<div class="modal-body">
+					<div>
+					  <!-- Nav tabs -->
+					  <ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active"><a href="#line" aria-controls="line" role="tab" data-toggle="tab">折线图</a></li>
+						<li role="presentation"><a href="#bar" aria-controls="bar" role="tab" data-toggle="tab">柱状图</a></li>
+						<li role="presentation"><a href="#pie" aria-controls="pie" role="tab" data-toggle="tab">饼图</a></li>
+						<li role="presentation"><a href="#map" aria-controls="map" role="tab" data-toggle="tab">地图</a></li>
+                        <li role="presentation"><a href="#scatter" aria-controls="dashed" role="tab" data-toggle="tab">散点图</a></li>
+						<li role="presentation"><a href="#radar" aria-controls="radar" role="tab" data-toggle="tab">雷达图</a></li>
+						<li role="presentation"><a href="#funnel" aria-controls="funnel" role="tab" data-toggle="tab">漏斗图</a></li>
+                        <li role="presentation"><a href="#gauge" aria-controls="gauge" role="tab" data-toggle="tab">仪表盘</a></li>
+					  </ul>
+
+					  <!-- Tab panes -->
+					  <div class="tab-content">					  
+					    <div role="tabpanel" class="tab-pane active" id="line" style="padding-top:2%">
+							<div class="row">
+							  <div class="col-sm-4 col-md-3" id="line01">
+								<div class="thumbnail">
+								  <img src="img/line01.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>标准折线图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="line02">
+								<div class="thumbnail">
+								  <img src="img/line02.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>堆积区域图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="line03">
+								<div class="thumbnail">
+								  <img src="img/line03.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>平滑折线图</p>
+								  </div>
+								</div>
+							  </div>
+							</div>
+						</div>						
+						<div role="tabpanel" class="tab-pane" id="bar" style="padding-top:2%">
+                            <div class="row">
+                              <div class="col-sm-4 col-md-3" id="bar01">
+                                <div class="thumbnail">
+                                  <img src="img/bar01.png" alt="...">
+                                  <div class="caption" style="text-align:center">
+                                    <p>标准柱状图</p>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="bar02">
+                                <div class="thumbnail">
+                                  <img src="img/bar02.png" alt="...">
+                                  <div class="caption" style="text-align:center">
+                                    <p>堆积柱状图</p>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="bar03">
+                                <div class="thumbnail">
+                                  <img src="img/bar03.png" alt="...">
+                                  <div class="caption" style="text-align:center">
+                                    <p>标准条形图</p>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="bar04">
+                                <div class="thumbnail">
+                                  <img src="img/bar04.png" alt="...">
+                                  <div class="caption" style="text-align:center">
+                                    <p>堆积条形图</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+						<div role="tabpanel" class="tab-pane" id="pie" style="padding-top:2%">
+                            <div class="row">
+							  <div class="col-sm-4 col-md-3" id="pie01">
+								<div class="thumbnail">
+								  <img src="img/pie01.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>标准饼图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="pie02">
+								<div class="thumbnail">
+								  <img src="img/pie02.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>标准环形图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="pie03">
+								<div class="thumbnail">
+								  <img src="img/pie03.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>嵌套饼图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="pie04">
+								<div class="thumbnail">
+								  <img src="img/pie04.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>南丁格尔玫瑰图</p>
+								  </div>
+								</div>
+							  </div>
+							</div>
+                            <div class="row">
+							  <div class="col-sm-4 col-md-3" id="pie05">
+								<div class="thumbnail">
+								  <img src="img/pie05.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>双玫瑰图</p>
+								  </div>
+								</div>
+							  </div>
+                            </div>  
+                        </div>
+						<div role="tabpanel" class="tab-pane" id="map" style="padding-top:2%">
+                            <div class="row">
+							  <div class="col-sm-4 col-md-3" id="map01">
+								<div class="thumbnail">
+								  <img src="img/map01.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>标准中国地图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="map02">
+								<div class="thumbnail">
+								  <img src="img/map02.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>标准世界地图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="map03">
+								<div class="thumbnail">
+								  <img src="img/map03.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>标准省市区地图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="map04">
+								<div class="thumbnail">
+								  <img src="img/map04.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>扩展</p>
+								  </div>
+								</div>
+							  </div>
+							</div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="scatter" style="padding-top:2%">
+                            <div class="row">
+							  <div class="col-sm-4 col-md-3" id="scatter01">
+								<div class="thumbnail">
+								  <img src="img/scatter01.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>标准散点图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="scatter02">
+								<div class="thumbnail">
+								  <img src="img/scatter02.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>散点图与世界地图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="scatter03">
+								<div class="thumbnail">
+								  <img src="img/scatter03.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>散点图（值域漫游）</p>
+								  </div>
+								</div>
+							  </div>
+							</div>
+                        </div>
+						<div role="tabpanel" class="tab-pane" id="radar" style="padding-top:2%">
+                            <div class="row">
+							  <div class="col-sm-4 col-md-3" id="radar01">
+								<div class="thumbnail">
+								  <img src="img/radar01.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>标准雷达图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="radar02">
+								<div class="thumbnail">
+								  <img src="img/radar02.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>雷达图（值域漫游）</p>
+								  </div>
+								</div>
+							  </div>
+							</div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="funnel" style="padding-top:2%">
+                            <div class="row">
+							  <div class="col-sm-4 col-md-3" id="funnel01">
+								<div class="thumbnail">
+								  <img src="img/funnel01.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>标准漏斗图</p>
+								  </div>
+								</div>
+							  </div>
+                              
+                              <div class="col-sm-4 col-md-3" id="funnel02">
+								<div class="thumbnail">
+								  <img src="img/funnel02.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>漏斗图（辅助背景）</p>
+								  </div>
+								</div>
+							  </div>
+							</div>
+                        </div>
+						<div role="tabpanel" class="tab-pane" id="gauge" style="padding-top:2%">
+                            <div class="row">
+							  <div class="col-sm-4 col-md-3" id="gauge01">
+								<div class="thumbnail">
+								  <img src="img/gauge01.png" alt="...">
+								  <div class="caption" style="text-align:center">
+									<p>标准漏斗图</p>
+								  </div>
+								</div>
+							  </div>
+							</div>
+                        </div>
+					  </div>
+
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		  </div>
+	  </div>
+      
+      <div class="modal fade bs-option-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="optionModal">           
+            <div class="modal-dialog modal-lg" style="width:1200px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">自定义配置</h4>
+                    </div>                   
+                    <div class="modal-body">
+                        <div id="optionContainer" style="width:500px;height:450px;float:left">
+                        </div>
+                        <div id="optionPanel" style="width:600px;height:450px;float:left;margin-left:50px;">
+                            <ul class="nav nav-tabs" role="tablist">
+                               <li role="presentation" class="active"><a href="#data" data-toggle="tab">数据编辑</a></li>
+                               <li role="presentation"><a href="#param" data-toggle="tab">基础</a></li>
+                            </ul>
+                            <div class="tab-content">
+                               <div role="tabpanel" class="tab-pane active" id="data">
+                                    <div style="margin-top:5px;padding-bottom:10px;">
+                                        <button type="button" class="btn btn-info" style="float:right;">+导入excel</button>
+                                    </div>
+                                    <div style="height:350px;overflow:auto;clear:both;">
+                                        
+                                    </div>    
+                               </div>
+                               <div role="tabpanel" class="tab-pane" id="param">
+                                    <div class="col-xs-3">
+                                        <ul class="nav nav-tabs tabs-left">
+                                          <li class="active"><a href="#option01" data-toggle="tab">通用</a></li>
+                                          <li><a href="#option02" data-toggle="tab">高级</a></li>
+                                          <li><a href="#option03" data-toggle="tab">系列</a></li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="col-xs-9">
+                                        <div class="tab-content">
+                                          <div class="tab-pane active" id="option01">配置1.</div>
+                                          <div class="tab-pane" id="option02">配置2.</div>
+                                          <div class="tab-pane" id="option03">配置3.</div>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>                   
+                    <div class="modal-footer" style="clear:both">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+                    </div> 
+                </div>  
+            </div>            
+      </div>
+    </div>
+	<script src="lib/require.js" defer async="true" data-main="app/main"></script>
+  </body>
+</html>
