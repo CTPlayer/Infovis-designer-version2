@@ -1,19 +1,19 @@
 require.config({
-    baseUrl: 'lib',
+    baseUrl: '../js',
     paths: {
-        "options": "charts/options",           //图表初始option配置文件
-        "echarts": "charts/echarts",    
-        "formatData": "charts/formatData",        //数据格式化文件
-        "jquery": "bootstrap/js/jquery-2.1.4.min",
-        "bootstrap": "bootstrap/js/bootstrap.min",
-        "jquery-ui": "jquery-ui.min",
-        "lodash": "gridstack/js/lodash.min",
-        "gridstack": "gridstack/dist/gridstack",
-        "exportHtml": "export/exportHtml",
-        "mapOfChina": "map/china",
-        "mapOfWorld": "map/world",
-        "mapOfXiangGang": "map/xianggang",
-        "knockOut": "knockout/knockout-3.4.0"
+        "options": "lib/charts/options",           //图表初始option配置文件
+        "echarts": "lib/charts/echarts",    
+        "formatData": "lib/charts/formatData",        //数据格式化文件
+        "jquery": "lib/bootstrap/js/jquery-2.1.4.min",
+        "bootstrap": "lib/bootstrap/js/bootstrap.min",
+        "jquery-ui": "lib/jquery-ui.min",
+        "lodash": "lib/gridstack/js/lodash.min",
+        "gridstack": "lib/gridstack/dist/gridstack",
+        "exportHtml": "lib/export/exportHtml",
+        "mapOfChina": "lib/map/china",
+        "mapOfWorld": "lib/map/world",
+        "mapOfXiangGang": "lib/map/xianggang",
+        "knockOut": "lib/knockout/knockout-3.4.0"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
