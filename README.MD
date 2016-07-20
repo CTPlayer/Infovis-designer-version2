@@ -1,6 +1,6 @@
 # Infovis
 
-Infovis is a new generation data representation engine. It is written in pure JavaScript and based on <a href="https://github.com/ecomfe/echarts">Echats</a>.
+Infovis-designer is a new configurable graphics making tool. It is written in pure JavaScript and based on <a href="https://github.com/ecomfe/echarts">Echats</a>.
 
 ## Get Infovis
 

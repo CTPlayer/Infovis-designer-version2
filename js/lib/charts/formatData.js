@@ -10,6 +10,90 @@ define(function(){
                     '<td><input type="text" value=""></td>'+
                     '<td><input type="text" value=""></td>';
                     
+    var test = function(){
+        var table = '<table class="table table-bordered">'+
+                        '<tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td></tr>'+
+                        '<tr>'+
+                            '<td>1</td>'+
+                            '<td><input type="text"></td>'+
+                            '<td><input data-bind="value: occupants()[0].l1, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                        '</tr>'+  
+                         '<tr>'+
+                            '<td>2</td>'+
+                            '<td><input data-bind="value: occupants()[1].x1, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input data-bind="value: occupants()[2].x1s1, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                        '</tr>'+
+                        '<tr>'+
+                            '<td>3</td>'+
+                            '<td><input data-bind="value: occupants()[1].x2, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input data-bind="value: occupants()[2].x2s1, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                        '</tr>'+ 
+                        '<tr>'+
+                            '<td>4</td>'+
+                            '<td><input data-bind="value: occupants()[1].x3, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input data-bind="value: occupants()[2].x3s1, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                        '</tr>'+ 
+                        '<tr>'+
+                            '<td>5</td>'+
+                            '<td><input data-bind="value: occupants()[1].x4, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input data-bind="value: occupants()[2].x4s1, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                        '</tr>'+ 
+                        '<tr>'+
+                            '<td>6</td>'+
+                            '<td><input data-bind="value: occupants()[1].x5, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input data-bind="value: occupants()[2].x5s1, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                        '</tr>'+ 
+                        '<tr>'+
+                            '<td>7</td>'+
+                            '<td><input data-bind="value: occupants()[1].x6, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input data-bind="value: occupants()[2].x6s1, valueUpdate: \'keyup\'"></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                            '<td><input ></td>'+
+                        '</tr>'+ 
+                    '</table>';
+        return table;    
+    }                
+                    
     var getDataOfBarAndLine = function(opt){                        //折线图和饼图
         var axisData = opt.xAxis[0].data;
         if(!('data' in opt.xAxis[0])){                             //判断X轴和Y轴是否对调
@@ -24,7 +108,7 @@ define(function(){
                            
                         
         for(var i=0;i<series.length;i++){
-            table += '<td><input type="text" value="'+series[i].name+'"></td>'
+            table += '<td><input data-bind="value: occupants()[0].l'+(i+1)+', valueUpdate: \'keyup\'"></td>'
         }               
         
         if((11 - series.length)>0){
@@ -38,9 +122,9 @@ define(function(){
         for(var i=0;i<axisData.length;i++){
             table += '<tr>'+
                        '<td>'+(i+2)+'</td>'+
-                        '<td><input type="text" value="'+axisData[i]+'"></td>'
+                        '<td><input data-bind="value: occupants()[1].x'+(i+1)+', valueUpdate: \'keyup\'""></td>'
                         for(var x=0;x<series.length;x++){
-                            table += '<td><input type="text" value="'+series[x].data[i]+'"></td>'
+                            table += '<td><input data-bind="value: occupants()[2].x'+x+'s'+i+', valueUpdate: \'keyup\'"></td>'
                         }
                         if(11-series.length){
                             for(var x=0;x<(11-series.length);x++){
@@ -196,6 +280,7 @@ define(function(){
 
 	return {
         getDataOfBarAndLine : getDataOfBarAndLine,
-        getDataOfPie : getDataOfPie
+        getDataOfPie : getDataOfPie,
+        test : test
 	};
 });

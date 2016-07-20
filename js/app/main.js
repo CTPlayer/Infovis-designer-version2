@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: '../js',
+    baseUrl: 'js',
     paths: {
         "options": "lib/charts/options",           //图表初始option配置文件
         "echarts": "lib/charts/echarts",    
@@ -8,12 +8,15 @@ require.config({
         "bootstrap": "lib/bootstrap/js/bootstrap.min",
         "jquery-ui": "lib/jquery-ui.min",
         "lodash": "lib/gridstack/js/lodash.min",
-        "gridstack": "lib/gridstack/dist/gridstack",
+        "gridstack": "lib/gridstack/js/gridstack.min",
         "exportHtml": "lib/export/exportHtml",
         "mapOfChina": "lib/map/china",
         "mapOfWorld": "lib/map/world",
         "mapOfXiangGang": "lib/map/xianggang",
-        "knockOut": "lib/knockout/knockout-3.4.0"
+        "knockout": "lib/knockout/knockout-3.4.0",
+        "backbone": "lib/backbone/backbone-min",
+        "underscore": "lib/underscore/underscore-min",
+        "knockback": "lib/knockback.min"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -21,11 +24,14 @@ require.config({
     }
 });
 
-require(['options', 'echarts', 'formatData', 'jquery', 'exportHtml', 'knockOut', 'app/appViewModel', 'bootstrap', 'gridstack', 'mapOfChina', 'mapOfWorld', 'mapOfXiangGang'],
+require(['options', 'echarts', 'formatData',
+         'jquery', 'exportHtml', 'knockout',
+         'app/appViewModel', 'bootstrap', 'gridstack',
+         'mapOfChina', 'mapOfWorld', 'mapOfXiangGang'],
     function(baseOptions, echarts, formatData, $, exportHtml,ko,appViewModel){
     
-    $(function(){    
-        
+    $(function(){  
+    ko.applyBindings(appViewModel.viewmodel(), $('#rm_manual')[0])
         var options = {
             float: true
         };
@@ -46,7 +52,7 @@ require(['options', 'echarts', 'formatData', 'jquery', 'exportHtml', 'knockOut',
                 var nWidget = this.grid.add_widget($('<div>'+                                                        
                                                         '<div class="grid-stack-item-content"'+'order='+order+'>'+
                                                             '<a href="#" data-toggle="modal" data-target=".bs-example-modal-lg">'+
-                                                                '<i class="glyphicon glyphicon-list-alt" style="font-size: 42px;margin-top:30%"></i>'+ 
+                                                                '<i class="glyphicon glyphicon-list-alt" style="font-size: 42px;margin-top:35%"></i>'+ 
                                                             '</a>'+
                                                         '</div>'+
                                                      '</div>'),
@@ -173,7 +179,9 @@ require(['options', 'echarts', 'formatData', 'jquery', 'exportHtml', 'knockOut',
                     var type = instance.getOption().series[0].type;
                     $("#data").children().eq(1).empty();
                     if(type=='bar'||type=='line'){
-                        $("#data").children().eq(1).html(formatData.getDataOfBarAndLine(instance.getOption()));
+                        $("#data").children().eq(1).html(formatData.test());
+                        ko.applyBindings(appViewModel.viewModel01(), $("#data").children().eq(1)[0]);
+                        
                     }else if(type=='pie'){
                         $("#data").children().eq(1).html(formatData.getDataOfPie(instance.getOption()));
                     }
