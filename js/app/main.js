@@ -26,12 +26,11 @@ require.config({
 
 require(['options', 'echarts', 'formatData',
          'jquery', 'exportHtml', 'knockout',
-         'app/appViewModel', 'bootstrap', 'gridstack',
+         'app/appViewModel', 'knockback', 'bootstrap', 'gridstack',
          'mapOfChina', 'mapOfWorld', 'mapOfXiangGang'],
-    function(baseOptions, echarts, formatData, $, exportHtml,ko,appViewModel){
+    function(baseOptions, echarts, formatData, $, exportHtml,ko,appViewModel,kb){
     
     $(function(){  
-    ko.applyBindings(appViewModel.viewmodel(), $('#rm_manual')[0])
         var options = {
             float: true
         };
@@ -178,10 +177,10 @@ require(['options', 'echarts', 'formatData',
                     
                     var type = instance.getOption().series[0].type;
                     $("#data").children().eq(1).empty();
+
                     if(type=='bar'||type=='line'){
-                        $("#data").children().eq(1).html(formatData.test());
-                        ko.applyBindings(appViewModel.viewModel01(), $("#data").children().eq(1)[0]);
-                        
+                        $("#data").children().eq(1).html(formatData.tableOfBar());
+                        ko.applyBindings(appViewModel.bindTable(instance.getOption()),$("#data").children().eq(1).children()[0]);  //开启双向绑定监听
                     }else if(type=='pie'){
                         $("#data").children().eq(1).html(formatData.getDataOfPie(instance.getOption()));
                     }

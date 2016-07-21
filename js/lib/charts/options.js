@@ -22,7 +22,12 @@ define(function(){
 				series: [{
 					name: '销量',
 					type: 'bar',
-					data: [5, 20, 36, 10, 10, 20]
+					data: [{name: "村衫",value: 5},
+                           {name: "羊毛衫",value: 20},
+                           {name: "雪纺衫",value: 36},
+                           {name: "裤子",value: 10},
+                           {name: "高跟鞋",value: 10},
+                           {name: "袜子",value: 20}]
 				}]			
 		};
 		
