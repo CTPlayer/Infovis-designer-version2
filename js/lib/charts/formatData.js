@@ -16,7 +16,9 @@ define(function(){
                         '<tr>'+
                             '<td>1</td>'+
                             '<td><input ></td>'+
-                            '<td><input value="销量"></td>'+
+                            '<!-- ko foreach: legends -->'+
+                                '<td><input data-bind="value: legend, valueUpdate: \'keyup\'"></td>'+
+                            '<!-- /ko -->'+
                             '<td><input ></td>'+
                             '<td><input ></td>'+
                             '<td><input ></td>'+
@@ -24,11 +26,13 @@ define(function(){
                             '<td><input ></td>'+
                             '<td><input ></td>'+
                         '</tr>'+  
-                        '<tbody data-bind="foreach: contacts">'+
+                        '<!-- ko foreach: contacts -->'+
                          '<tr>'+
-                            '<td>2</td>'+
+                            '<td data-bind="text: index"></td>'+
                             '<td><input data-bind="value: name, valueUpdate: \'keyup\'"></td>'+
-                            '<td><input data-bind="value: value, valueUpdate: \'keyup\'"></td>'+
+                            '<!-- ko foreach: {data : value} -->'+
+                            '<td><input data-bind="value: v, valueUpdate: \'keyup\'"></td>'+
+                            '<!-- /ko -->'+
                             '<td><input ></td>'+
                             '<td><input ></td>'+
                             '<td><input ></td>'+
@@ -36,7 +40,7 @@ define(function(){
                             '<td><input ></td>'+
                             '<td><input ></td>'+
                         '</tr>'+
-                        '</tbody>'+
+                        '<!-- /ko -->'+
                     '</table>';
         return table;    
     }                

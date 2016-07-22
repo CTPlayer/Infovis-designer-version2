@@ -171,9 +171,9 @@ require(['options', 'echarts', 'formatData',
                 //将选中即将配置的图表渲染到配置面板                
                 $(container).find('a').eq(2).click(function(){
                     var instance  = echarts.getInstanceByDom($(this).parent().parent().parent()[0]);
-                    var optionChart = echarts.init(document.getElementById("optionContainer"));
+                    // var optionChart = echarts.init(document.getElementById("optionContainer"));
                    
-                    optionChart.setOption(instance.getOption());
+                    // optionChart.setOption(instance.getOption());
                     
                     var type = instance.getOption().series[0].type;
                     $("#data").children().eq(1).empty();
