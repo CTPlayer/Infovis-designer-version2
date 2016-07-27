@@ -2,8 +2,11 @@ define(function(){
 	var makeBar01 = function(){
 		var option = {
 				title: {
-				text: "各类型服装销量",
-				 x:'center'
+    				text: "各类型服装销量",
+    				left: 0,
+                    textStyle: {
+                       fontFamily: "sans-serif"
+                    }
 				},
 				tooltip: {},
 				legend: {

@@ -1,15 +1,4 @@
 define(function(){    
-    var template =  '<td><input type="text" value=""></td>'+
-                    '<td><input type="text" value=""></td>'+
-                    '<td><input type="text" value=""></td>'+
-                    '<td><input type="text" value=""></td>'+
-                    '<td><input type="text" value=""></td>'+
-                    '<td><input type="text" value=""></td>'+
-                    '<td><input type="text" value=""></td>'+
-                    '<td><input type="text" value=""></td>'+
-                    '<td><input type="text" value=""></td>'+
-                    '<td><input type="text" value=""></td>';
-                    
     var tableOfBar = function(){
         var table = '<table class="table table-bordered">'+
                         '<tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td></tr>'+
@@ -43,142 +32,54 @@ define(function(){
                         '<!-- /ko -->'+
                     '</table>';
         return table;    
-    }                
-                    
-    var getDataOfPie = function(opt){
-        var legendData = opt.legend.data;
-        var series = opt.series;
-        
-        var table = '<table class="table table-bordered">'+
-                        '<tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td><td>I</td><td>J</td><td>K</td><td>L</td></tr>'+
-                        '<tr>'+
-                            '<td>1</td>';
-                            
-                           
-        for(var i=0;i<series.length;i++){
-            for(var i=0;i<series.length;i++){
-                table += '<td><input type="text" value=""></td>'+
-                         '<td><input type="text" value="'+series[i].name+'"></td>'
-            }
-        }                
-                              
-        if((11 - series.length*2)>0){
-            for(var i=0;i<(11 - series.length*2);i++){
-                table += '<td><input type="text" value=""></td>'
-            }
-        }
-        
-        table += '</tr>';
-        
-        
-        if(series.length>1){
-            var length0 = series[0].data.length;
-            var length1 = series[1].data.length;
-            if(length0>length1||length0==length1){
-                for(var i=0;i<length1;i++){
-                    table += '<tr>'+
-                           '<td>'+(i+2)+'</td>'+
-                            '<td><input type="text" value="'+series[0].data[i].name+'"></td>'+
-                            '<td><input type="text" value="'+series[0].data[i].value+'"></td>'+
-                            '<td><input type="text" value="'+series[1].data[i].name+'"></td>'+
-                            '<td><input type="text" value="'+series[1].data[i].value+'"></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+   
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+   
-                            '<td><input type="text" value=""></td>'+
-                        ' </tr>';   
-                }
-                for(var i=length1;i<length0;i++){
-                    table += '<tr>'+
-                           '<td>'+(i+2)+'</td>'+
-                            '<td><input type="text" value="'+series[0].data[i].name+'"></td>'+
-                                template+
-                        ' </tr>';
-                }
-                 for(var i=0;i<170;i++){
-                    table += '<tr>'+
-                                '<td>'+(i+length0+2)+'</td>'+
-                                '<td><input type="text" value=""></td>'+
-                                '<td><input type="text" value=""></td>'+
-                                    template+
-                             ' </tr>';
-                }
-                table += '</table>';
-            }else if(length0<length1){
-                for(var i=0;i<length0;i++){
-                    table += '<tr>'+
-                           '<td>'+(i+2)+'</td>'+
-                            '<td><input type="text" value="'+series[0].data[i].name+'"></td>'+
-                            '<td><input type="text" value="'+series[0].data[i].value+'"></td>'+
-                            '<td><input type="text" value="'+series[1].data[i].name+'"></td>'+
-                            '<td><input type="text" value="'+series[1].data[i].value+'"></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+   
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+   
-                            '<td><input type="text" value=""></td>'+
-                        ' </tr>';   
-                }
-                for(var i=length0;i<length1;i++){
-                    table += '<tr>'+
-                           '<td>'+(i+2)+'</td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value="'+series[1].data[i].name+'"></td>'+
-                            '<td><input type="text" value="'+series[1].data[i].value+'"></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+   
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+   
-                            '<td><input type="text" value=""></td>'+
-                        ' </tr>';
-                }
-                 for(var i=0;i<170;i++){
-                    table += '<tr>'+
-                                '<td>'+(i+length1+2)+'</td>'+
-                                '<td><input type="text" value=""></td>'+
-                                '<td><input type="text" value=""></td>'+
-                                    template+
-                             ' </tr>';
-                }
-                table += '</table>';
-            }
-        }else{
-            var length0 = series[0].data.length;
-            for(var i=0;i<length0;i++){
-                table += '<tr>'+
-                       '<td>'+(i+2)+'</td>'+
-                        '<td><input type="text" value="'+series[0].data[i].name+'"></td>'+
-                        '<td><input type="text" value="'+series[0].data[i].value+'"></td>'+
-                         template+
-                    ' </tr>';   
-            }
-             for(var i=0;i<170;i++){
-                table += '<tr>'+
-                            '<td>'+(i+length0+2)+'</td>'+
-                            '<td><input type="text" value=""></td>'+
-                            '<td><input type="text" value=""></td>'+
-                                template+                             
-                         ' </tr>';
-            }
-            table += '</table>';
-        }
-        
-        return table;
-    }
+    }; 
 
+    var configOfBar = function(){
+        var config = ['<div class="tab-pane active" id="option01">',
+                            '<div>',
+                                '<span style="color:#5D5BA8;margin-top;10px;">主标题</span>',
+                                '<hr style="margin-top:10px;">',
+                                '<form role="form">',
+                                    '<div class="form-group form-group-sm">',
+                                        '<label >内容&nbsp;&nbsp;</label>',
+                                        '<input class="form-control" data-bind="value: titleContent, valueUpdate: \'keyup\'">',
+                                    '</div>',
+                                    '<div class="form-group form-group-sm">',
+                                        '<label >上边距&nbsp;&nbsp;</label>',
+                                        '<input type="number" class="form-control" data-bind="value: titleTop, valueUpdate: \'keyup\'">',
+                                    '</div>',
+                                    '<div class="form-group form-group-sm">',
+                                        '<label >左边距&nbsp;&nbsp;</label>',
+                                        '<input type="number" class="form-control" data-bind="value: titleLeft, valueUpdate: \'keyup\'">',
+                                    '</div>',
+                                    '<div class="form-group form-group-sm">',
+                                        '<label >字体&nbsp;&nbsp;</label>',
+                                        '<select class="form-control" data-bind="options: titleFontFamily, value: selectedFontFamily, valueUpdate: \'keyup\'"></select>',
+                                    '</div>',
+                                    '<div class="form-group form-group-sm">',
+                                        '<label >字号&nbsp;&nbsp;</label>',
+                                        '<input type="number" class="form-control" data-bind="value: titleFontSize, valueUpdate: \'keyup\'">',
+                                    '</div>',
+                                    '<div class="form-group form-group-sm">',
+                                        '<label >粗细&nbsp;&nbsp;</label>',
+                                        '<select class="form-control" data-bind="options: titleFontWeight, value: selectedFontWeight, valueUpdate: \'keyup\'"></select>',
+                                    '</div>',
+                                    '<div class="form-group form-group-sm">',
+                                        '<label >风格&nbsp;&nbsp;</label>',
+                                        '<select class="form-control" data-bind="options: titleFontStyle, value: selectedFontStyle, valueUpdate: \'keyup\'"></select>',
+                                    '</div>',
+                                '</form>',
+                            '</div>',
+                      '</div>',
+                      '<div class="tab-pane" id="option02">配置2.</div>',
+                      '<div class="tab-pane" id="option03">配置3.</div>',
+                      '<div class="tab-pane" id="option04">配置3.</div>'].join("");
+
+        return config;
+    };
+                    
 	return {
-        getDataOfPie : getDataOfPie,
-        tableOfBar : tableOfBar
+        tableOfBar : tableOfBar,
+        configOfBar : configOfBar
 	};
 });

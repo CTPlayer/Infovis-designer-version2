@@ -2,7 +2,12 @@ define(['knockout', 'echarts'],function(ko, echarts){
         
     var bindTable = function(option){
         var lgd = option.legend[0].data;      //图例数据
-        var axis = option.xAxis[0].data;       //x轴数据
+        var axis;                             //轴数据
+        if("data" in option.xAxis[0]){
+            axis = option.xAxis[0].data;
+        }else{
+            axis = option.yAxis[0].data;
+        }
         var ser = option.series;                //series部分
 
         //将基础数据从option中抽取组装
@@ -60,7 +65,11 @@ define(['knockout', 'echarts'],function(ko, echarts){
                 option.series[i].data = data;
             }
             
-            option.xAxis[0].data = Axis;
+            if("data" in option.xAxis[0]){
+                option.xAxis[0].data = Axis;
+            }else{
+                option.yAxis[0].data = Axis;
+            }
             option.legend[0].data = legends; 
             optionChart.setOption(option,true);
         })
