@@ -17,10 +17,12 @@ require.config({
         "backbone": "lib/backbone/backbone-min",
         "underscore": "lib/underscore/underscore-min",
         "knockback": "lib/knockback.min",
-        "bootsnav": "lib/bootstrap/js/bootsnav"
+        "bootsnav": "lib/bootstrap/js/bootsnav",
+        "colorpicker": "lib/bootstrap/js/bootstrap-colorpicker.min"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
+        "colorpicker": { "deps" :['bootstrap'] },
         "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] }
     }
 });
@@ -29,10 +31,10 @@ require(['options', 'echarts', 'formatData',
          'jquery', 'exportHtml', 'knockout',
          'app/appViewModel', 'app/appViewModelOfConfig', 'knockback',
          'bootstrap', 'gridstack','mapOfChina',
-         'mapOfWorld', 'mapOfXiangGang', 'bootsnav'],
+         'mapOfWorld', 'mapOfXiangGang', 'bootsnav', 'colorpicker'],
     function(baseOptions, echarts, formatData, $, exportHtml, ko, appViewModel, appViewModelOfConfig, kb){
     
-    $(function(){  
+    $(function(){
         var options = {
             float: true
         };
@@ -153,7 +155,8 @@ require(['options', 'echarts', 'formatData',
                 $(area).parent().remove();
             });               
             //将选中即将配置的图表渲染到配置面板  
-            var currentIndex;                                        //记录当前所修改的option下标              
+            var currentIndex;                                        //记录当前所修改的option下标 
+            //双向绑定数据表格             
             container.find('a').eq(1).click(function(){
                 var instance  = echarts.getInstanceByDom($(this).parent().parent().parent()[0]);
                 currentIndex = $(this).parent().parent().parent().attr("order");
@@ -163,22 +166,38 @@ require(['options', 'echarts', 'formatData',
                     $("#data").children().eq(1).html(formatData.tableOfBar());
                     ko.applyBindings(appViewModel.bindTable(instance.getOption()),$("#data").children().eq(1).children()[0]);  //开启双向绑定监听
                 }else if(type=='pie'){
+                    
                 }
             });
 
+            //再次双向绑定数据表格
             $("ul[role = 'tablist']").children().eq(0).click(function(){
-                console.log(1);
                 var instance = echarts.getInstanceByDom(document.getElementById("optionContainer"));
                 $("#data").children().eq(1).html(formatData.tableOfBar());
                 ko.applyBindings(appViewModel.bindTable(instance.getOption()),$("#data").children().eq(1).children()[0]); 
             })
 
             $("ul[role = 'tablist']").children().eq(1).click(function(){
-                console.log(2);
-                var instance = echarts.getInstanceByDom(document.getElementById("optionContainer"));
+                var option = echarts.getInstanceByDom(document.getElementById("optionContainer")).getOption();
+
                 $("#chartConfig").html(formatData.configOfBar());
-                ko.applyBindings(appViewModelOfConfig.bindConfig(instance.getOption()),$("#chartConfig").children()[0]);
-            })
+                
+                // $('#cp1').colorpicker({
+                //     "customClass": "showColorPanel"
+                // }).on("showPicker", function(e) {
+                //     var offset = $(".modal-footer").width() - 2*$(".side.on").width();
+                //     $("div.colorpicker.dropdown-menu.showColorPanel").css("left", offset)
+                // });
+
+                // $('#cp2').colorpicker({
+                //     "customClass": "showColorPanel"
+                // }).on("showPicker", function(e) {
+                //     var offset = $(".modal-footer").width() - 2*$(".side.on").width();
+                //     $("div.colorpicker.dropdown-menu.showColorPanel").css("left", offset)
+                // })
+
+                ko.applyBindings(appViewModelOfConfig.bindConfig(option),$("#chartConfig").children()[0]);
+            });
 
             $(".modal-footer").click(function(){
                 var instance = echarts.getInstanceByDom(document.getElementById("optionContainer"));

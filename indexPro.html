@@ -7,6 +7,9 @@
 
     <title>Infovis-designer</title>
 
+    <!--Color Picker CSS-->
+    <link href="js/lib/bootstrap/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+
     <!-- Bootstrap Core CSS -->
     <link href="js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="js/lib/bootstrap/css/bootstrap.vertical-tabs.css" rel="stylesheet">
@@ -64,6 +67,10 @@
 
         form {
             font-size: 10px;
+        }
+
+        .showColorPanel {
+            z-index: 10000
         }
     </style>
 </head>
@@ -216,9 +223,9 @@
                     <h4 class="modal-title">自定义配置</h4>
                 </div>                   
                 <div class="modal-body">
-                    <div id="optionContainer" style="width:500px;height:450px;float:left">
+                    <div id="optionContainer" style="width:500px;height:410px;float:left">
                     </div>
-                    <div id="optionPanel" style="width:600px;height:450px;float:left;margin-left:50px;">
+                    <div id="optionPanel" style="width:600px;height:410px;float:left;margin-left:50px;">
                         <ul class="nav nav-tabs" role="tablist">
                            <li role="presentation" class="active"><a href="#data" data-toggle="tab">数据编辑</a></li>
                            <li role="presentation"><a href="#param" data-toggle="tab">图表属性</a></li>
@@ -228,7 +235,7 @@
                                 <div style="margin-top:5px;padding-bottom:10px;">
                                     <button type="button" class="btn btn-info" style="float:right;">+导入excel</button>
                                 </div>
-                                <div style="height:350px;overflow:auto;clear:both;">
+                                <div style="height:310px;overflow:auto;clear:both;">
                                     
                                 </div>    
                            </div>
@@ -242,9 +249,8 @@
                                     </ul>
                                 </div>
 
-                                <div class="col-xs-9" style="height:400px;overflow:auto;">
-                                    <div class="tab-content" id="chartConfig">
-                                    </div>
+                                <div class="col-xs-9" style="height:360px;overflow:auto;" id="chartConfig">
+                                    
                                 </div>  
                             </div>
                         </div>

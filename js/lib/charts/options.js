@@ -3,15 +3,13 @@ define(function(){
 		var option = {
 				title: {
     				text: "各类型服装销量",
-    				left: 0,
-                    textStyle: {
-                       fontFamily: "sans-serif"
-                    }
+                    subtext : "数据纯属虚构"
 				},
 				tooltip: {},
 				legend: {
 					data: ['销量'],
-					top: 'bottom'
+                    left: "100",
+                    top: "30"
 				},
                 toolbox: {
                     feature: {
@@ -23,6 +21,11 @@ define(function(){
 				},
 				yAxis: {},
 				series: [{
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
 					name: '销量',
 					type: 'bar',
 					data: [5,20,36,10,10,20]
@@ -34,6 +37,9 @@ define(function(){
 	
 	var makeBar02 = function(){
 		var option = {
+            title: {
+                    text: "各浏览器占比"
+            },
             tooltip : {
                 trigger: 'axis',
                 axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -41,7 +47,8 @@ define(function(){
                 }
             },
             legend: {
-                data:['邮件营销','联盟广告','视频广告','百度','谷歌','必应','其他']
+                data:['邮件营销','联盟广告','视频广告','百度','谷歌','必应','其他'],
+                itemGap:10
             },
             toolbox: {
                 feature: {
@@ -66,43 +73,78 @@ define(function(){
                 }
             ],
             series : [
-                {
+                {   
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'邮件营销',
                     type:'bar',
                     stack: '广告',
                     data:[120, 132, 101, 134, 90, 230, 210]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'联盟广告',
                     type:'bar',
                     stack: '广告',
                     data:[220, 182, 191, 234, 290, 330, 310]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'视频广告',
                     type:'bar',
                     stack: '广告',
                     data:[150, 232, 201, 154, 190, 330, 410]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'百度',
                     type:'bar',
                     stack: '搜索引擎',
                     data:[620, 732, 701, 734, 1090, 1130, 1120]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'谷歌',
                     type:'bar',
                     stack: '搜索引擎',
                     data:[120, 132, 101, 134, 290, 230, 220]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'必应',
                     type:'bar',
                     stack: '搜索引擎',
                     data:[60, 72, 71, 74, 190, 130, 110]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'其他',
                     type:'bar',
                     stack: '搜索引擎',
@@ -148,12 +190,22 @@ define(function(){
                 data: ['巴西','印尼','美国','印度','中国','世界人口(万)']
             },
             series: [
-                {
+                {   
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name: '2011年',
                     type: 'bar',
                     data: [18203, 23489, 29034, 104970, 131744, 630230]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name: '2012年',
                     type: 'bar',
                     data: [19325, 23438, 31000, 121594, 134141, 681807]
@@ -194,6 +246,11 @@ define(function(){
             },
             series: [
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name: '直接访问',
                     type: 'bar',
                     stack: '总量',
@@ -206,6 +263,11 @@ define(function(){
                     data: [320, 302, 301, 334, 390, 330, 320]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name: '邮件营销',
                     type: 'bar',
                     stack: '总量',
@@ -218,6 +280,11 @@ define(function(){
                     data: [120, 132, 101, 134, 90, 230, 210]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name: '联盟广告',
                     type: 'bar',
                     stack: '总量',
@@ -230,6 +297,11 @@ define(function(){
                     data: [220, 182, 191, 234, 290, 330, 310]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name: '视频广告',
                     type: 'bar',
                     stack: '总量',
@@ -242,6 +314,11 @@ define(function(){
                     data: [150, 212, 201, 154, 190, 330, 410]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name: '搜索引擎',
                     type: 'bar',
                     stack: '总量',
@@ -409,6 +486,9 @@ define(function(){
     
     var makeLine03 = function(){
         var option = {
+            title: {
+                text: '高度/气温变化图'
+            },
             legend: {
                 data:['高度(km)与气温(°C)变化关系']
             },
