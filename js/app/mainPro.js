@@ -137,14 +137,6 @@ require(['jquery', 'echarts', 'knockout', 'knockback', 'options', 'formatData', 
                 });
             });
 
-                
-            //     // $('#cp1').colorpicker({
-            //     //     "customClass": "showColorPanel"
-            //     // }).on("showPicker", function(e) {
-            //     //     var offset = $(".modal-footer").width() - 2*$(".side.on").width();
-            //     //     $("div.colorpicker.dropdown-menu.showColorPanel").css("left", offset)
-            //     // });
-
             $(".modal-footer").click(function(){
                 var instance = echarts.getInstanceByDom(document.getElementById("optionContainer"));
                 exportOptions[currentIndex-1] = instance.getOption();
