@@ -10,9 +10,6 @@ require.config({
         "lodash": "lib/gridstack/js/lodash.min",
         "gridstack": "lib/gridstack/js/gridstack.min",
         "exportHtml": "lib/export/exportHtml",
-        "mapOfChina": "lib/map/china",
-        "mapOfWorld": "lib/map/world",
-        "mapOfXiangGang": "lib/map/xianggang",
         "knockout": "lib/knockout/knockout-3.4.0",
         "backbone": "lib/backbone/backbone-min",
         "underscore": "lib/underscore/underscore-min",
@@ -27,12 +24,9 @@ require.config({
     }
 });
 
-require(['options', 'echarts', 'formatData',
-         'jquery', 'exportHtml', 'knockout',
-         'app/appViewModel', 'app/appViewModelOfConfig', 'knockback',
-         'bootstrap', 'gridstack','mapOfChina',
-         'mapOfWorld', 'mapOfXiangGang', 'bootsnav', 'colorpicker'],
-    function(baseOptions, echarts, formatData, $, exportHtml, ko, appViewModel, appViewModelOfConfig, kb){
+require(['jquery', 'echarts', 'knockout', 'knockback', 'options', 'formatData', 'exportHtml', 'app/appViewModel',
+         'bootstrap', 'gridstack', 'bootsnav', 'colorpicker'],
+    function($, echarts, ko, kb, baseOptions, formatData, exportHtml, appViewModel){
     
     $(function(){
         var options = {
@@ -57,10 +51,6 @@ require(['options', 'echarts', 'formatData',
             node.x, node.y, node.width, node.height); 
         }
 
-        $('#add-new-widget').click(function(){
-            console.log(add_new_widget);
-        });
-               
         var exportOptions = [];                            //记录并保存每个图表的option并与容器对应
         $(".panel-body").children().click(function(){
             add_new_widget();
@@ -92,33 +82,8 @@ require(['options', 'echarts', 'formatData',
                 option = baseOptions.makePie04();
             }else if(this.id=="pie05"){
                 option = baseOptions.makePie05();
-            }else if(this.id=="map01"){
-                option = baseOptions.makeMap01();
-            }else if(this.id=="map02"){
-                option = baseOptions.makeMap02();
-            }else if(this.id=="map03"){
-                option = baseOptions.makeMap03();
-            }else if(this.id=="map04"){
-                option = baseOptions.makeMap04();
-            }else if(this.id=="scatter01"){
-                option = baseOptions.makeScatter01();
-            }else if(this.id=="scatter02"){
-                option = baseOptions.makeScatter02();
-            }else if(this.id=="scatter03"){
-                option = baseOptions.makeScatter03();
-            }else if(this.id=="radar01"){
-                option = baseOptions.makeRadar01();
-            }else if(this.id=="radar02"){
-                option = baseOptions.makeRadar02();
-            }else if(this.id=="funnel01"){
-                option = baseOptions.makeFunnel01();
-            }else if(this.id=="funnel02"){
-                option = baseOptions.makeFunnel02();
-            }else if(this.id=="gauge01"){
-                option = baseOptions.makeGauge01();
             }
             myChart.setOption(option);
-            console.log(option);
             exportOptions[index-1] = option;
             
             //图表初始化完成后添加菜单
@@ -156,48 +121,29 @@ require(['options', 'echarts', 'formatData',
             });               
             //将选中即将配置的图表渲染到配置面板  
             var currentIndex;                                        //记录当前所修改的option下标 
-            //双向绑定数据表格             
+            //双向绑定            
             container.find('a').eq(1).click(function(){
                 var instance  = echarts.getInstanceByDom($(this).parent().parent().parent()[0]);
                 currentIndex = $(this).parent().parent().parent().attr("order");
-                var type = instance.getOption().series[0].type;
-                $("#data").children().eq(1).empty();
-                if(type=='bar'||type=='line'){
-                    $("#data").children().eq(1).html(formatData.tableOfBar());
-                    ko.applyBindings(appViewModel.bindTable(instance.getOption()),$("#data").children().eq(1).children()[0]);  //开启双向绑定监听
-                }else if(type=='pie'){
-                    
-                }
+                $("#optionPanel").html(formatData.tableAndConfig());
+                ko.applyBindings(appViewModel.bindTableAndConfig(instance.getOption()),$("#optionPanel").children()[1]);  //开启双向绑定监听
+                $('#cp1').colorpicker({
+                    "customClass": "showColorPanel"
+                }).on("showPicker", function(e) {
+                    var offset = $(".modal-footer").width() - 2*$(".side.on").width();
+                    $("div.colorpicker.dropdown-menu.showColorPanel").css("left", offset);
+                }).on("changeColor", function(e){
+
+                });
             });
 
-            //再次双向绑定数据表格
-            $("ul[role = 'tablist']").children().eq(0).click(function(){
-                var instance = echarts.getInstanceByDom(document.getElementById("optionContainer"));
-                $("#data").children().eq(1).html(formatData.tableOfBar());
-                ko.applyBindings(appViewModel.bindTable(instance.getOption()),$("#data").children().eq(1).children()[0]); 
-            })
-
-            $("ul[role = 'tablist']").children().eq(1).click(function(){
-                var option = echarts.getInstanceByDom(document.getElementById("optionContainer")).getOption();
-
-                $("#chartConfig").html(formatData.configOfBar());
                 
-                // $('#cp1').colorpicker({
-                //     "customClass": "showColorPanel"
-                // }).on("showPicker", function(e) {
-                //     var offset = $(".modal-footer").width() - 2*$(".side.on").width();
-                //     $("div.colorpicker.dropdown-menu.showColorPanel").css("left", offset)
-                // });
-
-                // $('#cp2').colorpicker({
-                //     "customClass": "showColorPanel"
-                // }).on("showPicker", function(e) {
-                //     var offset = $(".modal-footer").width() - 2*$(".side.on").width();
-                //     $("div.colorpicker.dropdown-menu.showColorPanel").css("left", offset)
-                // })
-
-                ko.applyBindings(appViewModelOfConfig.bindConfig(option),$("#chartConfig").children()[0]);
-            });
+            //     // $('#cp1').colorpicker({
+            //     //     "customClass": "showColorPanel"
+            //     // }).on("showPicker", function(e) {
+            //     //     var offset = $(".modal-footer").width() - 2*$(".side.on").width();
+            //     //     $("div.colorpicker.dropdown-menu.showColorPanel").css("left", offset)
+            //     // });
 
             $(".modal-footer").click(function(){
                 var instance = echarts.getInstanceByDom(document.getElementById("optionContainer"));

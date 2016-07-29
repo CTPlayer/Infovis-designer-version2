@@ -5,11 +5,16 @@ define(function(){
     				text: "各类型服装销量",
                     subtext : "数据纯属虚构"
 				},
-				tooltip: {},
+				tooltip: {
+                    textStyle: {
+                        fontSize: "14"
+                    }
+                },
 				legend: {
 					data: ['销量'],
                     left: "100",
-                    top: "30"
+                    top: "30",
+                    itemGap:10
 				},
                 toolbox: {
                     feature: {
@@ -367,31 +372,56 @@ define(function(){
                     type: 'value'
                 },
                 series: [
-                    {
+                    {   
+                        label:{
+                            normal:{
+                                show:false
+                            }
+                        },
                         name:'邮件营销',
                         type:'line',
                         stack: '总量',
                         data:[120, 132, 101, 134, 90, 230, 210]
                     },
                     {
+                        label:{
+                            normal:{
+                                show:false
+                            }
+                        },
                         name:'联盟广告',
                         type:'line',
                         stack: '总量',
                         data:[220, 182, 191, 234, 290, 330, 310]
                     },
                     {
+                        label:{
+                            normal:{
+                                show:false
+                            }
+                        },
                         name:'视频广告',
                         type:'line',
                         stack: '总量',
                         data:[150, 232, 201, 154, 190, 330, 410]
                     },
                     {
+                        label:{
+                            normal:{
+                                show:false
+                            }
+                        },
                         name:'直接访问',
                         type:'line',
                         stack: '总量',
                         data:[320, 332, 301, 334, 390, 330, 320]
                     },
                     {
+                        label:{
+                            normal:{
+                                show:false
+                            }
+                        },
                         name:'搜索引擎',
                         type:'line',
                         stack: '总量',
@@ -439,6 +469,11 @@ define(function(){
             ],
             series : [
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'邮件营销',
                     type:'line',
                     stack: '总量',
@@ -446,6 +481,11 @@ define(function(){
                     data:[120, 132, 101, 134, 90, 230, 210]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'联盟广告',
                     type:'line',
                     stack: '总量',
@@ -453,6 +493,11 @@ define(function(){
                     data:[220, 182, 191, 234, 290, 330, 310]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'视频广告',
                     type:'line',
                     stack: '总量',
@@ -460,6 +505,11 @@ define(function(){
                     data:[150, 232, 201, 154, 190, 330, 410]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'直接访问',
                     type:'line',
                     stack: '总量',
@@ -467,6 +517,11 @@ define(function(){
                     data:[320, 332, 301, 334, 390, 330, 320]
                 },
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name:'搜索引擎',
                     type:'line',
                     stack: '总量',
@@ -524,6 +579,11 @@ define(function(){
             },
             series: [
                 {
+                    label:{
+                        normal:{
+                            show:false
+                        }
+                    },
                     name: '高度(km)与气温(°C)变化关系',
                     type: 'line',
                     smooth: true,
