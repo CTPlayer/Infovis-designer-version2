@@ -251,11 +251,6 @@ define(function(){
             },
             series: [
                 {
-                    label:{
-                        normal:{
-                            show:false
-                        }
-                    },
                     name: '直接访问',
                     type: 'bar',
                     stack: '总量',
@@ -268,11 +263,6 @@ define(function(){
                     data: [320, 302, 301, 334, 390, 330, 320]
                 },
                 {
-                    label:{
-                        normal:{
-                            show:false
-                        }
-                    },
                     name: '邮件营销',
                     type: 'bar',
                     stack: '总量',
@@ -285,11 +275,6 @@ define(function(){
                     data: [120, 132, 101, 134, 90, 230, 210]
                 },
                 {
-                    label:{
-                        normal:{
-                            show:false
-                        }
-                    },
                     name: '联盟广告',
                     type: 'bar',
                     stack: '总量',
@@ -302,11 +287,6 @@ define(function(){
                     data: [220, 182, 191, 234, 290, 330, 310]
                 },
                 {
-                    label:{
-                        normal:{
-                            show:false
-                        }
-                    },
                     name: '视频广告',
                     type: 'bar',
                     stack: '总量',
@@ -319,11 +299,6 @@ define(function(){
                     data: [150, 212, 201, 154, 190, 330, 410]
                 },
                 {
-                    label:{
-                        normal:{
-                            show:false
-                        }
-                    },
                     name: '搜索引擎',
                     type: 'bar',
                     stack: '总量',
@@ -373,6 +348,11 @@ define(function(){
                 },
                 series: [
                     {   
+                        itemStyle: {
+                            normal: {
+                                opacity: 1
+                            }
+                        },
                         label:{
                             normal:{
                                 show:false
@@ -384,6 +364,11 @@ define(function(){
                         data:[120, 132, 101, 134, 90, 230, 210]
                     },
                     {
+                        itemStyle: {
+                            normal: {
+                                opacity: 1
+                            }
+                        },
                         label:{
                             normal:{
                                 show:false
@@ -395,6 +380,11 @@ define(function(){
                         data:[220, 182, 191, 234, 290, 330, 310]
                     },
                     {
+                        itemStyle: {
+                            normal: {
+                                opacity: 1
+                            }
+                        },
                         label:{
                             normal:{
                                 show:false
@@ -406,6 +396,11 @@ define(function(){
                         data:[150, 232, 201, 154, 190, 330, 410]
                     },
                     {
+                        itemStyle: {
+                            normal: {
+                                opacity: 1
+                            }
+                        },
                         label:{
                             normal:{
                                 show:false
@@ -417,6 +412,11 @@ define(function(){
                         data:[320, 332, 301, 334, 390, 330, 320]
                     },
                     {
+                        itemStyle: {
+                            normal: {
+                                opacity: 1
+                            }
+                        },
                         label:{
                             normal:{
                                 show:false

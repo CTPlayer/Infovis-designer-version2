@@ -63,7 +63,13 @@ define(['knockout', 'echarts'],function(ko, echarts){
         self.selectedFontWeight = ko.observable(title.textStyle.fontWeight);
         self.titleFontStyle = ko.observableArray(["normal","italic","oblique"]);
         self.selectedFontStyle = ko.observable(title.textStyle.fontStyle);
-        self.titleFontColor = ko.observable(title.textStyle.color)
+        self.titleFontColor = ko.observable(title.textStyle.color);
+        $("#titleFontColor").spectrum({
+            color: title.textStyle.color,
+            change: function(color) {
+                self.titleFontColor(color.toHexString());
+            }
+        });
 
         self.subtitleContent = ko.observable(title.subtext);     
         self.subtitleFontFamily = ko.observableArray(["SimSun","Microsoft YaHei","sans-serif","SimHei","KaiTi"]);   
@@ -73,6 +79,13 @@ define(['knockout', 'echarts'],function(ko, echarts){
         self.subselectedFontWeight = ko.observable(title.subtextStyle.fontWeight);
         self.subtitleFontStyle = ko.observableArray(["normal","italic","oblique"]);
         self.subselectedFontStyle = ko.observable(title.subtextStyle.fontStyle);
+        self.subtitleFontColor = ko.observable(title.subtextStyle.color);
+        $("#subtitleFontColor").spectrum({
+            color: title.subtextStyle.color,
+            change: function(color) {
+                self.subtitleFontColor(color.toHexString());
+            }
+        });
 
         var legend = option.legend[0];
         self.legendShow = ko.observableArray(["显示","不显示"]);
@@ -97,6 +110,13 @@ define(['knockout', 'echarts'],function(ko, echarts){
         self.legendFontSize = ko.observable(legend.textStyle.fontSize);
         self.legendFontWeight = ko.observableArray(["normal","bold","bolder","lighter"]);
         self.selectedLegendFontWeight = ko.observable(legend.textStyle.fontWeight);
+        self.legendFontColor = ko.observable(legend.textStyle.color);
+        $("#legendFontColor").spectrum({
+            color: legend.textStyle.color,
+            change: function(color) {
+                self.legendFontColor(color.toHexString());
+            }
+        });
 
         var tooltip = option.tooltip[0];
         self.tooltipShow = ko.observableArray(["显示","不显示"]);
@@ -111,6 +131,27 @@ define(['knockout', 'echarts'],function(ko, echarts){
         self.tooltipFontSize = ko.observable(tooltip.textStyle.fontSize);
         self.tooltipFontWeight = ko.observableArray(["normal","bold","bolder","lighter"]);
         self.selectedToolTipFontWeight = ko.observable(tooltip.textStyle.fontWeight);
+        self.tooltipBorderColor = ko.observable(tooltip.borderColor);
+        $("#tooltipBorderColor").spectrum({
+            color: tooltip.borderColor,
+            change: function(color) {
+                self.tooltipBorderColor(color.toHexString());
+            }
+        });
+        self.tooltipBackgroundColor = ko.observable(tooltip.backgroundColor);
+        $("#tooltipBackgroundColor").spectrum({
+            color: tooltip.backgroundColor,
+            change: function(color) {
+                self.tooltipBackgroundColor(color.toHexString());
+            }
+        });
+        self.tooltipFontColor = ko.observable(tooltip.textStyle.color);
+        $("#tooltipFontColor").spectrum({
+            color: tooltip.textStyle.color,
+            change: function(color) {
+                self.tooltipFontColor(color.toHexString());
+            }
+        });
 
         var series = option.series[0]
         self.seriesBarGap = ko.observable(series.barGap);
@@ -120,6 +161,13 @@ define(['knockout', 'echarts'],function(ko, echarts){
         }else if(series.label.normal.show == true){
             self.selectedSeriesBarShowLabel = ko.observable("显示");
         }
+        self.barColor = ko.observable(series.itemStyle.normal.color);
+        $("#barColor").spectrum({
+            color: series.itemStyle.normal.color,
+            change: function(color) {
+                self.barColor(color.toHexString());
+            }
+        });
 
         var grid = option.grid[0]
         self.gridTop = ko.observable(grid.top);
@@ -128,6 +176,7 @@ define(['knockout', 'echarts'],function(ko, echarts){
         self.gridRight = ko.observable(grid.right);
         
         var optionChart = echarts.init(document.getElementById("optionContainer"));
+
         //每次被观察的数据变动后调用下列方法
         ko.computed(function(){
             if(type == 'bar'||type=='line'){
@@ -175,12 +224,14 @@ define(['knockout', 'echarts'],function(ko, echarts){
             option.title[0].textStyle.fontWeight = self.selectedFontWeight();
             option.title[0].textStyle.fontStyle = self.selectedFontStyle();
             option.title[0].textStyle.color  = self.titleFontColor();
-            //suntitle
+
+            //subtitle
             option.title[0].subtext = self.subtitleContent();
             option.title[0].subtextStyle.fontFamily = self.subselectedFontFamily();
             option.title[0].subtextStyle.fontSize = self.subtitleFontSize();
             option.title[0].subtextStyle.fontWeight = self.subselectedFontWeight();
             option.title[0].subtextStyle.fontStyle = self.subselectedFontStyle();
+            option.title[0].subtextStyle.color  = self.subtitleFontColor();
             //legend
             if(self.selectedLegendShow() == "不显示"){
                 option.legend[0].show = false;
@@ -200,6 +251,7 @@ define(['knockout', 'echarts'],function(ko, echarts){
             option.legend[0].textStyle.fontFamily = self.selectedLegendFontFamily();
             option.legend[0].textStyle.fontSize = parseInt(self.legendFontSize());
             option.legend[0].textStyle.fontWeight = self.selectedLegendFontWeight();
+            option.legend[0].textStyle.color = self.legendFontColor();
             //tooltip
             if(self.selectedToolTipShow() == "不显示"){
                 option.tooltip[0].show = false;
@@ -210,6 +262,9 @@ define(['knockout', 'echarts'],function(ko, echarts){
             option.tooltip[0].textStyle.fontFamily = self.selectedToolTipFontFamily();
             option.tooltip[0].textStyle.fontSize = parseInt(self.tooltipFontSize());
             option.tooltip[0].textStyle.fontWeight = self.selectedToolTipFontWeight();
+            option.tooltip[0].borderColor = self.tooltipBorderColor();
+            option.tooltip[0].backgroundColor = self.tooltipBackgroundColor();
+            option.tooltip[0].textStyle.color = self.tooltipFontColor();
             //series
             option.series[0].barGap = self.seriesBarGap();
             if(self.selectedSeriesBarShowLabel() == "不显示"){
@@ -221,6 +276,7 @@ define(['knockout', 'echarts'],function(ko, echarts){
                     option.series[i].label.normal.show = true;
                 } 
             }
+            option.series[0].itemStyle.normal.color = self.barColor();
             //grid
             option.grid[0].top = self.gridTop();
             option.grid[0].left = self.gridLeft();

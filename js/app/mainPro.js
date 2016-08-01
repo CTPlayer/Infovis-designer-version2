@@ -15,7 +15,7 @@ require.config({
         "underscore": "lib/underscore/underscore-min",
         "knockback": "lib/knockback.min",
         "bootsnav": "lib/bootstrap/js/bootsnav",
-        "colorpicker": "lib/bootstrap/js/bootstrap-colorpicker.min"
+        "spectrum": "lib/bootstrap/js/spectrum"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -25,8 +25,8 @@ require.config({
 });
 
 require(['jquery', 'echarts', 'knockout', 'knockback', 'options', 'formatData', 'exportHtml', 'app/appViewModel',
-         'bootstrap', 'gridstack', 'bootsnav', 'colorpicker'],
-    function($, echarts, ko, kb, baseOptions, formatData, exportHtml, appViewModel){
+         'bootstrap', 'gridstack', 'bootsnav', 'spectrum'],
+    function($, echarts, ko, kb, baseOptions, formatData, exportHtml, appViewModel, spectrum){
     
     $(function(){
         var options = {
@@ -127,14 +127,6 @@ require(['jquery', 'echarts', 'knockout', 'knockback', 'options', 'formatData', 
                 currentIndex = $(this).parent().parent().parent().attr("order");
                 $("#optionPanel").html(formatData.tableAndConfig());
                 ko.applyBindings(appViewModel.bindTableAndConfig(instance.getOption()),$("#optionPanel").children()[1]);  //开启双向绑定监听
-                $('#cp1').colorpicker({
-                    "customClass": "showColorPanel"
-                }).on("showPicker", function(e) {
-                    var offset = $(".modal-footer").width() - 2*$(".side.on").width();
-                    $("div.colorpicker.dropdown-menu.showColorPanel").css("left", offset);
-                }).on("changeColor", function(e){
-
-                });
             });
 
             $(".modal-footer").click(function(){
