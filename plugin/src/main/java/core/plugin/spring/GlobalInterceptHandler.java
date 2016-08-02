@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import common.util.WebUtil;
-
 /**
  * <p>
  * 拦截请求预处理
@@ -32,8 +30,6 @@ import common.util.WebUtil;
 public class GlobalInterceptHandler extends HandlerInterceptorAdapter {
 
     private static final Logger L = LoggerFactory.getLogger(GlobalInterceptHandler.class);
-
-    private static final int SESSION_INVALID_CODE = 999;
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
@@ -51,10 +47,6 @@ public class GlobalInterceptHandler extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         L.debug("发起请求: {}", request.getRequestURI());
-        if (WebUtil.isAjax(request) && request.getServletPath().indexOf("login") != -1) {
-            response.setStatus(SESSION_INVALID_CODE);
-            L.warn("session已经失效, 请重新登录!");
-        }
         return super.preHandle(request, response, handler);
     }
 
