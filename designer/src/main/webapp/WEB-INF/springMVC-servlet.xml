@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+  <context:property-placeholder location="classpath:application.properties" ignore-unresolvable="true" />
+  <context:component-scan base-package="web" />
+  <context:component-scan base-package="core.plugin.spring" />
+  <!-- MVC 设置 -->
+  <mvc:annotation-driven enable-matrix-variables="true" />
+  <mvc:default-servlet-handler />
+
+  <!-- MVC 请求操作设置 -->
+  <mvc:interceptors>
+    <mvc:interceptor><!-- 全局请求拦截 -->
+        <mvc:mapping path="/**"/>
+        <bean class="core.plugin.spring.GlobalInterceptHandler" />
+    </mvc:interceptor>
+  </mvc:interceptors>
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <property name="messageConverters">
+      <list>
+        <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+        <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+          <property name="supportedMediaTypes">
+            <list>
+              <value>text/plain;charset=utf-8</value>
+              <value>text/html;charset=utf-8</value>
+              <value>text/json;charset=utf-8</value>
+              <value>application/json;charset=utf-8</value>
+            </list>
+          </property>
+        </bean>
+      </list>
+    </property>
+    <property name="customArgumentResolvers">
+      <list>
+      </list>
+    </property>
+  </bean>
+  <!-- 视图设置 -->
+  <bean id="viewResolverCommon" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="viewClass" value="org.springframework.web.servlet.view.InternalResourceView" />
+    <property name="prefix" value="/WEB-INF/views/jsp/" />
+    <property name="suffix" value=".jsp" />
+    <property name="order" value="1" />
+  </bean>
+  <bean id="viewResolverFtl" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+    <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+    <property name="contentType" value="text/html; charset=utf-8" />
+    <property name="cache" value="true" />
+    <property name="suffix" value=".ftl" />
+    <property name="order" value="0" />
+    <property name="exposeSpringMacroHelpers" value="true" />
+    <property name="exposeRequestAttributes" value="false" />
+    <property name="exposeSessionAttributes" value="false" />
+    <property name="requestContextAttribute" value="request" />
+  </bean>
+  <!-- 设置上传文件 -->
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+    p:defaultEncoding="utf-8">
+    <!-- 设置上传文件大小最大为 10M -->
+    <property name="maxUploadSize" value="0xA00000" />
+  </bean>
+
+</beans>

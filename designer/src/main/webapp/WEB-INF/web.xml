@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+
+  <display-name>designer</display-name>
+  <!-- Spring resource loader -->
+  <context-param>
+    <!--如果放两个项目实例此属性要设置，而且两个项目param-value值的不能相同,log4j和logback都要设置，这点很容易忽略 -->
+    <param-name>webAppRootKey</param-name>
+    <param-value>designer.root</param-value>
+  </context-param>
+  <context-param>
+    <param-name>logbackConfigLocation</param-name>
+    <param-value>/WEB-INF/logback.xml</param-value>
+  </context-param>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/conf/spring/**/*.xml</param-value>
+  </context-param>
+  <!-- Spring 刷新Introspector防止内存泄露 -->
+  <listener>
+    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+  </listener>
+  <!-- 设置webAppRootKey生效 
+  <listener>
+    <listener-class>org.springframework.web.util.WebAppRootListener</listener-class>
+  </listener>
+  -->
+  <listener>
+    <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <!-- Character filter -->
+  <filter>
+    <filter-name>encoding</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <async-supported>true</async-supported>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encoding</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- Druid filter -->
+  <filter>
+    <filter-name>DruidWebStatFilter</filter-name>
+    <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+    <async-supported>true</async-supported>
+    <init-param>
+      <param-name>exclusions</param-name>
+      <param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>DruidWebStatFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- Spring MVC 支持 doPut, doDelete 提交方法 -->
+  <filter>
+    <filter-name>hiddenHttpMethodFilter</filter-name>
+    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    <async-supported>true</async-supported>
+  </filter>
+  <filter-mapping>
+    <filter-name>hiddenHttpMethodFilter</filter-name>
+    <servlet-name>springMVC</servlet-name>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>httpPutFormFilter</filter-name>
+    <filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
+    <async-supported>true</async-supported>
+  </filter>
+  <filter-mapping>
+    <filter-name>httpPutFormFilter</filter-name>
+    <servlet-name>springMVC</servlet-name>
+  </filter-mapping>
+
+  <!-- Spring MVC 拦截 -->
+  <servlet>
+    <servlet-name>springMVC</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>springMVC</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <!-- Druid stat view -->
+  <servlet>
+    <servlet-name>DruidStatView</servlet-name>
+    <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+    <async-supported>true</async-supported>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DruidStatView</servlet-name>
+    <url-pattern>/druid/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- 静态资源处理 -->
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/resources/*</url-pattern>
+  </servlet-mapping>
+  <!-- 自定义标签库 -->
+  <jsp-config>
+    <taglib>
+      <taglib-uri>http://www.jiudaotech.com.cn/tags</taglib-uri>
+      <taglib-location>/WEB-INF/common-tags.tld</taglib-location>
+    </taglib>
+  </jsp-config>
+  <!-- 未捕获异常定义 -->
+  <error-page>
+    <error-code>404</error-code>
+    <location>/errors/404.page</location>
+  </error-page>
+  <!-- 会话设置 -->
+  <session-config>
+    <!-- 默认超时30分钟 -->
+    <session-timeout>30</session-timeout>
+  </session-config>
+
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

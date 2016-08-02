@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+  <aop:aspectj-autoproxy proxy-target-class="true"/>
+  <bean class="aop.PaginationAspect"/>
+
+  <!-- <bean class="aop.database.DynamicDataSourceAspect"/> -->
+  <context:component-scan base-package="dao" />
+  <context:component-scan base-package="service" />
+  <!-- MyBatis Configure -->
+  <bean id="vendorProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <!-- 多数据库支持根据不同的数据库 设置databaseId属性对应SQL -->
+    <!-- name是数据库厂商名，value是标识名 -->
+    <property name="properties">
+      <props>
+        <prop key="DB2">db2</prop>
+        <prop key="MySQL">mysql</prop>
+        <prop key="Oracle">oracle</prop>
+        <prop key="SQL Server">sqlserver</prop>
+      </props>
+    </property>
+  </bean>
+  <bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
+    <property name="properties" ref="vendorProperties" />
+  </bean>
+  <bean name="paginationInterceptor" class="core.plugin.mybatis.PageInterceptor" />
+  <bean name="executeSqlLogInterceptor" class="core.plugin.mybatis.ExecuteSqlLogInterceptor" />
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dynamicDataSource" />
+    <property name="plugins">
+      <list>
+        <ref bean="paginationInterceptor" />
+        <ref bean="executeSqlLogInterceptor" />
+      </list>
+    </property>
+    <property name="databaseIdProvider" ref="databaseIdProvider" />
+    <property name="configLocation" value="classpath:MyBatis-Configuration.xml" />
+    <property name="mapperLocations" value="classpath:mappers/**/*.xml" />
+    <property name="typeAliasesPackage" value="model" />
+  </bean>
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="dao.mapper" />
+    <!-- <property name="markerInterface" value="dao.SqlMapper" /> -->
+    <property name="annotationClass" value="core.plugin.mybatis.annotation.MapperMaker" />
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+  </bean>
+  <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+    <constructor-arg index="0" ref="sqlSessionFactory" />
+    <constructor-arg index="1" value="SIMPLE" /><!-- SIMPLE:为每一条SQL创建PS, REUSE:重复使用PS, BATCH:批量模式无法正常返回自增长id -->
+  </bean>
+  <!-- Transaction advice -->
+  <bean id="dataSourceExchange" class="aop.database.DynamicDataSourceTransationAspect" />
+  <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dynamicDataSource" />
+  </bean>
+  <tx:annotation-driven />
+  <tx:advice id="txAdvice" transaction-manager="txManager">
+    <tx:attributes>
+      <!-- all methods starting with 'query' are read-only -->
+      <tx:method name="query*" read-only="true" />
+      <!-- other methods use the default transaction settings -->
+      <tx:method name="*" propagation="REQUIRED" rollback-for="Throwable" />
+    </tx:attributes>
+  </tx:advice>
+  <!-- Ensure that the above transaction advice runs for any execution -->
+  <aop:config>
+    <aop:pointcut id="serviceOperation" expression="execution(* service..*Service.*(..))" />
+    <aop:advisor pointcut-ref="serviceOperation" advice-ref="txAdvice" order="2" />
+    <aop:advisor pointcut-ref="serviceOperation" advice-ref="dataSourceExchange" order="1" />
+  </aop:config>
+</beans>

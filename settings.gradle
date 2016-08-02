@@ -1,0 +1,2 @@
+include 'util', 'plugin', 'designer'
+rootProject.name = 'Infovis'

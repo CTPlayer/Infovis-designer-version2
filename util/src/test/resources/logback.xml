@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+
+  <!-- 控制台输出 -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- 过滤掉 TRACE 级别的日志 -->
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>DEBUG</level>
+    </filter>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <!--格式化输出,%d:日期;%thread:线程名;%-5level：级别,从左显示5个字符宽度;%msg:日志消息;%n:换行符 -->
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!--Mybatis log configure -->
+  <logger name="java.sql" level="DEBUG" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <logger name="org.apache.ibatis" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <logger name="org.apache.commons" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <logger name="org.apache.http" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <logger name="org.apache.shiro" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <logger name="org.mybatis.spring" level="WARN" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <logger name="org.springframework" level="WARN" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <logger name="net.sf.ehcache" level="WARN" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+  <!-- 日志输出级别 -->
+  <root level="DEBUG">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

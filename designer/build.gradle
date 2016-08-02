@@ -1,0 +1,15 @@
+description = '可视化设计器'
+import org.gradle.plugins.ide.eclipse.model.Facet
+apply plugin: "eclipse-wtp"
+eclipse {
+    wtp {
+        facet {
+            facet name: 'jst.web', type: Facet.FacetType.fixed
+            facet name: 'wst.jsdt.web', type: Facet.FacetType.fixed
+            facet name: 'jst.java', type: Facet.FacetType.fixed
+            facet name: 'jst.web', version: '3.0'
+            facet name: 'jst.java', version: JAVA_VERSION
+            facet name: 'wst.jsdt.web', version: '1.0'
+        }
+    }
+}
