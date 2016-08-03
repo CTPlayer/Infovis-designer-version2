@@ -15,7 +15,8 @@ require.config({
         "underscore": "lib/underscore/underscore-min",
         "knockback": "lib/knockback.min",
         "bootsnav": "lib/bootstrap/js/bootsnav",
-        "spectrum": "lib/bootstrap/js/spectrum"
+        "spectrum": "lib/bootstrap/js/spectrum",
+        "infovis": "lib/infovis.min"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -24,9 +25,9 @@ require.config({
     }
 });
 
-require(['jquery', 'echarts', 'knockout', 'knockback', 'options', 'formatData', 'exportHtml', 'app/appViewModel',
+require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'exportHtml', 'app/appViewModel',
          'bootstrap', 'gridstack', 'bootsnav', 'spectrum'],
-    function($, echarts, ko, kb, baseOptions, formatData, exportHtml, appViewModel, spectrum){
+    function($, infovis, ko, kb, baseOptions, formatData, exportHtml, appViewModel, spectrum){
     
     $(function(){
         var options = {
@@ -45,46 +46,44 @@ require(['jquery', 'echarts', 'knockout', 'knockback', 'options', 'formatData', 
                         height: 3
                     };
             var nWidget = grid.add_widget($('<div">'+                                                        
-                                                '<div class="grid-stack-item-content"'+'order='+order+'>'+
+                                                '<div class="grid-stack-item-content"'+'order="'+order+'" id="'+order+'">'+
                                                 '</div>'+
                                              '</div>'),
             node.x, node.y, node.width, node.height); 
         }
 
         var exportOptions = [];                            //记录并保存每个图表的option并与容器对应
+        var allOptions = baseOptions.makeAllOptions();
+        var engine = infovis.init(allOptions || {});
+        var currentIndex;                                        //记录当前所修改的option下标
+
         $(".panel-body").children().click(function(){
             add_new_widget();
             var container = $("div[order = "+order+"]");
             var index = container.attr("order");
-            var myChart = echarts.init(container[0]);
-            var option;
-            if(this.id=="bar01"){
-                option = baseOptions.makeBar01();
-            }else if(this.id=="bar02"){
-                option = baseOptions.makeBar02();
-            }else if(this.id=="bar03"){
-                option = baseOptions.makeBar03();
-            }else if(this.id=="bar04"){
-                option = baseOptions.makeBar04();
-            }else if(this.id=="line01"){
-                option = baseOptions.makeLine01();
-            }else if(this.id=="line02"){
-                option = baseOptions.makeLine02();                    
-            }else if(this.id=="line03"){
-                option = baseOptions.makeLine03();
-            }else if(this.id=="pie01"){
-                option = baseOptions.makePie01();
-            }else if(this.id=="pie02"){
-                option = baseOptions.makePie02();
-            }else if(this.id=="pie03"){
-                option = baseOptions.makePie03();
-            }else if(this.id=="pie04"){
-                option = baseOptions.makePie04();
-            }else if(this.id=="pie05"){
-                option = baseOptions.makePie05();
+            if(engine){
+                if(this.id=="bar01"){
+                    engine.render(order,"datasetOfBar","bar01");
+                }else if(this.id=="bar02"){
+                    engine.render(order,"datasetOfBar","bar02");
+                }else if(this.id=="bar03"){
+                    engine.render(order,"datasetOfBar","bar03");
+                }else if(this.id=="line01"){
+                    engine.render(order,"datasetOfLine","line01");
+                }else if(this.id=="line02"){
+                    engine.render(order,"datasetOfLine","line02");
+                }else if(this.id=="line03"){
+                    engine.render(order,"datasetOfLine","line03");
+                }else if(this.id=="pie01"){
+                    engine.render(order,"datasetOfPie","pie01");
+                }else if(this.id=="pie02"){
+                    engine.render(order,"datasetOfPie","pie02");
+                }
             }
-            myChart.setOption(option);
-            exportOptions[index-1] = option;
+
+            // myChart.setOption(option);
+            // exportOptions[index-1] = option;
+            exportOptions[index-1] = engine.chart.getInstanceByDom(document.getElementById(order)).getOption();
             
             //图表初始化完成后添加菜单
             container.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(52,73,94);position:absolute;top:0px;opacity:0.8">'+
@@ -120,28 +119,37 @@ require(['jquery', 'echarts', 'knockout', 'knockback', 'options', 'formatData', 
                 $(area).parent().remove();
             });               
             //将选中即将配置的图表渲染到配置面板  
-            var currentIndex;                                        //记录当前所修改的option下标 
+
             //双向绑定            
             container.find('a').eq(1).click(function(){
-                var instance  = echarts.getInstanceByDom($(this).parent().parent().parent()[0]);
+                var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
                 currentIndex = $(this).parent().parent().parent().attr("order");
                 $("#optionPanel").html(formatData.tableAndConfig());
-                ko.applyBindings(appViewModel.bindTableAndConfig(instance.getOption()),$("#optionPanel").children()[1]);  //开启双向绑定监听
-            });
-
-            $(".modal-footer").click(function(){
-                var instance = echarts.getInstanceByDom(document.getElementById("optionContainer"));
-                exportOptions[currentIndex-1] = instance.getOption();
-                myChart.setOption(instance.getOption());
+                ko.applyBindings(appViewModel.bindTableAndConfig(instance.getOption(),engine),$("#optionPanel").children()[1]);  //开启双向绑定监听
             });
 
             $(".grid-stack").on("resizestop",function(event,ui){
-                myChart.resize();                                                //自适应容器
+                for(var i=1;i<=order;i++){
+                    engine.chart.getInstanceByDom(document.getElementById(i)).resize();
+                }
                 window.addEventListener("resize",function(){
-                    myChart.resize();                                            //自适应窗口
+                    for(var i=1;i<=order;i++){
+                        engine.chart.getInstanceByDom(document.getElementById(i)).resize();
+                    }
                 });
-            });                                
-        }); 
+            });
+        });
+
+        var domId;
+        $("#optionModal").on("show.bs.modal",function(e){
+            domId = e.relatedTarget.parentNode.parentNode.parentNode.getAttribute('order');
+        });
+
+        $(".modal-footer").click(function(){
+            var instance = engine.chart.getInstanceByDom(document.getElementById("optionContainer"));
+            engine.chart.getInstanceByDom(document.getElementById(domId)).setOption(instance.getOption());
+            exportOptions[currentIndex-1] = instance.getOption();
+        });
 
         //导出HTML
         $("#exportHtml").click(function(){

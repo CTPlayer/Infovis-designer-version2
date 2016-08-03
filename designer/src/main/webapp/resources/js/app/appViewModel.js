@@ -1,6 +1,6 @@
-define(['knockout', 'echarts'],function(ko, echarts){
+define(['knockout', 'infovis'],function(ko, infovis){
         
-    var bindTableAndConfig = function(option){
+    var bindTableAndConfig = function(option,engine){
         var type = option.series[0].type;
         var initialData01 = [];
         var initialData02 = [];
@@ -153,7 +153,7 @@ define(['knockout', 'echarts'],function(ko, echarts){
             }
         });
 
-        var series = option.series[0]
+        var series = option.series[0];
         self.seriesBarGap = ko.observable(series.barGap);
         self.seriesBarShowLabel = ko.observableArray(["显示","不显示"]);
         if(series.label.normal.show == false){
@@ -169,14 +169,14 @@ define(['knockout', 'echarts'],function(ko, echarts){
             }
         });
 
-        var grid = option.grid[0]
+        var grid = option.grid[0];
         self.gridTop = ko.observable(grid.top);
         self.gridBottom = ko.observable(grid.bottom);
         self.gridLeft = ko.observable(grid.left);
         self.gridRight = ko.observable(grid.right);
         
-        var optionChart = echarts.init(document.getElementById("optionContainer"));
-
+        // var optionChart = echarts.init(document.getElementById("optionContainer"));
+        var optionChart = engine.chart.init(document.getElementById("optionContainer"));
         //每次被观察的数据变动后调用下列方法
         ko.computed(function(){
             if(type == 'bar'||type=='line'){
@@ -240,7 +240,6 @@ define(['knockout', 'echarts'],function(ko, echarts){
             }
             option.legend[0].top = self.legendTop();
             option.legend[0].left = self.legendLeft();
-            console.log(self.selectedLegendOrient());
             if(self.selectedLegendOrient() == "横向"){
                 option.legend[0].orient = "horizontal";
             }else if(self.selectedLegendOrient() == "纵向"){
@@ -286,10 +285,6 @@ define(['knockout', 'echarts'],function(ko, echarts){
             optionChart.setOption(option,true);
         })
     };
-
-    var bindTableOfPie = function(option){
-        var series = option.series[0];
-    }
     
     return {
         bindTableAndConfig : bindTableAndConfig
