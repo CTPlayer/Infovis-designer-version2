@@ -71,9 +71,7 @@ public class BaseMapperImpl<T extends BaseModel> implements BaseMapper<T> {
     @Override
     public List<T> selectList(T entity) {
         if (entity.isPaging()) {
-            int offset = entity.getStart();
-            int limit = entity.getLimit();
-            RowBounds rowBounds = new RowBounds(offset, limit);
+            RowBounds rowBounds = getRowBounds(entity);
             return sqlSessionTemplate.selectList(entity.getStatmentId(), entity, rowBounds);
         }
         return sqlSessionTemplate.selectList(entity.getStatmentId(), entity);
@@ -112,12 +110,16 @@ public class BaseMapperImpl<T extends BaseModel> implements BaseMapper<T> {
     @Override
     public List<T> selectList(T entity, Object extraParam) {
         if (entity.isPaging()) {
-            int offset = entity.getStart();
-            int limit = entity.getLimit();
-            RowBounds rowBounds = new RowBounds(offset, limit);
+            RowBounds rowBounds = getRowBounds(entity);
             return sqlSessionTemplate.selectList(entity.getStatmentId(), extraParam, rowBounds);
         }
         return sqlSessionTemplate.selectList(entity.getStatmentId(), extraParam);
+    }
+
+    private RowBounds getRowBounds(T entity) {
+        int offset = entity.getStart();
+        int limit = entity.getLimit();
+        return new RowBounds(offset, limit);
     }
 
     public SqlSessionTemplate getSqlSessionTemplate() {

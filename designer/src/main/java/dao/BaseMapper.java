@@ -30,49 +30,49 @@ public interface BaseMapper<T> {
      * 
      * @param entity
      */
-    public int insert(T entity);
+    int insert(T entity);
 
     /**
      * delete a record form DB
      * 
      * @param entity
      */
-    public int delete(T entity);
+    int delete(T entity);
 
     /**
      * update a record form DB
      * 
      * @param entity
      */
-    public int update(T entity);
+    int update(T entity);
 
     /**
      * query a record form DB
      * 
      * @param entity
      */
-    public T selectOne(T entity);
+    T selectOne(T entity);
 
     /**
      * query count number form DB
      * 
      * @param entity
      */
-    public int count(T entity);
+    int count(T entity);
 
     /**
      * query a record to Map
      * 
      * @param entity
      */
-    public Map<String, Object> selectMap(T entity, String mapKey);
+    Map<String, Object> selectMap(T entity, String mapKey);
 
     /**
      * query records form DB
      * 
      * @param entity
      */
-    public List<T> selectList(T entity);
+    List<T> selectList(T entity);
 
     /**
      * insert a new record into DB
@@ -86,48 +86,48 @@ public interface BaseMapper<T> {
      * 
      * @param entity
      */
-    public int delete(T entity, Object extraParam);
+    int delete(T entity, Object extraParam);
 
     /**
      * update a record form DB
      * 
      * @param entity
      */
-    public int update(T entity, Object extraParam);
+    int update(T entity, Object extraParam);
 
     /**
      * query a record form DB
      * 
      * @param entity
      */
-    public T selectOne(T entity, Object extraParam);
+    T selectOne(T entity, Object extraParam);
 
     /**
      * query count number form DB
      * 
      * @param entity
      */
-    public int count(T entity, Object extraParam);
+    int count(T entity, Object extraParam);
 
     /**
      * query a record to Map
      * 
      * @param entity
      */
-    public Map<String, Object> selectMap(T entity, String mapKey, Object extraParam);
+    Map<String, Object> selectMap(T entity, String mapKey, Object extraParam);
 
     /**
      * query records form DB
      * 
      * @param entity
      */
-    public List<T> selectList(T entity, Object extraParam);
+    List<T> selectList(T entity, Object extraParam);
 
     /**
      * get sql session template
      * 
      * @return
      */
-    public SqlSessionTemplate getSqlSessionTemplate();
+    SqlSessionTemplate getSqlSessionTemplate();
 
 }

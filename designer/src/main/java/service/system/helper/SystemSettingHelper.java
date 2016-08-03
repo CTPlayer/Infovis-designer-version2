@@ -14,10 +14,12 @@
 package service.system.helper;
 
 import core.plugin.spring.database.route.DynamicDataSource;
+import model.system.SystemStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import service.system.SystemDetectedService;
 
 import javax.annotation.Resource;
 /**
@@ -33,16 +35,29 @@ public final class SystemSettingHelper {
     @Resource
     private DynamicDataSource dynamicDataSource;
 
+    @Resource
+    private SystemDetectedService  systemDetectedService;
+
     @Value("${app.version}")
     private float appVersion;
 
-    public boolean upgradeSystem() {
+    public void checkSystemStatus() {
 
-        L.info("当前应用系统版本为Ver: {}", appVersion);
         // 选择默认数据源
         dynamicDataSource.selectDataSource("");
 
-        return true;
+        SystemStatus status = systemDetectedService.checkSystemStatus();
+        switch (status) {
+            case INIT:
+                L.info("创建系统应用表");
+                systemDetectedService.initSystemCoreTables();
+                break;
+            case UPGRADE:
+                L.info("当前应用系统版本为Ver: {}", appVersion);
+                break;
+            case OK:
+                break;
+        }
     }
 
 }

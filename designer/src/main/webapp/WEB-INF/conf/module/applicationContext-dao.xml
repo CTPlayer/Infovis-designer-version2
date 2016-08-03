@@ -20,6 +20,7 @@
     <!-- name是数据库厂商名，value是标识名 -->
     <property name="properties">
       <props>
+        <prop key="H2">h2</prop>
         <prop key="DB2">db2</prop>
         <prop key="MySQL">mysql</prop>
         <prop key="Oracle">oracle</prop>

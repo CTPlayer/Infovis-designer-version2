@@ -48,7 +48,7 @@ public class ApplicationBootstrapListener implements ApplicationListener<Applica
         if (event.getApplicationContext().getParent() == null) {
             L.info("系统启动, 初始化中...\n 检测是否有新版本");
             // 需要执行的逻辑代码，当spring容器初始化完成后就会执行该方法。
-            systemSettingHelper.upgradeSystem();
+            systemSettingHelper.checkSystemStatus();
         }
 
     }
