@@ -13,6 +13,7 @@ define(function(){
                         layout: [
                             {
                                 id: "bar01",
+                                backgroundColor: "white",
                                 title: {
                                     text: "各类型服装销量",
                                     subtext : "数据纯属虚构"
@@ -50,6 +51,7 @@ define(function(){
                             },
                             {
                                 id: "bar02",
+                                backgroundColor: "white",
                                 title: {
                                     text: "各浏览器占比"
                                 },
@@ -167,6 +169,7 @@ define(function(){
                             },
                             {
                                 id: "bar03",
+                                backgroundColor: "white",
                                 title: {
                                     text: '世界人口总量',
                                     subtext: '数据来自网络'
@@ -229,6 +232,7 @@ define(function(){
                         layout: [
                             {
                                 id: "line01",
+                                backgroundColor: "white",
                                 title: {
                                     text: '折线图堆叠'
                                 },
@@ -342,6 +346,7 @@ define(function(){
                             },
                             {
                                 id: "line02",
+                                backgroundColor: "white",
                                 title: {
                                     text: '堆叠区域图'
                                 },
@@ -470,6 +475,7 @@ define(function(){
                             },
                             {
                                 id: "line03",
+                                backgroundColor: "white",
                                 title: {
                                     text: '高度/气温变化图'
                                 },
@@ -540,6 +546,7 @@ define(function(){
                         layout: [
                             {
                                 id: "pie01",
+                                backgroundColor: "white",
                                 title : {
                                     text: '某站点用户访问来源',
                                     subtext: '纯属虚构',
@@ -584,6 +591,7 @@ define(function(){
                             },
                             {
                                 id: "pie02",
+                                backgroundColor: "white",
                                 title : {
                                     text: '某站点用户访问来源',
                                     subtext: '纯属虚构',

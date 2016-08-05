@@ -31,7 +31,8 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
     
     $(function(){
         var options = {
-            float: true
+            float: true,
+            vertical_margin: 10
         };
         $('.grid-stack').gridstack(options);
               
@@ -45,11 +46,11 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         width: 3,
                         height: 3
                     };
-            var nWidget = grid.add_widget($('<div">'+                                                        
+            var nWidget = grid.add_widget($('<div>'+
                                                 '<div class="grid-stack-item-content"'+'order="'+order+'" id="'+order+'">'+
                                                 '</div>'+
                                              '</div>'),
-            node.x, node.y, node.width, node.height); 
+            node.x, node.y, node.width, node.height);
         }
 
         var exportOptions = [];                            //记录并保存每个图表的option并与容器对应
