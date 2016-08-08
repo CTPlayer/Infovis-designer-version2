@@ -20,14 +20,13 @@ require.config({
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
-        "colorpicker": { "deps" :['bootstrap'] },
         "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] }
     }
 });
 
 require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'exportHtml', 'app/appViewModel',
          'bootstrap', 'gridstack', 'bootsnav', 'spectrum'],
-    function($, infovis, ko, kb, baseOptions, formatData, exportHtml, appViewModel, spectrum){
+    function($, infovis, ko, kb, baseOptions, formatData, exportHtml, appViewModel){
 
     $(function(){
         var options = {
@@ -53,7 +52,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     '</div>'),node.x, node.y, node.width, node.height);
         }
 
-        grid.add_widget($('<div>'+
+        grid.add_widget($('<div style="display: none">'+
                 '<div class="grid-stack-item-content">'+
                 '</div>'+
                 '</div>'),0, 0, 0, 10);
@@ -76,9 +75,8 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             ev.preventDefault();
             var data=ev.originalEvent.dataTransfer.getData("Text");
             var pagex = (ev.originalEvent.clientX - 280) /  105;
-            var pagey = (ev.originalEvent.clientY - 118) /  70;
-            add_new_widget(pagex,pagey);
-            console.log(pagey);
+            var pagey = (ev.originalEvent.clientY - 118+$(document).scrollTop()) /  70;
+            add_new_widget(pagex,Math.floor(pagey));
             var container = $("div[order = "+order+"]");
             var index = container.attr("order");
             if(engine){
