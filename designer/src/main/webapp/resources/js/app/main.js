@@ -28,7 +28,7 @@ require.config({
 require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'exportHtml', 'app/appViewModel',
          'bootstrap', 'gridstack', 'bootsnav', 'spectrum'],
     function($, infovis, ko, kb, baseOptions, formatData, exportHtml, appViewModel, spectrum){
-    
+
     $(function(){
         var options = {
             float: true,
@@ -38,61 +38,78 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
               
         var order = 0;  //容器的顺序标记     
         var grid = $('.grid-stack').data('gridstack');
-        var add_new_widget = function () {  
+
+        var add_new_widget = function (pagex,pagey) {
             order++;
             var node = {
-                        x: 0,
-                        y: 0,
-                        width: 3,
-                        height: 3
-                    };
+                x: pagex,
+                y: pagey,
+                width: 3,
+                height: 3
+            };
             var nWidget = grid.add_widget($('<div>'+
-                                                '<div class="grid-stack-item-content"'+'order="'+order+'" id="'+order+'">'+
-                                                '</div>'+
-                                             '</div>'),
-            node.x, node.y, node.width, node.height);
+                    '<div class="grid-stack-item-content"'+'order="'+order+'" id="'+order+'">'+
+                    '</div>'+
+                    '</div>'),node.x, node.y, node.width, node.height);
         }
+
+        grid.add_widget($('<div>'+
+                '<div class="grid-stack-item-content">'+
+                '</div>'+
+                '</div>'),0, 0, 0, 10);
 
         var exportOptions = [];                            //记录并保存每个图表的option并与容器对应
         var allOptions = baseOptions.makeAllOptions();
         var engine = infovis.init(allOptions || {});
         var currentIndex;                                        //记录当前所修改的option下标
 
-        $(".panel-body").children().click(function(){
-            add_new_widget();
+        $(".side").find("img").on("dragstart",function(ev){
+            ev.originalEvent.dataTransfer.setData("Text",$(ev.target).parent().attr("id"));
+        });
+
+        $(".grid-stack").on("dragover",function(ev){
+            ev.preventDefault();
+        });
+
+
+        $(".grid-stack").on("drop",function(ev){
+            ev.preventDefault();
+            var data=ev.originalEvent.dataTransfer.getData("Text");
+            var pagex = (ev.originalEvent.clientX - 280) /  105;
+            var pagey = (ev.originalEvent.clientY - 118) /  70;
+            add_new_widget(pagex,pagey);
+            console.log(pagey);
             var container = $("div[order = "+order+"]");
             var index = container.attr("order");
             if(engine){
-                if(this.id=="bar01"){
+                if(data=="bar01"){
                     engine.render(order,"datasetOfBar","bar01");
-                }else if(this.id=="bar02"){
+                }else if(data=="bar02"){
                     engine.render(order,"datasetOfBar","bar02");
-                }else if(this.id=="bar03"){
+                }else if(data=="bar03"){
                     engine.render(order,"datasetOfBar","bar03");
-                }else if(this.id=="line01"){
+                }else if(data=="line01"){
                     engine.render(order,"datasetOfLine","line01");
-                }else if(this.id=="line02"){
+                }else if(data=="line02"){
                     engine.render(order,"datasetOfLine","line02");
-                }else if(this.id=="line03"){
+                }else if(data=="line03"){
                     engine.render(order,"datasetOfLine","line03");
-                }else if(this.id=="pie01"){
+                }else if(data=="pie01"){
                     engine.render(order,"datasetOfPie","pie01");
-                }else if(this.id=="pie02"){
+                }else if(data=="pie02"){
                     engine.render(order,"datasetOfPie","pie02");
                 }
             }
 
-            // myChart.setOption(option);
-            // exportOptions[index-1] = option;
             exportOptions[index-1] = engine.chart.getInstanceByDom(document.getElementById(order)).getOption();
-            
-            //图表初始化完成后添加菜单
+
+            // 图表初始化完成后添加菜单
             container.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(52,73,94);position:absolute;top:0px;opacity:0.8">'+
                                     '<span style="display:none;">'+
                                     '<a href="#"><i class="glyphicon glyphicon-remove"></i></a>'+
                                     '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil"></i></a>'+
-                                    '</span>'+    
-                                '</div>');               
+                                    '</span>'+
+                                '</div>');
             container.on('mouseenter mouseleave',function(e){
                 var target = $("#operate",$(this));
                 if(e.type == 'mouseenter'){
@@ -118,10 +135,10 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     }
                 }
                 $(area).parent().remove();
-            });               
-            //将选中即将配置的图表渲染到配置面板  
+            });
 
-            //双向绑定            
+            //将选中即将配置的图表渲染到配置面板
+            //双向绑定
             container.find('a').eq(1).click(function(){
                 var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
                 currentIndex = $(this).parent().parent().parent().attr("order");
@@ -154,6 +171,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
         //导出HTML
         $("#exportHtml").click(function(){
+            $(".grid-stack").children(":first").remove();
             $(".grid-stack").children(":first").remove();
             var template = '<!DOCTYPE html>'+
                             '<html lang="zh-CN">'+
