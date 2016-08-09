@@ -21,5 +21,18 @@ package model.system;
  *
  */
 public enum SystemStatus {
-    INIT, UPGRADE, OK
+
+    NOT_INIT("未初始化"), HAS_INIT("已初始化"), UPGRADE("需要升级"), OK("正常");
+
+    private String desc;
+
+    private SystemStatus(String desc) {
+        this.desc = desc;
+    }
+
+    @Override
+    public String toString() {
+        return this.desc;
+    }
+
 }

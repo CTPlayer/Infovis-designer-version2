@@ -20,6 +20,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
+import common.exception.app.AppRuntimeException;
+import common.model.BaseModel;
+import core.plugin.mybatis.annotation.ColumnMap;
+import javassist.*;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.ibatis.executor.statement.PreparedStatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -237,6 +241,93 @@ public final class MybatisHelper {
             try {
                 return superClass.getDeclaredField(fieldName);
             } catch (NoSuchFieldException e) {
+            }
+        }
+        return null;
+    }
+
+    /**
+     * <p>
+     * Mybatis添加类似JPA的Column注解支持, 在不设置resultMap下支持_id, _id_, aId, a_id, userName 组合需求
+     *
+     */
+    public static void supportColumnMap() {
+        ClassPool classPool = ClassPool.getDefault();
+        ClassClassPath ccpath = new ClassClassPath(new BaseModel().getClass());
+        classPool.insertClassPath(ccpath);
+        try {
+            CtClass ctClass = classPool.get("org.apache.ibatis.executor.resultset.DefaultResultSetHandler");
+            CtMethod ctMethod = ctClass.getDeclaredMethod("applyAutomaticMappings");
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("{")
+                    .append("   final java.util.List unmappedColumnNames = $1.getUnmappedColumnNames($2, $4);")
+                    .append("   boolean foundValues = false;")
+                    .append("   int length = unmappedColumnNames.size();")
+                    .append("   for (int i = 0; i < length; i++) {")
+                    .append("       String columnName = unmappedColumnNames.get(i).toString();")
+                    .append("       String propertyName = columnName;")
+                    .append("       if ($4 != null && $4.length() > 0) {")
+                    .append("           if (columnName.toUpperCase(java.util.Locale.ENGLISH).startsWith($4)) {")
+                    .append("               propertyName = columnName.substring($4.length());")
+                    .append("           } else {")
+                    .append("               continue;")
+                    .append("           }")
+                    .append("       }")
+                    .append("       boolean mapUnderscoreToCamelCase = configuration.isMapUnderscoreToCamelCase();")
+                    .append("       final String property = $3.findProperty(propertyName, mapUnderscoreToCamelCase);")
+                    .append("       /******************************************************************************/")
+                    .append("       /** 如果找不到，则首先查找columnMap */")
+                    .append("       if(property == null) {")
+                    .append("           Class sourceClass = $3.getOriginalObject().getClass();")
+                    .append("           property = core.plugin.mybatis.MybatisHelper.getDomainColumnMapping(sourceClass, propertyName);")
+                    .append("       }")
+                    .append("       /** 尝试去下划线匹配 */")
+                    .append("       if(property == null && !mapUnderscoreToCamelCase) {")
+                    .append("           property = $3.findProperty(propertyName, true);")
+                    .append("       }")
+                    .append("       /** 采用默认解析 */")
+                    .append("       /******************************************************************************/")
+                    .append("       if (property != null && $3.hasSetter(property)) {")
+                    .append("           final Class propertyType = $3.getSetterType(property);")
+                    .append("           if (typeHandlerRegistry.hasTypeHandler(propertyType)) {")
+                    .append("               final org.apache.ibatis.type.TypeHandler typeHandler = $1.getTypeHandler(propertyType, columnName);")
+                    .append("               final Object value = typeHandler.getResult($1.getResultSet(), columnName);")
+                    .append("               if (value != null || configuration.isCallSettersOnNulls()) {")
+                    .append("                   if (value != null || !propertyType.isPrimitive()) {")
+                    .append("                       $3.setValue(property, value);")
+                    .append("                   }")
+                    .append("                   foundValues = true;")
+                    .append("               }")
+                    .append("           }")
+                    .append("       }")
+                    .append("   }")
+                    .append("   return foundValues;")
+                    .append("}");
+            ctMethod.setBody(builder.toString());
+            ctClass.toClass();
+        } catch (NotFoundException | CannotCompileException e) {
+            throw new AppRuntimeException("Mybatis Column Map Error", e);
+        }
+    }
+
+    /**
+     * <p>
+     * 获取数据模型Column Map
+     *
+     * @param clz
+     * @param columnName
+     * @return
+     */
+    public static String getDomainColumnMapping(Class<?> clz, String columnName) {
+        Field[] fields = clz.getDeclaredFields();
+        for (Field field : fields) {
+            if(field.isAnnotationPresent(ColumnMap.class)) {
+                ColumnMap columnInfo = field.getAnnotation(ColumnMap.class);
+                String column = columnInfo.column();
+                if(column.equals(columnName)) {
+                    return field.getName();
+                }
             }
         }
         return null;

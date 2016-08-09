@@ -8,44 +8,20 @@
  * Unless otherwise explicitly stated, this software is provided
  * by JiuDaoTech "AS IS".
  *************************************************************************/
-package service.system;
+package dao.mapper.system;
 
+import core.plugin.mybatis.annotation.MapperMaker;
 import model.system.SystemMetaData;
-import model.system.SystemStatus;
 
 /**
  * <p>
- * 系统检测
+ * 系统元数据Mappper
  *
  * @author CSJ
  */
-public interface SystemDetectedService {
+@MapperMaker
+public interface SystemMetaDataMapper {
 
-    /**
-     * <p>
-     * 检测系统初始化状态
-     *
-     * @return
-     */
-    SystemStatus checkSystemInitStatus(float appVersion);
-
-    /**
-     * <p>
-     * 初始化系统核心表
-     */
-    void initSystemCoreTables();
-
-    /**
-     * <p>
-     * 执行升级系统脚本
-     */
-    void upgradeSystem(float from, float to);
-
-    /**
-     * <p>
-     * 查询系统元数据
-     *
-     * @return
-     */
     SystemMetaData querySystemMetaDataAsObject();
+
 }

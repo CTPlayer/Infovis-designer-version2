@@ -14,6 +14,7 @@
 package service.system.helper;
 
 import core.plugin.spring.database.route.DynamicDataSource;
+import model.system.SystemMetaData;
 import model.system.SystemStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,21 +42,26 @@ public final class SystemSettingHelper {
     @Value("${app.version}")
     private float appVersion;
 
-    public void checkSystemStatus() {
+    public void checkSystemInitStatus() {
 
         // 选择默认数据源
         dynamicDataSource.selectDataSource("");
 
-        SystemStatus status = systemDetectedService.checkSystemStatus();
+        SystemStatus status = systemDetectedService.checkSystemInitStatus(appVersion);
         switch (status) {
-            case INIT:
+            case NOT_INIT:
                 L.info("创建系统应用表");
                 systemDetectedService.initSystemCoreTables();
                 break;
-            case UPGRADE:
-                L.info("当前应用系统版本为Ver: {}", appVersion);
-                break;
-            case OK:
+            case HAS_INIT:
+                SystemMetaData metaData = systemDetectedService.querySystemMetaDataAsObject();
+                float currentVersion = metaData.getVersion();
+                if(currentVersion < appVersion) {
+                    L.info("更新版本, Ver: {} -> Ver: {}", currentVersion, appVersion);
+                    systemDetectedService.upgradeSystem(currentVersion, appVersion);
+                } else {
+                    L.info("当前应用系统版本为Ver: {}", appVersion);
+                }
                 break;
         }
     }

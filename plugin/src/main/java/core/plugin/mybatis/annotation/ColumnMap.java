@@ -13,18 +13,24 @@
  ************************************************************************/
 package core.plugin.mybatis.annotation;
 
-import java.lang.annotation.ElementType;
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+
 /**
  * <p>
- * Mybatis mapper 标识
+ * Mybatis Column 映射
  *
  * @author CSJ
  */
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface MapperMaker {
+@Target(value = {METHOD, FIELD})
+public @interface ColumnMap {
+    String column() default "";
+    boolean camelCaseMapping() default true;
 }

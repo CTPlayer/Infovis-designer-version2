@@ -16,7 +16,6 @@ package common.util;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.xerces.internal.util.XMLChar;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -252,18 +251,22 @@ public final class TemplateUtil {
     }
 
     /**
-     * Check the string against XML's definition of acceptable names for
-     * elements and attributes and so on using the XMLCharacterProperties
-     * utility class
-     * only for xml version 1.0
+     * 将下划线名称风格替换为驼峰风格
+     *
+     * @param underlineStr
+     * @return
      */
-
-    public static final boolean isXMLName(String s) {
-
-        if (s == null) {
-            return false;
+    public static String underlineToCamelCase(String underlineStr) {
+        Matcher matcher = Pattern.compile("[a-z]_[a-z]").matcher(underlineStr);
+        StringBuilder builder = new StringBuilder(underlineStr);
+        for (int i = 0; matcher.find(); i++) {
+            String group = matcher.group();
+            String upperCase = group.replaceAll("_[a-z]", group.substring(2).toUpperCase());
+            builder.replace(matcher.start() - i, matcher.end() - i, upperCase);
         }
-        return XMLChar.isValidName(s);
-
-    } // isXMLName(String):boolean
+        if (Character.isUpperCase(builder.charAt(0))) {
+            builder.replace(0, 1, String.valueOf(Character.toLowerCase(builder.charAt(0))));
+        }
+        return builder.toString();
+    }
 }

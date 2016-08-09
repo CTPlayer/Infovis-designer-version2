@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jiudaotech.www">
-    <insert id="initSystemCoreTables" databaseId="h2">
-      CREATE TABLE IF NOT EXISTS t_sys_core_metadata (
-        id BIGINT AUTO_INCREMENT,
-        version DOUBLE,
-        update_time VARCHAR(14)
+
+    <update id="initSystemCoreTables" databaseId="h2">
+      CREATE TABLE IF NOT EXISTS T_SYS_CORE_METADATA (
+        ID BIGINT AUTO_INCREMENT,
+        VERSION REAL,
+        UPDATE_TIME VARCHAR(14)
       );
-      INSERT INTO t_sys_core_metadata(version, update_time) VALUES (1.0, TO_CHAR(CURRENT_TIMESTAMP(), 'yyyyMMddHHmmss'));
-    </insert>
+      INSERT INTO T_SYS_CORE_METADATA(VERSION, UPDATE_TIME) VALUES (1.0, TO_CHAR(CURRENT_TIMESTAMP(), 'yyyyMMddHHmmss'));
+    </update>
+
 </mapper>
