@@ -2,8 +2,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
         
     var bindTableAndConfig = function(option,engine){
         var type = option.series[0].type;
-        var initialData01 = [];
-        var initialData02 = [];
+        var initialData01 = [];           //数据格式： {value:[...],name:...}
+        var initialData02 = [];           //数据格式： {legend:...}
         if(type == 'bar'||type=='line'){
             var lgd = option.legend[0].data;      //图例数据
             var axis;                             //轴数据
@@ -161,13 +161,6 @@ define(['knockout', 'infovis'],function(ko, infovis){
         }else if(series.label.normal.show == true){
             self.selectedSeriesBarShowLabel = ko.observable("显示");
         }
-        self.barColor = ko.observable(series.itemStyle.normal.color);
-        $("#barColor").spectrum({
-            color: series.itemStyle.normal.color,
-            change: function(color) {
-                self.barColor(color.toHexString());
-            }
-        });
 
         var grid = option.grid[0];
         self.gridTop = ko.observable(grid.top);
@@ -232,6 +225,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
             option.title[0].subtextStyle.fontWeight = self.subselectedFontWeight();
             option.title[0].subtextStyle.fontStyle = self.subselectedFontStyle();
             option.title[0].subtextStyle.color  = self.subtitleFontColor();
+
             //legend
             if(self.selectedLegendShow() == "不显示"){
                 option.legend[0].show = false;
@@ -251,6 +245,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
             option.legend[0].textStyle.fontSize = parseInt(self.legendFontSize());
             option.legend[0].textStyle.fontWeight = self.selectedLegendFontWeight();
             option.legend[0].textStyle.color = self.legendFontColor();
+
             //tooltip
             if(self.selectedToolTipShow() == "不显示"){
                 option.tooltip[0].show = false;
@@ -264,6 +259,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
             option.tooltip[0].borderColor = self.tooltipBorderColor();
             option.tooltip[0].backgroundColor = self.tooltipBackgroundColor();
             option.tooltip[0].textStyle.color = self.tooltipFontColor();
+
             //series
             option.series[0].barGap = self.seriesBarGap();
             if(self.selectedSeriesBarShowLabel() == "不显示"){
@@ -275,7 +271,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
                     option.series[i].label.normal.show = true;
                 } 
             }
-            option.series[0].itemStyle.normal.color = self.barColor();
+
             //grid
             option.grid[0].top = self.gridTop();
             option.grid[0].left = self.gridLeft();

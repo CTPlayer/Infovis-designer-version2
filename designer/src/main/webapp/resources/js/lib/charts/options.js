@@ -16,7 +16,8 @@ define(function(){
                                 backgroundColor: "white",
                                 title: {
                                     text: "各类型服装销量",
-                                    subtext : "数据纯属虚构"
+                                    subtext : "数据纯属虚构",
+                                    left: "center"
                                 },
                                 tooltip: {
                                     textStyle: {
@@ -53,7 +54,8 @@ define(function(){
                                 id: "bar02",
                                 backgroundColor: "white",
                                 title: {
-                                    text: "各浏览器占比"
+                                    text: "各浏览器占比",
+                                    left: "center"
                                 },
                                 tooltip : {
                                     trigger: 'axis',
@@ -172,7 +174,8 @@ define(function(){
                                 backgroundColor: "white",
                                 title: {
                                     text: '世界人口总量',
-                                    subtext: '数据来自网络'
+                                    subtext: '数据来自网络',
+                                    left: "center"
                                 },
                                 tooltip: {
                                     trigger: 'axis',
@@ -234,7 +237,8 @@ define(function(){
                                 id: "line01",
                                 backgroundColor: "white",
                                 title: {
-                                    text: '折线图堆叠'
+                                    text: '折线图堆叠',
+                                    left: "center"
                                 },
                                 tooltip: {
                                     trigger: 'axis'
@@ -348,7 +352,8 @@ define(function(){
                                 id: "line02",
                                 backgroundColor: "white",
                                 title: {
-                                    text: '堆叠区域图'
+                                    text: '堆叠区域图',
+                                    left: "center"
                                 },
                                 tooltip : {
                                     trigger: 'axis'
@@ -477,7 +482,8 @@ define(function(){
                                 id: "line03",
                                 backgroundColor: "white",
                                 title: {
-                                    text: '高度/气温变化图'
+                                    text: '高度/气温变化图',
+                                    left: "center"
                                 },
                                 legend: {
                                     data:['高度(km)与气温(°C)变化关系']
