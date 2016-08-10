@@ -144,15 +144,13 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 ko.applyBindings(appViewModel.bindTableAndConfig(instance.getOption(),engine),$("#optionPanel").children()[1]);  //开启双向绑定监听
             });
 
-            $(".grid-stack").on("resizestop",function(event,ui){
-                for(var i=1;i<=order;i++){
-                    engine.chart.getInstanceByDom(document.getElementById(i)).resize();
-                }
-                window.addEventListener("resize",function(){
-                    for(var i=1;i<=order;i++){
-                        engine.chart.getInstanceByDom(document.getElementById(i)).resize();
-                    }
-                });
+        });
+
+        $(".grid-stack").on("resizestop",function(event,ui){
+            var id = ui.element[0].firstChild.getAttribute("id");
+                engine.chart.getInstanceByDom(document.getElementById(id)).resize();
+            window.addEventListener("resize",function(){
+                engine.chart.getInstanceByDom(document.getElementById(id)).resize();
             });
         });
 
