@@ -7,6 +7,7 @@ require.config({
         "bootstrap": "lib/bootstrap/js/bootstrap.min"
     },
     shim : {
+        "jquery-layout" : { "deps" :['jquery','jquery-ui'] },
         "bootstrap" : { "deps" :['jquery'] },
         "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] }
     }
