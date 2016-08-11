@@ -65,6 +65,34 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate'],fu
         var dataSourceTree = $.fn.zTree.init($("#dataSourceTree"),setting);
 
 
+        //删除
+        $("#deleteDB").click(function(){
+            var nodes = dataSourceTree.getSelectedNodes();
+            if(nodes.length != 1){
+                $("#isCheckModal").modal('toggle');
+            }else if(!nodes[0].dbUrl){
+                $("#onlyDBModal").modal('toggle');
+            }else{
+                $("#isDeleteModal").modal('toggle');
+            }
+        })
+
+        $("#isDeleteModal .btn-primary").click(function(){
+            var nodes = dataSourceTree.getSelectedNodes();
+            var deferred = $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '../connectionManage/delete',
+                data : 'id=' + nodes[0].id
+            });
+            $("#isDeleteModal").modal('toggle');
+            deferred.done(function(){
+                dataSourceTree.reAsyncChildNodes(null, "refresh");
+            })
+
+        });
+
+        //新增保存
         $("#addConnectionModal .btn-primary").click(function(){
             $('#addConnectionForm').submit();
         })
@@ -103,7 +131,6 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate'],fu
                 }
             },
             submitHandler : function(form) {
-                console.log($(form).serialize());
                 var deferred = $.ajax({
                     type: 'POST',
                     dataType: 'json',

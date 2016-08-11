@@ -111,8 +111,8 @@
                             <li>
                                 <a href="javascript: void(0);" data-toggle="modal" data-target="#addConnectionModal">新增连接</a>
                             </li>
-                            <li><a href="#">删除链接</a></li>
-                            <li><a href="#">SQL查询</a></li>
+                            <li><a href="javascript: void(0);" id="deleteDB" >删除连接</a></li>
+                            <li><a href="javascript: void(0);">SQL查询</a></li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
@@ -158,6 +158,61 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="isCheckModal" tabindex="-1" role="dialog" >
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" >提示</h4>
+                </div>
+                <div class="modal-body" style="text-align:center">
+                    <h5>请先选择一个节点</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="onlyDBModal" tabindex="-1" role="dialog" >
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" >提示</h4>
+                </div>
+                <div class="modal-body" style="text-align:center">
+                    <h5>只能选择数据库节点</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="isDeleteModal" tabindex="-1" role="dialog" >
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" >提示</h4>
+                </div>
+                <div class="modal-body" style="text-align:center">
+                    <h5>该操作将会删除数据库连接,请确认是否删除</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" >确认</button>
                 </div>
             </div>
         </div>
