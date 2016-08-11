@@ -14,6 +14,7 @@ public class ConnectionManage extends BaseModel {
     private String password;
     private String createTime;
     private String isParent;
+    private String queryParam;
 
     public String getId() {
         return id;
@@ -69,5 +70,13 @@ public class ConnectionManage extends BaseModel {
 
     public void setIsParent(String isParent) {
         this.isParent = isParent;
+    }
+
+    public String getQueryParam() {
+        return queryParam;
+    }
+
+    public void setQueryParam(String queryParam) {
+        this.queryParam = queryParam;
     }
 }
