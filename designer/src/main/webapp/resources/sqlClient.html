@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Setting cells and column properties</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <!-- Bootstrap Core CSS -->
+    <link href="js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="js/lib/bootstrap/css/bootstrap.vertical-tabs.css" rel="stylesheet">
+
+    <!-- Font Icons -->
+    <link href="js/lib/bootstrap/css/font-awesome.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        .scrollable {
+            overflow: scroll;
+        }
+        /*
+         * Customize borders and shading to suit this nested layout
+         */
+
+        .ui-layout-pane { /* all 'panes' */
+            padding: 10px;
+            background: #FFF;
+            border-top: 1px solid #BBB;
+            border-bottom: 1px solid #BBB;
+        }
+        .ui-layout-pane-north ,
+        .ui-layout-pane-south {
+            border: 1px solid #BBB;
+        }
+        .ui-layout-pane-west {
+            border-left: 1px solid #BBB;
+        }
+        .ui-layout-pane-east {
+            border-right: 1px solid #BBB;
+        }
+        .ui-layout-pane-center {
+            border-left: 0;
+            border-right: 0;
+        }
+        .inner-center {
+            border: 1px solid #BBB;
+        }
+
+        .outer-west ,
+        .outer-east {
+            background-color: #EEE;
+        }
+        .middle-west ,
+        .middle-east {
+            background-color: #F8F8F8;
+        }
+
+        .ui-layout-resizer { /* all 'resizer-bars' */
+            background: #DDD;
+        }
+        .ui-layout-resizer:hover { /* all 'resizer-bars' */
+            background: #FED;
+        }
+        .ui-layout-resizer-west {
+            border-left: 1px solid #BBB;
+        }
+        .ui-layout-resizer-east {
+            border-right: 1px solid #BBB;
+        }
+
+        .ui-layout-toggler { /* all 'toggler-buttons' */
+            background: #AAA;
+        }
+        .ui-layout-toggler:hover { /* all 'toggler-buttons' */
+            background: #FC3;
+        }
+
+        .outer-center ,
+        .middle-center {
+            /* center pane that are 'containers' for a nested layout */
+            padding: 0;
+            border: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="ui-layout-north">
+        <div>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">SQL在线查询</a>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#">新增连接</a></li>
+                            <li><a href="#">删除链接</a></li>
+                            <li><a href="#">SQL查询</a></li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        </div>
+    </div>
+    <div class="outer-center">
+        <div class="middle-center">
+            <div class="inner-center scrollable">Inner Center</div>
+            <div class="ui-layout-north scrollable">
+                <textarea name="sql" style="height: 100%;width: 100%;resize: none"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="outer-west">Outer West</div>
+    <script src="js/lib/require.js" defer async="true" data-main="js/app/sqlClient"></script>
+</body>
+</html>
