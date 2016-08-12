@@ -60,6 +60,11 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate'],fu
                     name: "dbName"
                 }
             }
+            callback: {
+                onAsyncError: function (event,treeId,treeNode,XMLHttpRequest,textStatus,errorThrown) {
+                    alert(1)
+                }
+            }
         };
 
         var dataSourceTree = $.fn.zTree.init($("#dataSourceTree"),setting);
@@ -76,7 +81,7 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate'],fu
                 $("#isDeleteModal").modal('toggle');
             }
         })
-
+        //确认删除
         $("#isDeleteModal .btn-primary").click(function(){
             var nodes = dataSourceTree.getSelectedNodes();
             var deferred = $.ajax({
