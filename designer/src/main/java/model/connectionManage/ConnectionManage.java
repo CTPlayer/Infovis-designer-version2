@@ -9,6 +9,8 @@ import common.model.TreeModel;
 public class ConnectionManage extends BaseModel {
     private String id;
     private String dbName;
+    private String dbHost;
+    private String dbPort;
     private String dbUrl;
     private String userName;
     private String password;
@@ -87,5 +89,21 @@ public class ConnectionManage extends BaseModel {
 
     public void setLv(String lv) {
         this.lv = lv;
+    }
+
+    public String getDbHost() {
+        return dbHost;
+    }
+
+    public void setDbHost(String dbHost) {
+        this.dbHost = dbHost;
+    }
+
+    public String getDbPort() {
+        return dbPort;
+    }
+
+    public void setDbPort(String dbPort) {
+        this.dbPort = dbPort;
     }
 }

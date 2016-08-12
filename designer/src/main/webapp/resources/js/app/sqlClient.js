@@ -6,7 +6,11 @@ require.config({
         "jquery-layout": "lib/jquery.layout.min",
         "bootstrap": "lib/bootstrap/js/bootstrap.min",
         "ztree": "lib/ztree/js/jquery.ztree.all.min",
-        "validate": "lib/jquery.validate.min"
+        "validate": "lib/jquery.validate.min",
+        "knockout": "lib/knockout/knockout-3.4.0",
+        "backbone": "lib/backbone/backbone-min",
+        "knockback": "lib/knockback.min",
+        "underscore": "lib/underscore/underscore-min"
     },
     shim : {
         "ztree" : { "deps" :['jquery'] },
@@ -17,7 +21,7 @@ require.config({
     }
 });
 
-require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate'],function($,bootstrap,jquery_ui,jquery_ayout,ztree,validate){
+require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','knockout','backbone','knockback'],function($,bootstrap,jquery_ui,jquery_ayout,ztree,validate,ko,bo,kb){
     $(function(){
         var outerLayout = $('body').layout({
             center__paneSelector:	".outer-center"
@@ -59,7 +63,7 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate'],fu
                 key: {
                     name: "dbName"
                 }
-            }
+            },
             callback: {
                 onAsyncError: function (event,treeId,treeNode,XMLHttpRequest,textStatus,errorThrown) {
                     alert(1)
@@ -108,11 +112,24 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate'],fu
             focusInvalid : true,
             ignore : "",
             rules : {
-                dburl : {
+                dbType : {
+                    required : true
+                },
+                dbHost : {
+                    required : true,
+                },
+                dbPort : {
+                    required : true,
+                },
+                dbName : {
                     required : true,
                     maxlength:300
                 },
-                username : {
+                dbUrl : {
+                    required : true,
+                    maxlength:300
+                },
+                userName : {
                     required : true,
                     maxlength:300
                 },
@@ -122,11 +139,24 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate'],fu
                 }
             },
             messages : {
-                dburl : {
+                dbType : {
+                    required : "数据库连接地址为必选项"
+                },
+                dbHost : {
+                    required : "数据库主机地址为必填项",
+                },
+                dbPort : {
+                    required : "数据库端口号为必填项",
+                },
+                dbName : {
+                    required : "数据库名称地址为必填项",
+                    maxlength: "最大长度为300个字符"
+                },
+                dbUrl : {
                     required : "数据库连接地址为必填项",
                     maxlength:"最大长度为300个字符"
                 },
-                username : {
+                userName : {
                     required : "数据库用户名为必填项",
                     maxlength:"最大长度为300个字符"
                 },
@@ -148,6 +178,32 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate'],fu
                     dataSourceTree.reAsyncChildNodes(null, "refresh");
                 })
             }
+        })
+
+        //打开模态框绑定数据
+        $('#addConnectionModal').on('show.bs.modal', function () {
+            ko.cleanNode($('#addConnectionModel')[0]);
+            var addConnectionModel = new Backbone.Model({dbType: "MySql",dbHost: "",dbPort: "",dbName: ""});
+            var addConnectionViewModel = function(model) {
+                this.dbType = kb.observable(model, 'dbType');
+                this.dbHost = kb.observable(model, 'dbHost');
+                this.dbPort = kb.observable(model, 'dbPort');
+                this.dbName = kb.observable(model, 'dbName');
+                this.dbUrl = ko.computed((function() {
+                    return buildUrl(this.dbType(),this.dbHost(),this.dbPort(),this.dbName());
+                }), this);
+            };
+            var buildUrl = function(dbType,dbHost,dbPort,dbName){
+                var UrlTemplate = {
+                    MySql:"jdbc:mysql://{dbHost}:{dbPort}/{dbName}",
+                    SqlServer:"jdbc:sqlserver://{dbHost}:{dbPort};databaseName={dbName}",
+                    Oracle:"jdbc:oracle:thin:@//{dbHost}:{dbPort}/{dbName}"
+                }
+                var template = UrlTemplate[dbType];
+                return template.replace(/{dbHost}/,dbHost).replace(/{dbPort}/,dbPort).replace(/{dbName}/,dbName);
+            }
+            var model = new addConnectionViewModel(addConnectionModel);
+            ko.applyBindings(model, $('#addConnectionModel')[0]);
         })
     });
 })
