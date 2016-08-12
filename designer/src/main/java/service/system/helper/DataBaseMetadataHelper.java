@@ -5,6 +5,7 @@ import core.plugin.spring.database.route.DynamicDataSource;
 import model.database.ColumnMetaData;
 import model.database.JdbcProps;
 import model.database.TableMetaData;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.JdbcUtils;
@@ -13,6 +14,7 @@ import java.sql.*;
 import java.util.*;
 
 /**
+ * 数据库元数据获取、动态查询sql辅助类
  * Created by gzy on 2016/8/11.
  */
 public class DataBaseMetadataHelper {
@@ -60,6 +62,13 @@ public class DataBaseMetadataHelper {
         JDBC_TYPE_MAP.put(Types.VARCHAR, "varchar");
     }
 
+    /**
+     * 获取数据源所有的表
+     * @param dynamicDataSource
+     * @param jdbcProps
+     * @return
+     * @throws Exception
+     */
     public static List<TableMetaData> getSchemaTables(DynamicDataSource dynamicDataSource, JdbcProps jdbcProps) throws Exception {
         Connection conn = null;
         ResultSet tRs = null;
@@ -119,6 +128,14 @@ public class DataBaseMetadataHelper {
         return typeName;
     }
 
+    /**
+     * 根据数据源和表获取表字段
+     * @param dynamicDataSource
+     * @param jdbcProps
+     * @param tableName
+     * @return
+     * @throws Exception
+     */
     public static List<ColumnMetaData> getSchemaTableColumns(DynamicDataSource dynamicDataSource, JdbcProps jdbcProps,String tableName) throws Exception {
         Connection conn = null;
         ResultSet cRs = null;
@@ -153,14 +170,54 @@ public class DataBaseMetadataHelper {
     }
 
     public static boolean isEffectiveDataSouce(DynamicDataSource dynamicDataSource,JdbcProps jdbcProps){
-        DruidDataSource druidDataSource = dynamicDataSource.createDataSource(jdbcProps.getUrl(),jdbcProps.getUsername(),jdbcProps.getPassword());
         Boolean isSuccessConnect = true;
-        try {
-            druidDataSource.getConnection();
-        } catch (SQLException e) {
-            isSuccessConnect = false;
-            L.error("获取数据库连接失败", e);
-        }
         return isSuccessConnect;
+    }
+
+    /**
+     * 根据数据源和sql执行sql并返回表头及数据
+     * @param dynamicDataSource
+     * @param jdbcProps
+     * @return
+     */
+    public static List<String[]> executeQuerySql(DynamicDataSource dynamicDataSource,JdbcProps jdbcProps){
+        Connection conn = null;
+        Statement st = null;
+        ResultSet cRs = null;
+        ResultSetMetaData rsmd = null;
+        List<String[]> datas = new ArrayList<>();
+        try {
+            dynamicDataSource.selectDataSource(jdbcProps.getUrl(), jdbcProps.getUsername(), jdbcProps.getPassword());
+            conn = dynamicDataSource.getConnection();
+            st = conn.createStatement();
+            String sql = jdbcProps.getSql();
+            if(StringUtils.isNotBlank(sql)){
+                int maxRows = jdbcProps.getQueryMaxRows();
+                if(maxRows > 0){
+                    st.setMaxRows(maxRows);
+                }
+                cRs = st.executeQuery(sql);
+                rsmd = cRs.getMetaData();
+                String[] columnNameDatas = new String[rsmd.getColumnCount()];
+                for( int i=1; i<=rsmd.getColumnCount(); i++ ){
+                    columnNameDatas[i-1] = rsmd.getColumnName(i);
+                }
+                datas.add(columnNameDatas);
+                while (cRs.next()){
+                    String[] columnCellDatas = new String[rsmd.getColumnCount()];
+                    for( int j=1; j<=rsmd.getColumnCount(); j++ ){
+                        columnCellDatas[j-1] = cRs.getString(j);
+                    }
+                    datas.add(columnCellDatas);
+                }
+            }
+        } catch (SQLException e) {
+            L.error("执行查询sql失败", e);
+        }finally {
+            JdbcUtils.closeResultSet(cRs);
+            JdbcUtils.closeStatement(st);
+            JdbcUtils.closeConnection(conn);
+        }
+        return datas;
     }
 }

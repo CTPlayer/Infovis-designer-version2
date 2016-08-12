@@ -70,7 +70,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         this.setTargetDataSources(this._targetDataSources);
     }
 
-    public DruidDataSource createDataSource(String url, String username, String password) {
+    private DruidDataSource createDataSource(String url, String username, String password) {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl(url);
         dataSource.setUsername(username);
@@ -83,7 +83,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         dataSource.setMinEvictableIdleTimeMillis(300000);
         dataSource.setValidationQuery("select 'x'");
         dataSource.setTestWhileIdle(true);
-        dataSource.setTestOnBorrow(false);
+        dataSource.setTestOnBorrow(true);
         dataSource.setTestOnReturn(false);
         dataSource.setPoolPreparedStatements(true);
         dataSource.setMaxPoolPreparedStatementPerConnectionSize(20);
