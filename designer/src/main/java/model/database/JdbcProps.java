@@ -19,6 +19,10 @@ public class JdbcProps {
 
     private String remarksReporting;//Oracle取出注释设置
 
+    private String sql;
+
+    private int queryMaxRows = 0;
+
     public String getDriverClassName() {
         return driverClassName;
     }
@@ -73,5 +77,21 @@ public class JdbcProps {
 
     public void setRemarksReporting(String remarksReporting) {
         this.remarksReporting = remarksReporting;
+    }
+
+    public String getSql() {
+        return sql;
+    }
+
+    public void setSql(String sql) {
+        this.sql = sql;
+    }
+
+    public int getQueryMaxRows() {
+        return queryMaxRows;
+    }
+
+    public void setQueryMaxRows(int queryMaxRows) {
+        this.queryMaxRows = queryMaxRows;
     }
 }
