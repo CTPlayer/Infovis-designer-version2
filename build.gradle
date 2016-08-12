@@ -138,6 +138,7 @@ project(":designer") {
                 "org.mybatis:mybatis:$mybatis",
                 "org.mybatis:mybatis-spring:$mybatisSpring",
                 "com.h2database:h2:$h2",
+                "mysql:mysql-connector-java:$mysql",
                 "com.alibaba:druid:$druid",
                 "jstl:jstl:$jstlib",
                 "taglibs:standard:$standard"
@@ -152,7 +153,9 @@ project(":designer") {
 project(":util") {
 
     dependencies {
-        compile "org.springframework:spring-web:$spring", 
+        compile "mysql:mysql-connector-java:$mysql",
+                "com.h2database:h2:$h2",
+                "org.springframework:spring-web:$spring",
                 "com.belerweb:pinyin4j:$pinyin4j",
                 "commons-codec:commons-codec:$codec",
                 "org.javassist:javassist:$javassist",

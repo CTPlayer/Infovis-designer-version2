@@ -7,6 +7,10 @@
     <delete id="delete" parameterType="ConnectionManage" databaseId="h2">
         delete from T_DB_CONNECTION where id=#{id}
     </delete>
+    <select id="queryAsObject" parameterType="ConnectionManage" resultType="ConnectionManage" databaseId="h2" >
+        SELECT ID,DBNAME,DBURL,USERNAME,PASSWORD,CREATETIME, 'true' as isParent, ID as queryParam FROM T_DB_CONNECTION
+        WHERE ID = #{id}
+    </select>
     <select id="query" parameterType="ConnectionManage" resultType="ConnectionManage" databaseId="h2" >
         SELECT ID,DBNAME,DBURL,USERNAME,PASSWORD,CREATETIME, 'true' as isParent, ID as queryParam FROM T_DB_CONNECTION
     </select>
