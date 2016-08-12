@@ -15,6 +15,7 @@ public class ConnectionManage extends BaseModel {
     private String createTime;
     private String isParent;
     private String queryParam;
+    private String lv;
 
     public String getId() {
         return id;
@@ -78,5 +79,13 @@ public class ConnectionManage extends BaseModel {
 
     public void setQueryParam(String queryParam) {
         this.queryParam = queryParam;
+    }
+
+    public String getLv() {
+        return lv;
+    }
+
+    public void setLv(String lv) {
+        this.lv = lv;
     }
 }

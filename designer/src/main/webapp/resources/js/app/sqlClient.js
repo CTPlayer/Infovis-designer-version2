@@ -52,7 +52,7 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate'],fu
         var setting = {
             async: {
                 enable: true,
-                url:"../connectionManage/query",
+                url:"../connectionManage/queryTree",
                 autoParam:["queryParam", "level=lv"]
             },
             data: {

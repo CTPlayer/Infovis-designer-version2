@@ -14,4 +14,6 @@ public interface ConnectionManageService {
     int delete(ConnectionManage connectionManage);
 
     List<ConnectionManage> query(ConnectionManage connectionManage);
+
+    ConnectionManage queryAsObject(ConnectionManage connectionManage);
 }

@@ -70,7 +70,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         this.setTargetDataSources(this._targetDataSources);
     }
 
-    private DruidDataSource createDataSource(String url, String username, String password) {
+    public DruidDataSource createDataSource(String url, String username, String password) {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl(url);
         dataSource.setUsername(username);
@@ -170,4 +170,30 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         return dataSource;
     }
 
+    /**
+     * <p>
+     *     根据URL,USERNAME,PASSWORD查询获取数据源
+     * 数据源存在时不做处理，不存在时创建新的数据源链接，并将新数据链接添加至缓存
+     */
+    public void selectDataSource(String url, String username, String password) {
+        if (StringUtils.isEmpty(url) || DEFAULT_DATA_SOURCE.equals(url)) {
+            DataSourceContextHolder.setDataSourceType(DEFAULT_DATA_SOURCE);
+            return;
+        }
+        Object obj = this._targetDataSources.get(url);
+        if (obj != null) {
+            DataSourceContextHolder.setDataSourceType(url);
+            return;
+        } else {
+            DruidDataSource dataSource = createDataSource(url, username, password);
+            if (null != dataSource) {
+                this.setDataSource(url, dataSource);
+            }
+        }
+    }
+
+    public DruidDataSource getDataSource(String url,String username,String password) {
+        DruidDataSource dataSource = this.createDataSource(url, username, password);
+        return dataSource;
+    }
 }

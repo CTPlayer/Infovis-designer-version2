@@ -39,4 +39,11 @@ public class ConnectionManageServiceImpl implements ConnectionManageService {
         connectionManage.setPaging(false);//不分页
         return connectionManageMapper.query(connectionManage);
     }
+
+    @Override
+    public ConnectionManage queryAsObject(ConnectionManage connectionManage) {
+        connectionManage.setPaging(false);//不分页
+        return connectionManageMapper.queryAsObject(connectionManage);
+    }
+
 }
