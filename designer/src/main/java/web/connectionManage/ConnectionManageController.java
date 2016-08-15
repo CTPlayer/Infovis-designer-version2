@@ -27,7 +27,7 @@ public class ConnectionManageController {
     private ConnectionManageService connectionManageService;
 
     @Resource
-    private DynamicDataSource dynamicDataSource;
+    private DataBaseMetadataHelper dataBaseMetadataHelper;
 
     @RequestMapping("/add")
     @ResponseBody
@@ -61,7 +61,7 @@ public class ConnectionManageController {
             jdbcProps.setUrl(connectionManage.getDbUrl());
             jdbcProps.setUsername(connectionManage.getUserName());
             jdbcProps.setPassword(connectionManage.getPassword());
-            List<TableMetaData> tableMetaDatas = DataBaseMetadataHelper.getSchemaTables(dynamicDataSource,jdbcProps);
+            List<TableMetaData> tableMetaDatas = dataBaseMetadataHelper.getSchemaTables(jdbcProps);
             for(TableMetaData tableMetaData : tableMetaDatas){
                 ConnectionManage treeNode = new ConnectionManage();
                 treeNode.setDbName(tableMetaData.getTableName());

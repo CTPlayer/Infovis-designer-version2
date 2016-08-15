@@ -76,4 +76,8 @@
     <aop:advisor pointcut-ref="serviceOperation" advice-ref="txAdvice" order="2" />
     <aop:advisor pointcut-ref="serviceOperation" advice-ref="dataSourceExchange" order="1" />
   </aop:config>
+
+  <bean id="dataBaseMetadataHelper" class="service.system.helper.DataBaseMetadataHelper">
+    <property name="dynamicDataSource" ref="dynamicDataSource" />
+  </bean>
 </beans>

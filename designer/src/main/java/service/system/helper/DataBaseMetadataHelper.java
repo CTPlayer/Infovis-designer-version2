@@ -29,6 +29,8 @@ public class DataBaseMetadataHelper {
 
     private static final Map<Integer, String> JDBC_TYPE_MAP = new HashMap<Integer, String>();
 
+    private DynamicDataSource dynamicDataSource;
+
     static {
         JDBC_TYPE_MAP.put(Types.ARRAY, "array");
         JDBC_TYPE_MAP.put(Types.BIGINT, "bigInt");
@@ -70,12 +72,11 @@ public class DataBaseMetadataHelper {
 
     /**
      * 获取数据源所有的表
-     * @param dynamicDataSource
      * @param jdbcProps
      * @return
      * @throws Exception
      */
-    public static List<TableMetaData> getSchemaTables(DynamicDataSource dynamicDataSource, JdbcProps jdbcProps) throws Exception {
+    public List<TableMetaData> getSchemaTables(JdbcProps jdbcProps) throws Exception {
         Connection conn = null;
         ResultSet tRs = null;
         List<TableMetaData> tableMetaDatas = new ArrayList<>();
@@ -136,13 +137,12 @@ public class DataBaseMetadataHelper {
 
     /**
      * 根据数据源和表获取表字段
-     * @param dynamicDataSource
      * @param jdbcProps
      * @param tableName
      * @return
      * @throws Exception
      */
-    public static List<ColumnMetaData> getSchemaTableColumns(DynamicDataSource dynamicDataSource, JdbcProps jdbcProps,String tableName) throws Exception {
+    public List<ColumnMetaData> getSchemaTableColumns(JdbcProps jdbcProps,String tableName) throws Exception {
         Connection conn = null;
         ResultSet cRs = null;
         List<ColumnMetaData> columnMetaDatas = new ArrayList<>();
@@ -177,11 +177,10 @@ public class DataBaseMetadataHelper {
 
     /**
      * 判断当前连接是否有效
-     * @param dynamicDataSource
      * @param jdbcProps
      * @return
      */
-    public static boolean isEffectiveDataSouce(DynamicDataSource dynamicDataSource,JdbcProps jdbcProps){
+    public boolean isEffectiveDataSouce(JdbcProps jdbcProps){
         Boolean isSuccessConnect = true;
         try {
             new Socket(jdbcProps.getDbHost(),Integer.parseInt(jdbcProps.getDbPort()));
@@ -202,11 +201,10 @@ public class DataBaseMetadataHelper {
 
     /**
      * 根据数据源和sql执行sql并返回表头及数据
-     * @param dynamicDataSource
      * @param jdbcProps
      * @return
      */
-    public static List<String[]> executeQuerySql(DynamicDataSource dynamicDataSource,JdbcProps jdbcProps){
+    public List<String[]> executeQuerySql(JdbcProps jdbcProps){
         Connection conn = null;
         Statement st = null;
         ResultSet cRs = null;
@@ -245,5 +243,9 @@ public class DataBaseMetadataHelper {
             JdbcUtils.closeConnection(conn);
         }
         return datas;
+    }
+
+    public void setDynamicDataSource(DynamicDataSource dynamicDataSource) {
+        this.dynamicDataSource = dynamicDataSource;
     }
 }
