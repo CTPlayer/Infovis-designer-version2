@@ -74,4 +74,17 @@ public class ConnectionManageController {
         }
         return treeNodes;
     }
+
+    @RequestMapping("/executeQuerySql")
+    @ResponseBody
+    public Object executeQuerySql(ConnectionManage connectionManage) throws Exception {
+        JdbcProps jdbcProps = new JdbcProps();
+        jdbcProps.setSql(connectionManage.getSql());
+        jdbcProps.setQueryMaxRows(connectionManage.getQueryMaxRows());
+        connectionManage = connectionManageService.queryAsObject(connectionManage);
+        jdbcProps.setUrl(connectionManage.getDbUrl());
+        jdbcProps.setUsername(connectionManage.getUserName());
+        jdbcProps.setPassword(connectionManage.getPassword());
+        return dataBaseMetadataHelper.executeQuerySql(jdbcProps);
+    }
 }

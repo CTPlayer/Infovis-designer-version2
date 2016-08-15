@@ -86,6 +86,33 @@
         .warning-block{
             color : #d16e6c;
         }
+
+
+        table.gridtable {
+            font-family: verdana,arial,sans-serif;
+            font-size:11px;
+            color:#333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+        }
+        table.gridtable th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+        table.gridtable td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+
+        .ztree li span.button.dbIcon_ico_open, .ztree li span.button.dbIcon_ico_close{margin-right:2px; background: url(img/database.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+        .ztree li span.button.tableIcon_ico_docu{margin-right:2px; background: url(img/table.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
     </style>
     <script src="js/lib/require.js" defer async="true" data-main="js/app/sqlClient"></script>
 </head>
@@ -112,7 +139,7 @@
                                 <a href="javascript: void(0);" data-toggle="modal" data-target="#addConnectionModal">新增连接</a>
                             </li>
                             <li><a href="javascript: void(0);" id="deleteDB" >删除连接</a></li>
-                            <li><a href="javascript: void(0);">SQL查询</a></li>
+                            <li><a href="javascript: void(0);" id="executeQuerySql">SQL查询</a></li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
@@ -121,9 +148,9 @@
     </div>
     <div class="outer-center">
         <div class="middle-center">
-            <div class="inner-center scrollable">Inner Center</div>
+            <div class="inner-center scrollable" id="resultArea"></div>
             <div class="ui-layout-north scrollable">
-                <textarea name="sql" style="height: 100%;width: 100%;resize: none"></textarea>
+                <textarea id='executeSql' name="sql" style="height: 100%;width: 100%;resize: none"></textarea>
             </div>
         </div>
     </div>
@@ -228,6 +255,24 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" >确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="isCheckDataSourceModal" tabindex="-1" role="dialog" >
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" >提示</h4>
+                </div>
+                <div class="modal-body" style="text-align:center">
+                    <h5>请先选择一个数据源</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
             </div>
         </div>

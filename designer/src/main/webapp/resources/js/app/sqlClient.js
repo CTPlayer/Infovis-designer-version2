@@ -57,7 +57,19 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
             async: {
                 enable: true,
                 url:"../connectionManage/queryTree",
-                autoParam:["queryParam", "level=lv"]
+                autoParam:["queryParam", "level=lv"],
+                dataType: "JSON",
+                dataFilter: function(treeId, parentNode, responseData) {
+                    //批量增加iconSkin
+                    $.each(responseData,function(index,object){
+                        if(object.dbUrl){
+                            object.iconSkin = "dbIcon";
+                        }else{
+                            object.iconSkin = "tableIcon";
+                        }
+                    });
+                    return responseData;
+                }
             },
             data: {
                 key: {
@@ -66,7 +78,22 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
             },
             callback: {
                 onAsyncError: function (event,treeId,treeNode,XMLHttpRequest,textStatus,errorThrown) {
-                    alert(1)
+                    //记录旧的节点名称以免重复增加无法连接
+                    if(!treeNode.oldDbName){
+                        treeNode.oldDbName = treeNode.dbName;
+                    }
+                    treeNode.dbName = treeNode.oldDbName +"(无法连接)"
+                    dataSourceTree.updateNode(treeNode);
+                },
+                onClick: function(event, treeId, treeNode) {
+                    if(!treeNode.isParent){
+                        var sql = $("#executeSql").val();
+                        if(sql === ''){
+                            $("#executeSql").val("select * from " + treeNode.dbName);
+                        }else{
+                            $("#executeSql").val(sql + " " + treeNode.dbName);
+                        }
+                    }
                 }
             }
         };
@@ -177,6 +204,51 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
                     $("#addConnectionModal").modal('toggle');
                     dataSourceTree.reAsyncChildNodes(null, "refresh");
                 })
+            }
+        })
+
+        $("#executeQuerySql").click(function(){
+            var nodes = dataSourceTree.getSelectedNodes();
+            var queryParam = {};
+
+            if(nodes.length != 1){
+                $("#isCheckDataSourceModal").modal('toggle');
+            }else{
+                queryParam.sql = $("#executeSql").val();
+                queryParam.queryMaxRows = 30;
+                if(nodes[0].dbUrl){
+                    queryParam.id = nodes[0].id;
+                }else{
+                    queryParam.id = nodes[0].getParentNode().id
+                }
+
+                var deferred = $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '../connectionManage/executeQuerySql',
+                    data : queryParam
+                });
+                deferred.done(function(result){
+                    $("#resultArea").empty();
+                    $("#resultArea").append("<table class='gridtable'></table>");
+                    $.each(result,function(RowIndex,row){
+                        var tr=$("<tr></tr>");
+                        $.each(row,function(colIndex,col){
+                            if(RowIndex == 0){
+                                tr.append("<th>"+ htmlEncode(col) +"</th>")
+                            }else {
+                                tr.append("<td>" + htmlEncode(col) + "</td>")
+                            }
+                        })
+                        $("#resultArea table").append(tr)
+                    });
+                })
+
+                function htmlEncode(str) {
+                    var div = document.createElement("div");
+                    div.appendChild(document.createTextNode(str));
+                    return div.innerHTML;
+                }
             }
         })
 

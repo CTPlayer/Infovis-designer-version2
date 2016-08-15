@@ -18,6 +18,8 @@ public class ConnectionManage extends BaseModel {
     private String isParent;
     private String queryParam;
     private String lv;
+    private String sql;
+    private int queryMaxRows;
 
     public String getId() {
         return id;
@@ -105,5 +107,21 @@ public class ConnectionManage extends BaseModel {
 
     public void setDbPort(String dbPort) {
         this.dbPort = dbPort;
+    }
+
+    public String getSql() {
+        return sql;
+    }
+
+    public void setSql(String sql) {
+        this.sql = sql;
+    }
+
+    public int getQueryMaxRows() {
+        return queryMaxRows;
+    }
+
+    public void setQueryMaxRows(int queryMaxRows) {
+        this.queryMaxRows = queryMaxRows;
     }
 }
