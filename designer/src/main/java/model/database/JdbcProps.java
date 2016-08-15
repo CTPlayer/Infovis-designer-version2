@@ -25,7 +25,7 @@ public class JdbcProps {
 
     private String sql;
 
-    private int queryMaxRows = 0;
+    private int queryMaxRows = 30;
 
     public String getDriverClassName() {
         return driverClassName;

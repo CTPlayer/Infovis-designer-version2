@@ -32,6 +32,10 @@ public class DataBaseMetadataHelper {
 
     private static final Map<Integer, String> JDBC_TYPE_MAP = new HashMap<Integer, String>();
 
+    private final static String SQL_SELECT_REGEX = "(?is)^\\s*SELECT.*$";
+
+    private final static String SQL_COUNT_REGEX = "(?is)^\\s*SELECT\\s+COUNT\\s*\\(\\s*(?:\\*|\\w+)\\s*\\).*$";
+
     @Resource
     private DynamicDataSource dynamicDataSource;
 
@@ -219,7 +223,8 @@ public class DataBaseMetadataHelper {
             conn = dynamicDataSource.getConnection();
             st = conn.createStatement();
             String sql = jdbcProps.getSql();
-            if(StringUtils.isNotBlank(sql)){
+            //sql不为空，并且为查询语句或count语句
+            if(StringUtils.isNotBlank(sql) && (sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX))){
                 int maxRows = jdbcProps.getQueryMaxRows();
                 if(maxRows > 0){
                     st.setMaxRows(maxRows);
