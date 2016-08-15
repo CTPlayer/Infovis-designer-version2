@@ -13,6 +13,10 @@ public class JdbcProps {
 
     private String password;
 
+    private String dbHost;
+
+    private String dbPort;
+
     private String remarks;//设置可以获取remarks信息
 
     private String useInformationSchema;// 设置可以获取tables remarks信息
@@ -93,5 +97,21 @@ public class JdbcProps {
 
     public void setQueryMaxRows(int queryMaxRows) {
         this.queryMaxRows = queryMaxRows;
+    }
+
+    public String getDbHost() {
+        return dbHost;
+    }
+
+    public void setDbHost(String dbHost) {
+        this.dbHost = dbHost;
+    }
+
+    public String getDbPort() {
+        return dbPort;
+    }
+
+    public void setDbPort(String dbPort) {
+        this.dbPort = dbPort;
     }
 }

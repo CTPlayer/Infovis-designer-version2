@@ -10,8 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.JdbcUtils;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 数据库元数据获取、动态查询sql辅助类
@@ -77,7 +83,7 @@ public class DataBaseMetadataHelper {
             dynamicDataSource.selectDataSource(jdbcProps.getUrl(), jdbcProps.getUsername(), jdbcProps.getPassword());
             conn = dynamicDataSource.getConnection();
             DatabaseMetaData metaData = conn.getMetaData();
-            String[] tableTypes = {"TABLE"};
+            String[] tableTypes = {"TABLE","VIEW"};
 
             tRs = metaData.getTables(null, "%", null, tableTypes);
             while (tRs.next()) {
@@ -169,8 +175,28 @@ public class DataBaseMetadataHelper {
         return columnMetaDatas;
     }
 
+    /**
+     * 判断当前连接是否有效
+     * @param dynamicDataSource
+     * @param jdbcProps
+     * @return
+     */
     public static boolean isEffectiveDataSouce(DynamicDataSource dynamicDataSource,JdbcProps jdbcProps){
         Boolean isSuccessConnect = true;
+        try {
+            new Socket(jdbcProps.getDbHost(),Integer.parseInt(jdbcProps.getDbPort()));
+            DruidDataSource druidDataSource = dynamicDataSource.createDataSource(jdbcProps.getUrl(),jdbcProps.getUsername(),jdbcProps.getPassword());
+            druidDataSource.getConnection();
+        } catch (SQLException e) {
+            isSuccessConnect = false;
+            L.info("获取数据库连接失败");
+        } catch (UnknownHostException e) {
+            isSuccessConnect = false;
+            L.info("未知的端口");
+        } catch (IOException e) {
+            isSuccessConnect = false;
+            L.info("Socket连接失败");
+        }
         return isSuccessConnect;
     }
 

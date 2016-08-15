@@ -11,6 +11,7 @@ import service.connectionManage.ConnectionManageService;
 import service.system.helper.DataBaseMetadataHelper;
 
 import javax.annotation.Resource;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -48,12 +49,14 @@ public class ConnectionManageController {
 
     @RequestMapping("/queryTree")
     @ResponseBody
+    @SuppressWarnings("unchecked")
     public Object queryTree(ConnectionManage connectionManage) throws Exception {
         String lv = connectionManage.getLv();
         List<ConnectionManage> treeNodes = new ArrayList();
         if("0".equals(lv)){
             connectionManage.setId(connectionManage.getQueryParam());
             connectionManage = connectionManageService.queryAsObject(connectionManage);
+            new Socket(connectionManage.getDbHost(),Integer.parseInt(connectionManage.getDbPort()));
             JdbcProps jdbcProps = new JdbcProps();
             jdbcProps.setUrl(connectionManage.getDbUrl());
             jdbcProps.setUsername(connectionManage.getUserName());

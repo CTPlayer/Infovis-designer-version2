@@ -70,7 +70,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         this.setTargetDataSources(this._targetDataSources);
     }
 
-    private DruidDataSource createDataSource(String url, String username, String password) {
+    public DruidDataSource createDataSource(String url, String username, String password) {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl(url);
         dataSource.setUsername(username);
