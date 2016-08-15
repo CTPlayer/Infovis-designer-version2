@@ -69,8 +69,8 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 var node = {
                     x: pagex,
                     y: pagey,
-                    width: 3,
-                    height: 3
+                    width: 4,
+                    height: 4
                 };
                 var nWidget = grid.add_widget($('<div>'+
                     '<div class="grid-stack-item-content"'+'order="'+order+'" id="'+order+'">'+
@@ -167,8 +167,15 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 container.find('a').eq(1).click(function(){
                     var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
                     currentIndex = $(this).parent().parent().parent().attr("order");
-                    $("#optionPanel").html(formatData.tableAndConfig());
-                    ko.applyBindings(appViewModel.bindTableAndConfig(instance.getOption(),engine),$("#optionPanel").children()[1]);  //开启双向绑定监听
+                    var type = instance.getOption().series[0].type;
+
+                    if(type == "bar" || type == "line"){
+                        $("#optionPanel").html(formatData.tableAndConfig());
+                        ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(),engine),$("#optionPanel").children()[1]);  //开启双向绑定监听
+                    }else if(type == "pie"){
+                        $("#optionPanel").html(formatData.tableAndConfig());
+                        ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(),engine),$("#optionPanel").children()[1]);  //开启双向绑定监听
+                    }
                 });
 
             });
