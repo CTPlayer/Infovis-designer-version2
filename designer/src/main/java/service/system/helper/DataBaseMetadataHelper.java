@@ -9,7 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -23,12 +25,14 @@ import java.util.Map;
  * 数据库元数据获取、动态查询sql辅助类
  * Created by gzy on 2016/8/11.
  */
+@Component
 public class DataBaseMetadataHelper {
 
     private static final Logger L = LoggerFactory.getLogger(DataBaseMetadataHelper.class);
 
     private static final Map<Integer, String> JDBC_TYPE_MAP = new HashMap<Integer, String>();
 
+    @Resource
     private DynamicDataSource dynamicDataSource;
 
     static {
@@ -243,9 +247,5 @@ public class DataBaseMetadataHelper {
             JdbcUtils.closeConnection(conn);
         }
         return datas;
-    }
-
-    public void setDynamicDataSource(DynamicDataSource dynamicDataSource) {
-        this.dynamicDataSource = dynamicDataSource;
     }
 }
