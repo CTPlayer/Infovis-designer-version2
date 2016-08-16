@@ -14,8 +14,20 @@ public class SqlUtil {
 
     public static String getQuerySqlByDialet(String url,String originalSql,RowBounds rowBounds){
         String dbType = getDbTypeByUrl(url);
+        Dialect dialect = getDialetByDbType(dbType);
+        String sql = dialect.getSqlWithPagination(originalSql,rowBounds);
+        return sql;
+    }
+
+    public static String getCountSqlByDialet(String url,String originalSql){
+        String dbType = getDbTypeByUrl(url);
+        Dialect dialect = getDialetByDbType(dbType);
+        String sql = dialect.getSqlWithCount(originalSql);
+        return sql;
+    }
+
+    private static Dialect getDialetByDbType(String dbType){
         Dialect dialect = null;
-        String sql = "";
         if(StringUtils.isNotBlank(dbType)){
             if (StringUtils.equalsIgnoreCase("ORACLE", dbType)) {
                 dialect = new OracleDialect();
@@ -26,9 +38,8 @@ public class SqlUtil {
             } else {
                 throw new RuntimeException("A404: Not Support ['" + dbType + "'] Pagination Yet!");
             }
-            sql = dialect.getSqlWithPagination(originalSql,rowBounds);
         }
-        return sql;
+        return dialect;
     }
 
     private static String getDbTypeByUrl(String url){

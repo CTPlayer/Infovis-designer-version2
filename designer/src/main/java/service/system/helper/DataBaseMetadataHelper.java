@@ -210,6 +210,21 @@ public class DataBaseMetadataHelper {
         return isSuccessConnect;
     }
 
+
+    private long executeCountSql(Connection conn,String countSql) throws Exception{
+        long count = 0;
+        Statement st = null;
+        st = conn.createStatement();
+        ResultSet cRs = null;
+        if(StringUtils.isNotBlank(countSql)){
+            cRs = st.executeQuery(countSql);
+            count = cRs.getLong(1);
+        }
+        JdbcUtils.closeResultSet(cRs);
+        JdbcUtils.closeStatement(st);
+        return count;
+    }
+
     /**
      * 根据数据源和sql执行sql并返回表头及数据
      * @param jdbcProps
@@ -234,6 +249,8 @@ public class DataBaseMetadataHelper {
                 }else if(jdbcProps.isPaging()){//分页
                     RowBounds rowBounds = getRowBounds(jdbcProps);
                     sql = SqlUtil.getQuerySqlByDialet(jdbcProps.getUrl(),sql,rowBounds);
+                    long totalCount = executeCountSql(conn,SqlUtil.getCountSqlByDialet(jdbcProps.getUrl(),sql));
+                    jdbcProps.setTotalCount(totalCount);
                 }
                 cRs = st.executeQuery(sql);
                 rsmd = cRs.getMetaData();
@@ -242,16 +259,13 @@ public class DataBaseMetadataHelper {
                     columnNameDatas[i-1] = rsmd.getColumnName(i);
                 }
                 datas.add(columnNameDatas);
-                long totalCount = 0;
                 while (cRs.next()){
                     String[] columnCellDatas = new String[rsmd.getColumnCount()];
                     for( int j=1; j<=rsmd.getColumnCount(); j++ ){
                         columnCellDatas[j-1] = cRs.getString(j);
                     }
                     datas.add(columnCellDatas);
-                    totalCount ++;
                 }
-                jdbcProps.setTotalCount(totalCount);
             }else{
                 throw new RuntimeException("query sql must be select statement!");
             }
