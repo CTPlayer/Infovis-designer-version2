@@ -211,6 +211,13 @@ public class DataBaseMetadataHelper {
     }
 
 
+    /**
+     * 查询结果总数
+     * @param conn
+     * @param countSql
+     * @return
+     * @throws Exception
+     */
     private long executeCountSql(Connection conn,String countSql) throws Exception{
         long count = 0;
         Statement st = null;
