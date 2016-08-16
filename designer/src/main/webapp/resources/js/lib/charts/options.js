@@ -17,7 +17,7 @@ define(function(){
                                 title: {
                                     text: "各类型服装销量",
                                     subtext : "数据纯属虚构",
-                                    left: "center"
+                                    left: "left"
                                 },
                                 tooltip: {
                                     textStyle: {
@@ -26,7 +26,7 @@ define(function(){
                                 },
                                 legend: {
                                     data: ['销量'],
-                                    left: "100",
+                                    left: "180",
                                     top: "30",
                                     itemGap:10
                                 },
@@ -34,6 +34,13 @@ define(function(){
                                     feature: {
                                         saveAsImage: {}
                                     }
+                                },
+                                grid: {
+                                    left: '3%',
+                                    right: '4%',
+                                    bottom: '3%',
+                                    top: '20%',
+                                    containLabel: true
                                 },
                                 xAxis: [{
                                     data: ['衬衫','羊毛衫','雪纺衫','裤子','高跟鞋','袜子']
@@ -76,6 +83,7 @@ define(function(){
                                     left: '3%',
                                     right: '4%',
                                     bottom: '3%',
+                                    top: '20%',
                                     containLabel: true
                                 },
                                 xAxis : [
@@ -175,7 +183,7 @@ define(function(){
                                 title: {
                                     text: '世界人口总量',
                                     subtext: '数据来自网络',
-                                    left: "center"
+                                    left: "left"
                                 },
                                 tooltip: {
                                     trigger: 'axis',
@@ -195,6 +203,7 @@ define(function(){
                                     left: '3%',
                                     right: '4%',
                                     bottom: '3%',
+                                    top: '20%',
                                     containLabel: true
                                 },
                                 xAxis: [{
@@ -237,8 +246,7 @@ define(function(){
                                 id: "line01",
                                 backgroundColor: "white",
                                 title: {
-                                    text: '折线图堆叠',
-                                    left: "center"
+                                    left: "left"
                                 },
                                 tooltip: {
                                     trigger: 'axis'
@@ -250,6 +258,7 @@ define(function(){
                                     left: '3%',
                                     right: '4%',
                                     bottom: '3%',
+                                    top: '20%',
                                     containLabel: true
                                 },
                                 toolbox: {
@@ -352,8 +361,7 @@ define(function(){
                                 id: "line02",
                                 backgroundColor: "white",
                                 title: {
-                                    text: '堆叠区域图',
-                                    left: "center"
+                                    left: "left"
                                 },
                                 tooltip : {
                                     trigger: 'axis'
@@ -370,6 +378,7 @@ define(function(){
                                     left: '3%',
                                     right: '4%',
                                     bottom: '3%',
+                                    top: '20%',
                                     containLabel: true
                                 },
                                 xAxis : [
@@ -482,8 +491,7 @@ define(function(){
                                 id: "line03",
                                 backgroundColor: "white",
                                 title: {
-                                    text: '高度/气温变化图',
-                                    left: "center"
+                                    left: "left"
                                 },
                                 legend: {
                                     data:['高度(km)与气温(°C)变化关系']
@@ -496,6 +504,7 @@ define(function(){
                                     left: '3%',
                                     right: '4%',
                                     bottom: '3%',
+                                    top: '20%',
                                     containLabel: true
                                 },
                                 toolbox: {
