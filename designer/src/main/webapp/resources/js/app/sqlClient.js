@@ -14,14 +14,48 @@ require.config({
     },
     shim : {
         "ztree" : { "deps" :['jquery'] },
+        "codemirror_sql" : { "deps" :['codemirror'] },
         "jquery-ui" : { "deps" :['jquery'] },
         "jquery-layout" : { "deps" :['jquery','jquery-ui'] },
         "bootstrap" : { "deps" :['jquery'] },
         "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] }
-    }
+    },
+    packages: [{
+        name: "codemirror",
+        location: "lib/cm",
+        main: "lib/codemirror"
+    }]
 });
 
-require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','knockout','backbone','knockback'],function($,bootstrap,jquery_ui,jquery_ayout,ztree,validate,ko,bo,kb){
+require([
+    "jquery",
+    "codemirror",
+    "codemirror/mode/sql/sql",
+    "codemirror/addon/hint/show-hint",
+    "codemirror/addon/hint/sql-hint",
+    "codemirror/addon/mode/loadmode"
+    ],function ($,codemirror) {
+    $(function() {
+        var editor = codemirror.fromTextArea($("#executeSql")[0], {
+            mode: 'text/x-sql',
+            indentWithTabs: true,
+            smartIndent: true,
+            lineNumbers: true,
+            matchBrackets: true,
+            autofocus: true,
+            extraKeys: {"Ctrl-Space": "autocomplete"},
+            hintOptions: {
+                tables: {
+                    users: {name: null, score: null, birthDate: null},
+                    countries: {name: null, population: null, size: null}
+                }
+            }
+        });
+    });
+})
+
+require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','knockout','backbone','knockback'],
+    function($,bootstrap,jquery_ui,jquery_ayout,ztree,validate,ko,bo,kb){
     $(function(){
         var outerLayout = $('body').layout({
             center__paneSelector:	".outer-center"
@@ -47,7 +81,7 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
 
         var innerLayout = $('div.middle-center').layout({
             center__paneSelector:	".inner-center"
-            ,	north__size:		    200
+            ,	north__size:		    240
             ,	spacing_open:			8  // ALL panes
             ,	spacing_closed:			8  // ALL panes
             ,	north__spacing_closed:	12
@@ -87,11 +121,13 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
                 },
                 onClick: function(event, treeId, treeNode) {
                     if(!treeNode.isParent){
-                        var sql = $("#executeSql").val();
+                        var editor = $('.CodeMirror')[0].CodeMirror;
+                        var sql = editor.getDoc().getValue();
                         if(sql === ''){
-                            $("#executeSql").val("select * from " + treeNode.dbName);
+                            editor.replaceSelection("select * from " + treeNode.dbName);
                         }else{
-                            $("#executeSql").val(sql + " " + treeNode.dbName);
+                            editor.replaceSelection(" " + treeNode.dbName);
+                            //editor.getDoc().setValue(sql + " " + treeNode.dbName);
                         }
                     }
                 }
@@ -207,14 +243,19 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
             }
         })
 
-        $("#executeQuerySql").click(function(){
+        $("#executeQuerySql,#executeSelectSql").click(function(e){
             var nodes = dataSourceTree.getSelectedNodes();
             var queryParam = {};
 
             if(nodes.length != 1){
                 $("#isCheckDataSourceModal").modal('toggle');
             }else{
-                queryParam.sql = $("#executeSql").val();
+                var editor = $('.CodeMirror')[0].CodeMirror;
+                if($(e.currentTarget).attr("id") === "executeQuerySql") {
+                    queryParam.sql = editor.getDoc().getValue();
+                }else{
+                    queryParam.sql = editor.getDoc().getSelection();
+                }
                 queryParam.queryMaxRows = 30;
                 if(nodes[0].dbUrl){
                     queryParam.id = nodes[0].id;
@@ -244,6 +285,10 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
                     });
                 })
 
+                deferred.fail(function(result){
+                    $("#resultArea").empty();
+                    $("#resultArea").append(result.responseText)
+                })
                 function htmlEncode(str) {
                     var div = document.createElement("div");
                     div.appendChild(document.createTextNode(str));

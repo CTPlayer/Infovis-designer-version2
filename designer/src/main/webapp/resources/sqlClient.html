@@ -16,9 +16,17 @@
     <![endif]-->
     <!--ztree-->
     <link href="js/lib/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+    <!--CodeMirror-->
+    <link href="js/lib/codemirror/lib/codemirror.css" rel="stylesheet">
+
     <style type="text/css">
         .scrollable {
             overflow: scroll;
+        }
+
+        .CodeMirror {
+            border: 1px solid #eee;
+            height: 170px;
         }
         /*
          * Customize borders and shading to suit this nested layout
@@ -139,7 +147,6 @@
                                 <a href="javascript: void(0);" data-toggle="modal" data-target="#addConnectionModal">新增连接</a>
                             </li>
                             <li><a href="javascript: void(0);" id="deleteDB" >删除连接</a></li>
-                            <li><a href="javascript: void(0);" id="executeQuerySql">SQL查询</a></li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
@@ -150,7 +157,21 @@
         <div class="middle-center">
             <div class="inner-center scrollable" id="resultArea"></div>
             <div class="ui-layout-north scrollable">
-                <textarea id='executeSql' name="sql" style="height: 100%;width: 100%;resize: none"></textarea>
+                <div class="btn-group" role="group">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success " id="executeQuerySql">查询SQL</button>
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript: void(0);" id="executeSelectSql">查询选中的SQL</a></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="formattSelectSql">格式化选中的SQL</button>
+                </div>
+                <div style="margin-top: 5px"></div>
+                <textarea id='executeSql' name="sql" style="height: 100%;width: 100%;resize: none;"></textarea>
             </div>
         </div>
     </div>
