@@ -1,5 +1,7 @@
 package web.connectionManage;
 
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.util.JdbcConstants;
 import core.plugin.spring.database.route.DynamicDataSource;
 import model.connectionManage.ConnectionManage;
 import model.database.JdbcProps;
@@ -86,5 +88,26 @@ public class ConnectionManageController {
         jdbcProps.setUsername(connectionManage.getUserName());
         jdbcProps.setPassword(connectionManage.getPassword());
         return dataBaseMetadataHelper.executeQuerySql(jdbcProps);
+    }
+
+    @RequestMapping("/formatSql")
+    @ResponseBody
+    public static String formatSql(ConnectionManage connectionManage) throws Exception {
+        String dbType = "";
+        switch (connectionManage.getDbType()) {
+            case "MySql":
+                dbType = JdbcConstants.MYSQL;
+                break;
+            case "SqlServer":
+                dbType = JdbcConstants.SQL_SERVER;
+                break;
+            case "Oracle":
+                dbType = JdbcConstants.ORACLE;
+                break;
+            default:
+                dbType = JdbcConstants.MYSQL;
+                break;
+        }
+        return SQLUtils.format(connectionManage.getSql(),dbType);
     }
 }

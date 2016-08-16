@@ -8,6 +8,7 @@ import common.model.TreeModel;
  */
 public class ConnectionManage extends BaseModel {
     private String id;
+    private String dbType;
     private String dbName;
     private String dbHost;
     private String dbPort;
@@ -123,5 +124,13 @@ public class ConnectionManage extends BaseModel {
 
     public void setQueryMaxRows(int queryMaxRows) {
         this.queryMaxRows = queryMaxRows;
+    }
+
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
     }
 }

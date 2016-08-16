@@ -127,7 +127,6 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
                             editor.replaceSelection("select * from " + treeNode.dbName);
                         }else{
                             editor.replaceSelection(" " + treeNode.dbName);
-                            //editor.getDoc().setValue(sql + " " + treeNode.dbName);
                         }
                     }
                 }
@@ -243,7 +242,7 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
             }
         })
 
-        $("#executeQuerySql,#executeSelectSql").click(function(e){
+        $("#executeQuerySql").click(function(e){
             var nodes = dataSourceTree.getSelectedNodes();
             var queryParam = {};
 
@@ -251,7 +250,7 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
                 $("#isCheckDataSourceModal").modal('toggle');
             }else{
                 var editor = $('.CodeMirror')[0].CodeMirror;
-                if($(e.currentTarget).attr("id") === "executeQuerySql") {
+                if(editor.getDoc().getSelection() === "") {
                     queryParam.sql = editor.getDoc().getValue();
                 }else{
                     queryParam.sql = editor.getDoc().getSelection();
@@ -294,6 +293,40 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
                     div.appendChild(document.createTextNode(str));
                     return div.innerHTML;
                 }
+            }
+        })
+
+        //格式化sql
+        $("#formattSelectSql").click(function() {
+            var editor = $('.CodeMirror')[0].CodeMirror;
+            var nodes = dataSourceTree.getSelectedNodes();
+            var queryParam = {sql: "", dbType: ""};
+            var isSelection = false;
+            if(nodes.length != 1){
+                $("#isCheckDataSourceModal").modal('toggle');
+            }else {
+                //如果没有选中则格式化全部
+                if (editor.getDoc().getSelection() === "") {
+                    queryParam.sql = editor.getDoc().getValue();
+                } else {
+                    queryParam.sql = editor.getDoc().getSelection();
+                    isSelection = true;
+                }
+                queryParam.dbType = nodes[0].dbType;
+                var formatSelectSqlDeferred = $.ajax({
+                    type: 'POST',
+                    dataType: 'text',
+                    url: '../connectionManage/formatSql',
+                    data: queryParam
+                });
+
+                formatSelectSqlDeferred.done(function(result){
+                    if(isSelection) {
+                        editor.replaceSelection(result);
+                    }else{
+                        editor.getDoc().setValue(result);
+                    }
+                });
             }
         })
 
