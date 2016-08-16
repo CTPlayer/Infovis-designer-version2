@@ -255,6 +255,7 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
                 }else{
                     queryParam.sql = editor.getDoc().getSelection();
                 }
+                queryParam.paging = false;
                 //去除换行符
                 queryParam.sql = queryParam.sql.replace(/[\r\n]/g,' ');
                 queryParam.queryMaxRows = 30;

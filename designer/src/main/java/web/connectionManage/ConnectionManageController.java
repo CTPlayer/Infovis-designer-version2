@@ -80,6 +80,7 @@ public class ConnectionManageController {
     public Object executeQuerySql(ConnectionManage connectionManage) throws Exception {
         JdbcProps jdbcProps = new JdbcProps();
         jdbcProps.setSql(connectionManage.getSql());
+        jdbcProps.setPaging(connectionManage.isPaging());
         jdbcProps.setQueryMaxRows(connectionManage.getQueryMaxRows());
         connectionManage = connectionManageService.queryAsObject(connectionManage);
         jdbcProps.setUrl(connectionManage.getDbUrl());
