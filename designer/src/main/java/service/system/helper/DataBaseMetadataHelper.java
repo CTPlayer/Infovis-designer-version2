@@ -225,7 +225,9 @@ public class DataBaseMetadataHelper {
         ResultSet cRs = null;
         if(StringUtils.isNotBlank(countSql)){
             cRs = st.executeQuery(countSql);
-            count = cRs.getLong(1);
+            if(cRs.next()){
+                count = cRs.getLong(1);
+            }
         }
         JdbcUtils.closeResultSet(cRs);
         JdbcUtils.closeStatement(st);
