@@ -1,11 +1,14 @@
 package service.system.helper;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import common.model.BaseModel;
+import core.plugin.database.SqlUtil;
 import core.plugin.spring.database.route.DynamicDataSource;
 import model.database.ColumnMetaData;
 import model.database.JdbcProps;
 import model.database.TableMetaData;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.JdbcUtils;
@@ -207,6 +210,28 @@ public class DataBaseMetadataHelper {
         return isSuccessConnect;
     }
 
+
+    /**
+     * 查询结果总数
+     * @param conn
+     * @param countSql
+     * @return
+     * @throws Exception
+     */
+    private long executeCountSql(Connection conn,String countSql) throws Exception{
+        long count = 0;
+        Statement st = null;
+        st = conn.createStatement();
+        ResultSet cRs = null;
+        if(StringUtils.isNotBlank(countSql)){
+            cRs = st.executeQuery(countSql);
+            count = cRs.getLong(1);
+        }
+        JdbcUtils.closeResultSet(cRs);
+        JdbcUtils.closeStatement(st);
+        return count;
+    }
+
     /**
      * 根据数据源和sql执行sql并返回表头及数据
      * @param jdbcProps
@@ -223,29 +248,46 @@ public class DataBaseMetadataHelper {
         st = conn.createStatement();
         String sql = jdbcProps.getSql();
         //sql不为空，并且为查询语句或count语句
-        if(StringUtils.isNotBlank(sql) && (sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX))){
-            int maxRows = jdbcProps.getQueryMaxRows();
-            if(maxRows > 0){
-                st.setMaxRows(maxRows);
-            }
-            cRs = st.executeQuery(sql);
-            rsmd = cRs.getMetaData();
-            String[] columnNameDatas = new String[rsmd.getColumnCount()];
-            for( int i=1; i<=rsmd.getColumnCount(); i++ ){
-                columnNameDatas[i-1] = rsmd.getColumnName(i);
-            }
-            datas.add(columnNameDatas);
-            while (cRs.next()){
-                String[] columnCellDatas = new String[rsmd.getColumnCount()];
-                for( int j=1; j<=rsmd.getColumnCount(); j++ ){
-                    columnCellDatas[j-1] = cRs.getString(j);
+        if(StringUtils.isNotBlank(sql)){
+            if(sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX)){
+                int maxRows = jdbcProps.getQueryMaxRows();
+                if(maxRows > 0 && !jdbcProps.isPaging()){
+                    st.setMaxRows(maxRows);
+                }else if(jdbcProps.isPaging()){//分页
+                    RowBounds rowBounds = getRowBounds(jdbcProps);
+                    sql = SqlUtil.getQuerySqlByDialet(jdbcProps.getUrl(),sql,rowBounds);
+                    long totalCount = executeCountSql(conn,SqlUtil.getCountSqlByDialet(jdbcProps.getUrl(),sql));
+                    jdbcProps.setTotalCount(totalCount);
                 }
-                datas.add(columnCellDatas);
+                cRs = st.executeQuery(sql);
+                rsmd = cRs.getMetaData();
+                String[] columnNameDatas = new String[rsmd.getColumnCount()];
+                for( int i=1; i<=rsmd.getColumnCount(); i++ ){
+                    columnNameDatas[i-1] = rsmd.getColumnName(i);
+                }
+                datas.add(columnNameDatas);
+                while (cRs.next()){
+                    String[] columnCellDatas = new String[rsmd.getColumnCount()];
+                    for( int j=1; j<=rsmd.getColumnCount(); j++ ){
+                        columnCellDatas[j-1] = cRs.getString(j);
+                    }
+                    datas.add(columnCellDatas);
+                }
+            }else{
+                throw new RuntimeException("query sql must be select statement!");
             }
+        }else{
+            throw new RuntimeException("query sql is empty!");
         }
         JdbcUtils.closeResultSet(cRs);
         JdbcUtils.closeStatement(st);
         JdbcUtils.closeConnection(conn);
         return datas;
+    }
+
+    private RowBounds getRowBounds(BaseModel entity) {
+        int offset = entity.getStart();
+        int limit = entity.getLimit();
+        return new RowBounds(offset, limit);
     }
 }

@@ -2,7 +2,6 @@ package web.connectionManage;
 
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.util.JdbcConstants;
-import core.plugin.spring.database.route.DynamicDataSource;
 import model.connectionManage.ConnectionManage;
 import model.database.JdbcProps;
 import model.database.TableMetaData;
@@ -16,7 +15,6 @@ import javax.annotation.Resource;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Created by yx on 16/8/11.

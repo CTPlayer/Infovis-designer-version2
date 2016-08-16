@@ -170,10 +170,10 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     var type = instance.getOption().series[0].type;
 
                     if(type == "bar" || type == "line"){
-                        $("#optionPanel").html(formatData.tableAndConfig());
+                        $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
                         ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(),engine),$("#optionPanel").children()[1]);  //开启双向绑定监听
                     }else if(type == "pie"){
-                        $("#optionPanel").html(formatData.tableAndConfig());
+                        $("#optionPanel").html(formatData.tableAndConfigOfPie());
                         ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(),engine),$("#optionPanel").children()[1]);  //开启双向绑定监听
                     }
                 });

@@ -261,10 +261,10 @@ define(['knockout', 'infovis'],function(ko, infovis){
             }
 
             //grid
-            option.grid[0].top = self.gridTop();
-            option.grid[0].left = self.gridLeft();
-            option.grid[0].right = self.gridRight();
-            option.grid[0].bottom = self.gridBottom();
+            option.grid[0].top = self.gridTop()+'%';
+            option.grid[0].left = self.gridLeft()+'%';
+            option.grid[0].right = self.gridRight()+'%';
+            option.grid[0].bottom = self.gridBottom()+'%';
 
             optionChart.setOption(option,true);
         })
@@ -411,12 +411,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
         }else if(series.label.normal.show == true){
             self.selectedSeriesBarShowLabel = ko.observable("显示");
         }
-
-        var grid = option.grid[0];
-        self.gridTop = ko.observable(grid.top);
-        self.gridBottom = ko.observable(grid.bottom);
-        self.gridLeft = ko.observable(grid.left);
-        self.gridRight = ko.observable(grid.right);
+        self.gridCenter = ko.observable(series.center);
+        self.gridRadius = ko.observable(series.radius);
 
         var optionChart = engine.chart.init(document.getElementById("optionContainer"));
 
@@ -498,12 +494,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
                     option.series[i].label.normal.show = true;
                 }
             }
-
-            //grid
-            option.grid[0].top = self.gridTop();
-            option.grid[0].left = self.gridLeft();
-            option.grid[0].right = self.gridRight();
-            option.grid[0].bottom = self.gridBottom();
+            option.series[0].center = self.gridCenter()+'%';
+            option.series[0].radius = self.gridRadius()+'%';
 
             optionChart.setOption(option,true);
         })
