@@ -226,31 +226,37 @@ public class DataBaseMetadataHelper {
         st = conn.createStatement();
         String sql = jdbcProps.getSql();
         //sql不为空，并且为查询语句或count语句
-        if(StringUtils.isNotBlank(sql) && (sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX))){
-            int maxRows = jdbcProps.getQueryMaxRows();
-            if(maxRows > 0 && !jdbcProps.isPaging()){
-                st.setMaxRows(maxRows);
-            }else if(jdbcProps.isPaging()){//分页
-                RowBounds rowBounds = getRowBounds(jdbcProps);
-                sql = SqlUtil.getQuerySqlByDialet(jdbcProps.getUrl(),sql,rowBounds);
-            }
-            cRs = st.executeQuery(sql);
-            rsmd = cRs.getMetaData();
-            String[] columnNameDatas = new String[rsmd.getColumnCount()];
-            for( int i=1; i<=rsmd.getColumnCount(); i++ ){
-                columnNameDatas[i-1] = rsmd.getColumnName(i);
-            }
-            datas.add(columnNameDatas);
-            long totalCount = 0;
-            while (cRs.next()){
-                String[] columnCellDatas = new String[rsmd.getColumnCount()];
-                for( int j=1; j<=rsmd.getColumnCount(); j++ ){
-                    columnCellDatas[j-1] = cRs.getString(j);
+        if(StringUtils.isNotBlank(sql)){
+            if(sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX)){
+                int maxRows = jdbcProps.getQueryMaxRows();
+                if(maxRows > 0 && !jdbcProps.isPaging()){
+                    st.setMaxRows(maxRows);
+                }else if(jdbcProps.isPaging()){//分页
+                    RowBounds rowBounds = getRowBounds(jdbcProps);
+                    sql = SqlUtil.getQuerySqlByDialet(jdbcProps.getUrl(),sql,rowBounds);
                 }
-                datas.add(columnCellDatas);
-                totalCount ++;
+                cRs = st.executeQuery(sql);
+                rsmd = cRs.getMetaData();
+                String[] columnNameDatas = new String[rsmd.getColumnCount()];
+                for( int i=1; i<=rsmd.getColumnCount(); i++ ){
+                    columnNameDatas[i-1] = rsmd.getColumnName(i);
+                }
+                datas.add(columnNameDatas);
+                long totalCount = 0;
+                while (cRs.next()){
+                    String[] columnCellDatas = new String[rsmd.getColumnCount()];
+                    for( int j=1; j<=rsmd.getColumnCount(); j++ ){
+                        columnCellDatas[j-1] = cRs.getString(j);
+                    }
+                    datas.add(columnCellDatas);
+                    totalCount ++;
+                }
+                jdbcProps.setTotalCount(totalCount);
+            }else{
+                throw new RuntimeException("query sql must be select statement!");
             }
-            jdbcProps.setTotalCount(totalCount);
+        }else{
+            throw new RuntimeException("query sql is empty!");
         }
         JdbcUtils.closeResultSet(cRs);
         JdbcUtils.closeStatement(st);
