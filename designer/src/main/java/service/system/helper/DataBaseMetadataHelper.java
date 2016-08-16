@@ -1,11 +1,14 @@
 package service.system.helper;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import common.model.BaseModel;
+import core.plugin.database.SqlUtil;
 import core.plugin.spring.database.route.DynamicDataSource;
 import model.database.ColumnMetaData;
 import model.database.JdbcProps;
 import model.database.TableMetaData;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.JdbcUtils;
@@ -225,8 +228,11 @@ public class DataBaseMetadataHelper {
         //sql不为空，并且为查询语句或count语句
         if(StringUtils.isNotBlank(sql) && (sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX))){
             int maxRows = jdbcProps.getQueryMaxRows();
-            if(maxRows > 0){
+            if(maxRows > 0 && !jdbcProps.isPaging()){
                 st.setMaxRows(maxRows);
+            }else if(jdbcProps.isPaging()){//分页
+                RowBounds rowBounds = getRowBounds(jdbcProps);
+                sql = SqlUtil.getQuerySqlByDialet(jdbcProps.getUrl(),sql,rowBounds);
             }
             cRs = st.executeQuery(sql);
             rsmd = cRs.getMetaData();
@@ -235,17 +241,26 @@ public class DataBaseMetadataHelper {
                 columnNameDatas[i-1] = rsmd.getColumnName(i);
             }
             datas.add(columnNameDatas);
+            long totalCount = 0;
             while (cRs.next()){
                 String[] columnCellDatas = new String[rsmd.getColumnCount()];
                 for( int j=1; j<=rsmd.getColumnCount(); j++ ){
                     columnCellDatas[j-1] = cRs.getString(j);
                 }
                 datas.add(columnCellDatas);
+                totalCount ++;
             }
+            jdbcProps.setTotalCount(totalCount);
         }
         JdbcUtils.closeResultSet(cRs);
         JdbcUtils.closeStatement(st);
         JdbcUtils.closeConnection(conn);
         return datas;
+    }
+
+    private RowBounds getRowBounds(BaseModel entity) {
+        int offset = entity.getStart();
+        int limit = entity.getLimit();
+        return new RowBounds(offset, limit);
     }
 }

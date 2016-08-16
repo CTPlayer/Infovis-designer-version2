@@ -1,9 +1,11 @@
 package model.database;
 
+import common.model.BaseModel;
+
 /**
  * Created by gzy on 2016/8/11.
  */
-public class JdbcProps {
+public class JdbcProps  extends BaseModel{
 
     private String driverClassName;
 
@@ -114,4 +116,5 @@ public class JdbcProps {
     public void setDbPort(String dbPort) {
         this.dbPort = dbPort;
     }
+
 }

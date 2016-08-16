@@ -119,6 +119,7 @@ project(":designer") {
     dependencies {
         compile project(":util")
         compile project(":plugin")
+        compile fileTree(dir: "../dependency", include: "*.jar")
         compile "javax.inject:javax.inject:$javaxInject",
                 "javax.annotation:javax.annotation-api:$annotationsApi",
                 "cglib:cglib:$cglib",
