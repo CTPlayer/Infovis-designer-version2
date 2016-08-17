@@ -101,6 +101,12 @@ require([
             ,	spacing_open:			8  // ALL panes
             ,	spacing_closed:			8  // ALL panes
             ,	north__spacing_closed:	12
+            ,   onresize_end: function (type,ob) {
+                    if(type === 'north'){
+                        $(".CodeMirror").height($(ob).height() - 50);
+                    }
+                    return true; // false = Cancel
+                }
         });
 
         var setting = {
