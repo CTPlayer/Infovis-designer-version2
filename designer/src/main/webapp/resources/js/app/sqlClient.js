@@ -83,6 +83,9 @@ require([
             ,	spacing_closed:			12 // ALL panes
             ,	north__spacing_open:	0
             ,	south__spacing_open:	0
+            ,   resizerTip :            ""
+            ,   togglerTip_open :          ""
+            ,   togglerTip_closed :        ""
         });
 
         var middleLayout = $('div.outer-center').layout({
@@ -93,6 +96,9 @@ require([
             ,	east__size:				100
             ,	spacing_open:			8  // ALL panes
             ,	spacing_closed:			12 // ALL panes
+            ,   resizerTip :            ""
+            ,   togglerTip_open :          ""
+            ,   togglerTip_closed :        ""
         });
 
         var innerLayout = $('div.middle-center').layout({
@@ -101,6 +107,9 @@ require([
             ,	spacing_open:			8  // ALL panes
             ,	spacing_closed:			8  // ALL panes
             ,	north__spacing_closed:	12
+            ,   resizerTip :            ""
+            ,   togglerTip_open :          ""
+            ,   togglerTip_closed :        ""
             ,   onresize_end: function (type,ob) {
                     if(type === 'north'){
                         $(".CodeMirror").height($(ob).height() - 50);
