@@ -10,7 +10,10 @@ require.config({
         "knockout": "lib/knockout/knockout-3.4.0",
         "backbone": "lib/backbone/backbone-min",
         "knockback": "lib/knockback.min",
-        "underscore": "lib/underscore/underscore-min"
+        "datatables.net": "lib/dataTables/js/jquery.dataTables.min",
+        "DT-bootstrap": "lib/dataTables/js/dataTables.bootstrap.min",
+        "underscore": "lib/underscore/underscore-min",
+        "bootpag": "lib/bootpag/jquery.bootpag.min",
     },
     shim : {
         "ztree" : { "deps" :['jquery'] },
@@ -18,7 +21,8 @@ require.config({
         "jquery-ui" : { "deps" :['jquery'] },
         "jquery-layout" : { "deps" :['jquery','jquery-ui'] },
         "bootstrap" : { "deps" :['jquery'] },
-        "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] }
+        "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] },
+        "bootpag" : { "deps" :['jquery'] }
     },
     packages: [{
         name: "codemirror",
@@ -54,8 +58,20 @@ require([
     });
 })
 
-require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','knockout','backbone','knockback'],
-    function($,bootstrap,jquery_ui,jquery_ayout,ztree,validate,ko,bo,kb){
+require([
+    'jquery',
+    'bootstrap',
+    'jquery-ui',
+    'jquery-layout',
+    'ztree',
+    'validate',
+    'knockout',
+    'backbone',
+    'knockback',
+    'datatables.net',
+    'DT-bootstrap',
+    'bootpag'],
+    function($,bootstrap,jquery_ui,jquery_ayout,ztree,validate,ko,bo,kb,dataTables,DT_bootstrap,bootpag){
     $(function(){
         var outerLayout = $('body').layout({
             center__paneSelector:	".outer-center"
@@ -242,10 +258,10 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
             }
         })
 
+        var queryParam = {};
+        //点击查询只查询第一页后面由分页插件去查询
         $("#executeQuerySql").click(function(e){
             var nodes = dataSourceTree.getSelectedNodes();
-            var queryParam = {};
-
             if(nodes.length != 1){
                 $("#isCheckDataSourceModal").modal('toggle');
             }else{
@@ -255,7 +271,8 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
                 }else{
                     queryParam.sql = editor.getDoc().getSelection();
                 }
-                queryParam.paging = false;
+                queryParam.pageSize = 30;
+                queryParam.page = 1;
                 //去除换行符
                 queryParam.sql = queryParam.sql.replace(/[\r\n]/g,' ');
                 queryParam.queryMaxRows = 30;
@@ -272,8 +289,29 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
                     data : queryParam
                 });
                 deferred.done(function(result){
+                    $('#pagebar').empty();
+                    $('#pagebar').bootpag({
+                        total: result.total,
+                        page: result.page,
+                        maxVisible: 5
+                    }).on("page", function(event, num){
+                        queryParam.page = num;
+                        var pageDeferred = $.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            url: '../connectionManage/executeQuerySql',
+                            data : queryParam
+                        });
+                        pageDeferred.done(function(result){
+                            randerTable(result.data)
+                        });
+                    })
+                    randerTable(result.data);
+                })
+
+                var randerTable = function (result) {
                     $("#resultArea").empty();
-                    $("#resultArea").append("<table class='gridtable'></table>");
+                    $("#resultArea").append("<table class='display' cellspacing='0' width='100%'><thead></thead><tbody></tbody></table>");
                     $.each(result,function(RowIndex,row){
                         var tr=$("<tr></tr>");
                         $.each(row,function(colIndex,col){
@@ -283,10 +321,23 @@ require(['jquery','bootstrap','jquery-ui','jquery-layout','ztree','validate','kn
                                 tr.append("<td>" + htmlEncode(col) + "</td>")
                             }
                         })
-                        $("#resultArea table").append(tr)
+                        if(RowIndex == 0) {
+                            $("#resultArea table thead").append(tr);
+                        }else{
+                            $("#resultArea table tbody").append(tr);
+                        }
                     });
-                })
-
+                    $('#resultArea table').DataTable({
+                        paging: false,
+                        searching: false,
+                        "language": {
+                            "zeroRecords": "没有查询到记录",
+                            "info": "",
+                            "infoEmpty": ""
+                        }
+                    });
+                }
+                
                 deferred.fail(function(result){
                     $("#resultArea").empty();
                     $("#resultArea").append(result.responseText)

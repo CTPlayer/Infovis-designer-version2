@@ -18,12 +18,21 @@
     <link href="js/lib/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
     <!--CodeMirror-->
     <link href="js/lib/cm/lib/codemirror.css" rel="stylesheet">
+    <!--dataTables-->
+    <link href="js/lib/dataTables/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="js/lib/dataTables/css/dataTables.bootstrap.min.css" rel="stylesheet">
+
 
     <style type="text/css">
         .scrollable {
             overflow: scroll;
         }
 
+        table.dataTable thead .sorting,
+        table.dataTable thead .sorting_asc,
+        table.dataTable thead .sorting_desc {
+            background : none;
+        }
         .CodeMirror {
             border: 1px solid #eee;
             height: 170px;
@@ -155,7 +164,10 @@
     </div>
     <div class="outer-center">
         <div class="middle-center">
-            <div class="inner-center scrollable" id="resultArea"></div>
+            <div class="inner-center scrollable">
+                <div id="resultArea"></div>
+                <div id="pagebar"></div>
+            </div>
             <div class="ui-layout-north scrollable">
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-success" id="executeQuerySql">查询SQL</button>

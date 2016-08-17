@@ -14,7 +14,9 @@ import service.system.helper.DataBaseMetadataHelper;
 import javax.annotation.Resource;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yx on 16/8/11.
@@ -78,15 +80,22 @@ public class ConnectionManageController {
     @RequestMapping("/executeQuerySql")
     @ResponseBody
     public Object executeQuerySql(ConnectionManage connectionManage) throws Exception {
+        Map<String,Object> resultSet = new HashMap<>();
         JdbcProps jdbcProps = new JdbcProps();
         jdbcProps.setSql(connectionManage.getSql());
-        jdbcProps.setPaging(connectionManage.isPaging());
+        jdbcProps.setPage(connectionManage.getPage());
+        jdbcProps.setPageSize(connectionManage.getPageSize());
         jdbcProps.setQueryMaxRows(connectionManage.getQueryMaxRows());
+
         connectionManage = connectionManageService.queryAsObject(connectionManage);
         jdbcProps.setUrl(connectionManage.getDbUrl());
         jdbcProps.setUsername(connectionManage.getUserName());
         jdbcProps.setPassword(connectionManage.getPassword());
-        return dataBaseMetadataHelper.executeQuerySql(jdbcProps);
+
+        resultSet.put("data",dataBaseMetadataHelper.executeQuerySql(jdbcProps));
+        resultSet.put("page",jdbcProps.getPage());
+        resultSet.put("total",jdbcProps.getTotalPage());
+        return resultSet;
     }
 
     @RequestMapping("/formatSql")
