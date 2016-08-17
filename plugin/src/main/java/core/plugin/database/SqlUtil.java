@@ -51,6 +51,8 @@ public class SqlUtil {
                 dbType = "MYSQL";
             }else if(url.startsWith("jdbc:h2")){
                 dbType = "H2";
+            }else if(url.startsWith("jdbc:sqlserver")){
+                dbType = "SQLSERVER";
             }
         }
         return dbType;

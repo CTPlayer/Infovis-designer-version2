@@ -97,13 +97,16 @@ public class DataBaseMetadataHelper {
             DatabaseMetaData metaData = conn.getMetaData();
             String[] tableTypes = {"TABLE","VIEW"};
 
-            tRs = metaData.getTables(null, "%", null, tableTypes);
+            tRs = metaData.getTables(null, null, null, tableTypes);
             while (tRs.next()) {
                 TableMetaData tableMetaData = new TableMetaData();
                 tableMetaData.setTableName(tRs.getString("TABLE_NAME").toLowerCase());
                 tableMetaData.setTableType(tRs.getString("TABLE_TYPE"));
                 tableMetaData.setTableRemark(tRs.getString("REMARKS"));
-                tableMetaDatas.add(tableMetaData);
+                String tableSchem = tRs.getString("TABLE_SCHEM");
+                if(!"INFORMATION_SCHEMA".equalsIgnoreCase(tRs.getString("TABLE_SCHEM")) && !"sys".equalsIgnoreCase(tRs.getString("TABLE_SCHEM"))){
+                    tableMetaDatas.add(tableMetaData);
+                }
             }
         } catch (SQLException e) {
             L.error("获取数据库表元数据异常", e);
@@ -257,9 +260,9 @@ public class DataBaseMetadataHelper {
                     st.setMaxRows(maxRows);
                 }else if(jdbcProps.isPaging()){//分页
                     RowBounds rowBounds = getRowBounds(jdbcProps);
-                    sql = SqlUtil.getQuerySqlByDialet(jdbcProps.getUrl(),sql,rowBounds);
                     long totalCount = executeCountSql(conn,SqlUtil.getCountSqlByDialet(jdbcProps.getUrl(),sql));
                     jdbcProps.setTotalCount(totalCount);
+                    sql = SqlUtil.getQuerySqlByDialet(jdbcProps.getUrl(),sql,rowBounds);
                 }
                 cRs = st.executeQuery(sql);
                 rsmd = cRs.getMetaData();
