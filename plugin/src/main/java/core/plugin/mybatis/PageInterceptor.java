@@ -30,9 +30,9 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 
 import core.plugin.mybatis.dialect.Dialect;
-import core.plugin.mybatis.dialect.H2Dialect;
-import core.plugin.mybatis.dialect.MysqlDialect;
-import core.plugin.mybatis.dialect.OracleDialect;
+import core.plugin.mybatis.dialect.impl.H2Dialect;
+import core.plugin.mybatis.dialect.impl.MysqlDialect;
+import core.plugin.mybatis.dialect.impl.OracleDialect;
 
 /**
  * 通用分页根据不同的数据库实现

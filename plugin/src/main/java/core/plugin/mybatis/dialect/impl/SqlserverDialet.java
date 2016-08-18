@@ -1,6 +1,20 @@
+/************************************************************************
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ ************************************************************************/
 package core.plugin.mybatis.dialect.impl;
 
 import core.plugin.mybatis.dialect.Dialect;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 
 /**
@@ -13,34 +27,41 @@ public class SqlserverDialet implements Dialect {
      *
      * <pre>
      *
-     SELECT * FROM (SELECT row_number() OVER (ORDER BY (select 1)) n1,* FROM (orignSql)) t1,
-         (SELECT TOP limit row_number() OVER (ORDER BY (select 1)) n2 FROM (orignSql))t2
-         WHERE t1.n1 = t2.n2  AND t2.n2 > offset
+          SELECT * FROM
+         (SELECT row_number() OVER (ORDER BY (select 1)) n1 FROM (orignSql)t)t1
+         WHERE t t1.n1 between offset and limit
      * </pre>
      */
     @Override
     public String getSqlWithPagination(String sql, RowBounds rowBounds) {
+        sql = sqlServerSqlQuery(sql);
         StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("SELECT * FROM( SELECT ROW_NUMBER() OVER(ORDER BY (SELECT 1)) n1,* FROM ("+sql+")t) t1,");
-        sqlBuilder.append("(SELECT TOP "+rowBounds.getLimit()+" row_number() OVER (ORDER BY (select 1)) n2 FROM ("+sql+")t)t2");
-        sqlBuilder.append(" WHERE t1.n1 = t2.n2  AND t2.n2 > "+rowBounds.getOffset()+" ");
+        sqlBuilder.append("SELECT * FROM ");
+        sqlBuilder.append("(SELECT row_number() OVER (ORDER BY (select 1)) n1,* FROM ("+sql+")t)t1");
+        sqlBuilder.append(" WHERE t1.n1  between "+rowBounds.getOffset()+" and "+rowBounds.getLimit());
         return sqlBuilder.toString();
+    }
+
+    private String sqlServerSqlQuery(String sql){
+        sql = sql.trim();
+        while (sql.startsWith("　")) {//去掉全角空格
+            sql = sql.substring(1, sql.length()).trim();
+        }
+        sql = "SELECT TOP 100 PERCENT "+sql.substring(6,sql.length());
+        return sql;
     }
 
     /**
      * SQLSERVER Count SQL:
      *
-     * <pre>
-     * SELECT COUNT(0) FROM (
-     *     orginSQL
-     * )
-     * </pre>
+
      *
      */
     @Override
     public String getSqlWithCount(String sql) {
         StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("SELECT COUNT(0) FROM ( ").append(sql).append(" ) t");
+        sql = sqlServerSqlQuery(sql);
+        sqlBuilder.append("SELECT COUNT(0) FROM ( ").append(sql).append(" )SQL");
         return sqlBuilder.toString();
     }
 }
