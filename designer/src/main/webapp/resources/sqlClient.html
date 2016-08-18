@@ -155,7 +155,9 @@
                             <li>
                                 <a href="javascript: void(0);" data-toggle="modal" data-target="#addConnectionModal">新增连接</a>
                             </li>
-                            <li><a href="javascript: void(0);" id="deleteDB" >删除连接</a></li>
+                            <li>
+                                <a href="javascript: void(0);" id="deleteDB" >删除连接</a>
+                            </li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
@@ -172,6 +174,7 @@
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-success" id="executeQuerySql">查询SQL</button>
                     <button type="button" class="btn btn-primary" id="formattSelectSql">美化SQL</button>
+                    <button type="button" class="btn btn-warning" id="clearSql">清除SQL</button>
                 </div>
                 <div style="margin-top: 5px"></div>
                 <textarea id='executeSql' name="sql" style="height: 100%;width: 100%;resize: none;"></textarea>
@@ -216,7 +219,7 @@
                                 <input type="password" class="form-control" name="password" placeholder="密码">
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" name="dbUrl" data-bind="value: dbUrl" placeholder="数据库连接地址">
+                                <input type="hidden" class="form-control" name="dbUrl" data-bind="value: dbUrl" placeholder="数据库连接地址">
                             </div>
                         </div>
                     </form>
