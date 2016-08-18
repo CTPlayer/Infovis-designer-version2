@@ -13,7 +13,7 @@
                 <p class="lead" style="text-align: center;line-height: 49px;">图表展示</p>
             </div>
         </nav>
-        <div class="container"style="margin-top:50px;">
+        <div class="container">
             <div class="grid-stack" id="exportContainer">
                 ${htmlCode}
             </div>
