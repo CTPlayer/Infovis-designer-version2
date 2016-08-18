@@ -11,34 +11,43 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  ************************************************************************/
-package core.plugin.mybatis.dialect;
+package core.plugin.mybatis.dialect.impl;
 
+import core.plugin.mybatis.dialect.Dialect;
 import org.apache.ibatis.session.RowBounds;
 
 /**
  * <p>
- * H2 通用分页语句
- *
+ * Oracle 通用分页语句
+ * 
  * @author CSJ
  */
-public class H2Dialect implements Dialect {
-
+public class OracleDialect implements Dialect {
     /**
-     * H2 SQL:
+     * ORACLE Pagination SQL:
      * 
      * <pre>
-     * SELECT * FROM table limit MAX offset START
+     * SELECT * FROM (
+     *     SELECT row_.*, ROWNUM rownum_ FROM (
+     *         orginSQL
+     *     ) row_ WHERE ROWNUM <= MAX
+     * )
+     * WHERE rownum_ > START
      * </pre>
      */
     @Override
     public String getSqlWithPagination(String sql, RowBounds rowBounds) {
         StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append(sql).append(" limit " + rowBounds.getLimit() + " offset " + rowBounds.getOffset());
+        sqlBuilder
+                .append("SELECT * FROM (SELECT row_.*, ROWNUM rownum_ FROM ( ")
+                .append(sql)
+                .append(" ) row_ WHERE ROWNUM <= " + rowBounds.getLimit() + ") WHERE rownum_ > "
+                        + rowBounds.getOffset());
         return sqlBuilder.toString();
     }
 
     /**
-     * H2 Count SQL:
+     * ORACLE Count SQL:
      * 
      * <pre>
      * SELECT COUNT(0) FROM (
@@ -52,4 +61,5 @@ public class H2Dialect implements Dialect {
         sqlBuilder.append("SELECT COUNT(0) FROM ( ").append(sql).append(" )");
         return sqlBuilder.toString();
     }
+
 }

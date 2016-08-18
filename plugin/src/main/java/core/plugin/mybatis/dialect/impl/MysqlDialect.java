@@ -11,8 +11,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  ************************************************************************/
-package core.plugin.mybatis.dialect;
+package core.plugin.mybatis.dialect.impl;
 
+import core.plugin.mybatis.dialect.Dialect;
 import org.apache.ibatis.session.RowBounds;
 
 /**
