@@ -14,7 +14,6 @@
 package core.plugin.mybatis.dialect.impl;
 
 import core.plugin.mybatis.dialect.Dialect;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 
 /**
@@ -34,7 +33,7 @@ public class SqlserverDialet implements Dialect {
      */
     @Override
     public String getSqlWithPagination(String sql, RowBounds rowBounds) {
-        sql = sqlServerSqlQuery(sql);
+        sql = sqlServerSqlPretreatment(sql);
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("SELECT * FROM ");
         sqlBuilder.append("(SELECT row_number() OVER (ORDER BY (select 1)) n1,* FROM ("+sql+")t)t1");
@@ -42,7 +41,12 @@ public class SqlserverDialet implements Dialect {
         return sqlBuilder.toString();
     }
 
-    private String sqlServerSqlQuery(String sql){
+    /**
+     * sql预处理
+     * @param sql
+     * @return
+     */
+    private String sqlServerSqlPretreatment(String sql){
         sql = sql.trim();
         while (sql.startsWith("　")) {//去掉全角空格
             sql = sql.substring(1, sql.length()).trim();
@@ -60,7 +64,7 @@ public class SqlserverDialet implements Dialect {
     @Override
     public String getSqlWithCount(String sql) {
         StringBuilder sqlBuilder = new StringBuilder();
-        sql = sqlServerSqlQuery(sql);
+        sql = sqlServerSqlPretreatment(sql);
         sqlBuilder.append("SELECT COUNT(0) FROM ( ").append(sql).append(" )SQL");
         return sqlBuilder.toString();
     }
