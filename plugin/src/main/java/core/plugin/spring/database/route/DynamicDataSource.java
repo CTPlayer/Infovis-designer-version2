@@ -18,6 +18,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import core.plugin.mybatis.dialect.SqlDialetHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -81,7 +82,12 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         dataSource.setMaxWait(60000);
         dataSource.setTimeBetweenEvictionRunsMillis(60000);
         dataSource.setMinEvictableIdleTimeMillis(300000);
-        dataSource.setValidationQuery("select 'x'");
+        String dbType = SqlDialetHelper.getDbTypeByUrl(url);
+        if("ORACLE".equals(dbType)){
+            dataSource.setValidationQuery("select 'x'  from dual ");
+        }else{
+            dataSource.setValidationQuery("select 'x' ");
+        }
         dataSource.setTestWhileIdle(true);
         dataSource.setTestOnBorrow(true);
         dataSource.setTestOnReturn(false);

@@ -95,8 +95,9 @@ public class DataBaseMetadataHelper {
             dynamicDataSource.selectDataSource(jdbcProps.getUrl(), jdbcProps.getUsername(), jdbcProps.getPassword());
             conn = dynamicDataSource.getConnection();
             DatabaseMetaData metaData = conn.getMetaData();
+            String userName = metaData.getUserName();
             String[] tableTypes = {"TABLE","VIEW"};
-
+            String dbType = SqlDialetHelper.getDbTypeByUrl(jdbcProps.getUrl());
             tRs = metaData.getTables(null, null, null, tableTypes);
             while (tRs.next()) {
                 TableMetaData tableMetaData = new TableMetaData();
@@ -105,7 +106,13 @@ public class DataBaseMetadataHelper {
                 tableMetaData.setTableRemark(tRs.getString("REMARKS"));
                 String tableSchem = tRs.getString("TABLE_SCHEM");
                 if(!"INFORMATION_SCHEMA".equalsIgnoreCase(tableSchem) && !"sys".equalsIgnoreCase(tableSchem)){
-                    tableMetaDatas.add(tableMetaData);
+                    if("ORACLE".equalsIgnoreCase(dbType)){
+                        if(userName.equalsIgnoreCase(tableSchem)){
+                            tableMetaDatas.add(tableMetaData);
+                        }
+                    }else{
+                        tableMetaDatas.add(tableMetaData);
+                    }
                 }
             }
         } catch (SQLException e) {
