@@ -202,12 +202,7 @@ public class DataBaseMetadataHelper {
         try {
             Socket s = new Socket();
             s.connect(new InetSocketAddress(jdbcProps.getDbHost(),Integer.parseInt(jdbcProps.getDbPort())),10000);
-            DruidDataSource druidDataSource = dynamicDataSource.createDataSource(jdbcProps.getUrl(),jdbcProps.getUsername(),jdbcProps.getPassword());
-            druidDataSource.getConnection();
-        } catch (SQLException e) {
-            isSuccessConnect = false;
-            L.info("获取数据库连接失败");
-        } catch (UnknownHostException e) {
+        }catch (UnknownHostException e) {
             isSuccessConnect = false;
             L.info("未知的端口");
         } catch (IOException e) {
