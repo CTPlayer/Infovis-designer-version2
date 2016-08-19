@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import service.myCharts.MyChartsService;
 
 import javax.annotation.Resource;
+import java.util.UUID;
 
 /**
  * Created by ct on 2016/8/19.
@@ -21,9 +22,12 @@ public class MyChartsServiceImpl implements MyChartsService{
     private MyChartsMapper myChartsMapper;
 
     @Override
-    public int add(MyCharts myCharts) {
+    public String add(MyCharts myCharts) {
+        String exportId = UUID.randomUUID().toString();
+        myCharts.setExportId(exportId);
         myCharts.setCreateTime(DateTime.now().toString("yyyyMMddHHmmss"));
-        return myChartsMapper.add(myCharts);
+        myChartsMapper.add(myCharts);
+        return exportId;
     }
 
     @Override

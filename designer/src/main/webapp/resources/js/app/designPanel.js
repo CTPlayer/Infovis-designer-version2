@@ -15,22 +15,19 @@ require.config({
         "backbone": "lib/backbone/backbone-min",
         "underscore": "lib/underscore/underscore-min",
         "knockback": "lib/knockback.min",
-        "bootsnav": "lib/bootstrap/js/bootsnav",
         "spectrum": "lib/bootstrap/js/spectrum",
         "infovis": "lib/infovis.min",
-        "exportUuid": "lib/export/exportUuid",
-        "ZeroClipboard": "lib/export/ZeroClipboard"
+        "Clipboard": "lib/export/clipboard.min"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
-        "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] },
-        "ZeroClipboard" : { "deps" :['jquery'] }
+        "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] }
     }
 });
 
-require(['jquery', 'infovis', 'knockout', 'knockback', 'ZeroClipboard', 'options', 'formatData', 'exportUuid', 'app/appViewModel',
-        'bootstrap', 'gridstack', 'bootsnav', 'spectrum'],
-    function($, infovis, ko, kb, ZeroClipboard, baseOptions, formatData, exportUuid, appViewModel){
+require(['jquery', 'infovis', 'knockout', 'knockback', 'Clipboard', 'options', 'formatData', 'app/appViewModel',
+        'bootstrap', 'gridstack', 'spectrum'],
+    function($, infovis, ko, kb, Clipboard, baseOptions, formatData, appViewModel){
 
         $(function() {
             $(".navbar-expand-toggle").click(function() {
@@ -202,26 +199,21 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'ZeroClipboard', 'options
             $("#exportHtml").click(function(){
                 $(".grid-stack-placeholder").remove();
                 $("#fill").remove();
-                var uuid = exportUuid.getUuid();
+
                 var arr = window.location.href.split("/");
-                var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+uuid;
-                $("#modalSuccess").on("show.bs.modal",function(e){
-                    $("#copy").html("复制到剪贴板");
-                    $(".modal-body").eq(1).find("p").eq(1).html(shareHref);
-                });
-
-                var clip = new ZeroClipboard(document.getElementById("copy"));
-                clip.on("copy", function(e){
-                    e.clipboardData.setData("text/plain", $(".modal-body").eq(1).find("p").eq(1).text())
-                });
-                clip.on("aftercopy",function(e){
-                    $("#copy").html("复制成功！");
-                })
-
                 $.ajax({
                    type: 'POST',
                    url: "../export",
-                   data: {"htmlCode" : $(".grid-stack").html().trim() , "jsCode" : JSON.stringify(exportOptions), "exportId" : uuid},
+                   data: {"htmlCode" : $(".grid-stack").html().trim() , "jsCode" : JSON.stringify(exportOptions)},
+                   success : function(data){
+                       new Clipboard("#copy");
+                       var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+data;
+                       $("#copy").html("复制到剪贴板");
+                       $(".modal-body").eq(1).find("p").eq(1).html(shareHref);
+                   },
+                   error : function(){
+                       $(".modal-body").eq(1).find("p").eq(1).html("链接生成失败，请重试！");
+                   }
                 });
             });
         })
