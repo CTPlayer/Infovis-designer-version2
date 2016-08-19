@@ -166,13 +166,15 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'Clipboard', 'options', '
                     currentIndex = $(this).parent().parent().parent().attr("order");
                     var type = instance.getOption().series[0].type;
 
-                    if(type == "bar" || type == "line"){
-                        $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
-                        ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(),engine),$("#optionPanel").children()[1]);  //开启双向绑定监听
-                    }else if(type == "pie"){
-                        $("#optionPanel").html(formatData.tableAndConfigOfPie());
-                        ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(),engine),$("#optionPanel").children()[1]);  //开启双向绑定监听
-                    }
+                    $("#optionModal").on("shown.bs.modal",function(e) {
+                        if (type == "bar" || type == "line") {
+                            $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
+                            ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
+                        } else if (type == "pie") {
+                            $("#optionPanel").html(formatData.tableAndConfigOfPie());
+                            ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
+                        }
+                    });
                 });
 
             });
