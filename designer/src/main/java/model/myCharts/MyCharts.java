@@ -1,19 +1,9 @@
-/*************************************************************************
- * Copyright (C) Unpublished JiuDaoTech Software, Inc. All rights reserved.
- * JiuDaoTech Software, Inc., Confidential and Proprietary.
- * <p>
- * This software is subject to copyright protection
- * under the laws of the Public of China and other countries.
- * <p>
- * Unless otherwise explicitly stated, this software is provided
- * by JiuDaoTech "AS IS".
- *************************************************************************/
-package model.exportCodeSave;
+package model.myCharts;
 
 /**
- * Created by ct on 2016/8/17.
+ * Created by ct on 2016/8/19.
  */
-public class ExportCodeSave {
+public class MyCharts {
     private String id;
     private String exportId;
     private String htmlCode;

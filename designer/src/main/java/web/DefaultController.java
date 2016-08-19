@@ -1,11 +1,11 @@
 package web;
 
-import model.exportCodeSave.ExportCodeSave;
+import model.myCharts.MyCharts;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import service.exportCodeSave.ExportCodeSaveService;
+import service.myCharts.MyChartsService;
 
 import javax.annotation.Resource;
 
@@ -15,19 +15,19 @@ import javax.annotation.Resource;
 @Controller
 public class DefaultController {
     @Resource
-    private ExportCodeSaveService exportCodeSaveService;
+    private MyChartsService myChartsService;
 
     @RequestMapping("/export")
     @ResponseBody
-    public Object export(ExportCodeSave exportCodeSave){
-        return exportCodeSaveService.add(exportCodeSave);
+    public Object export(MyCharts myCharts){
+        return myChartsService.add(myCharts);
     }
 
     @RequestMapping("/share.page")
     public Object share(String exportId, ModelMap map){
-        ExportCodeSave exportCodeSave = exportCodeSaveService.queryAsObject(exportId);
-        map.addAttribute("htmlCode",exportCodeSave.getHtmlCode());
-        map.addAttribute("jsCode",exportCodeSave.getJsCode());
+        MyCharts myCharts = myChartsService.queryAsObject(exportId);
+        map.addAttribute("htmlCode",myCharts.getHtmlCode());
+        map.addAttribute("jsCode",myCharts.getJsCode());
         return "export/exportTemplate";
     }
 }
