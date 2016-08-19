@@ -106,7 +106,7 @@ public class ConnectionManageController {
     @RequestMapping("/formatSql")
     @ResponseBody
     public static String formatSql(ConnectionManage connectionManage) throws Exception {
-        String dbType = "";
+        String dbType;
         switch (connectionManage.getDbType()) {
             case "MySql":
                 dbType = JdbcConstants.MYSQL;
