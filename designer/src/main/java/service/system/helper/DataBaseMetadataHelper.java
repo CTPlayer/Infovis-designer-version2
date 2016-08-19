@@ -276,8 +276,8 @@ public class DataBaseMetadataHelper {
                 }
                 cRs = st.executeQuery(sql);
                 rsmd = cRs.getMetaData();
-                //sqlserver特殊处理，分页sql去掉rownumber列
-                if(jdbcProps.isPaging() && "SQLSERVER".equalsIgnoreCase(dbType) && rsmd.getColumnCount()>1){
+                //sqlserver,oracle特殊处理，分页sql去掉rownumber列
+                if(jdbcProps.isPaging() && ("SQLSERVER".equalsIgnoreCase(dbType) || "ORACLE".equalsIgnoreCase(dbType)) && rsmd.getColumnCount()>1){
                     String[] columnNameDatas = new String[rsmd.getColumnCount()-1];
                     for( int i=1; i<rsmd.getColumnCount(); i++ ){
                         columnNameDatas[i-1] = rsmd.getColumnName(i+1);

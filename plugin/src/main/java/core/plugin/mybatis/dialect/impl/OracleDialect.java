@@ -39,7 +39,7 @@ public class OracleDialect implements Dialect {
     public String getSqlWithPagination(String sql, RowBounds rowBounds) {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder
-                .append("SELECT * FROM (SELECT row_.*, ROWNUM rownum_ FROM ( ")
+                .append("SELECT * FROM (SELECT ROWNUM rownum_ ,row_.* FROM ( ")
                 .append(sql)
                 .append(" ) row_ WHERE ROWNUM <= " + rowBounds.getLimit() + ") WHERE rownum_ > "
                         + rowBounds.getOffset());
