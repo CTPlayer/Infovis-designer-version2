@@ -2,7 +2,7 @@ package service.system.helper;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import common.model.BaseModel;
-import core.plugin.database.SqlUtil;
+import core.plugin.mybatis.dialect.SqlDialetHelper;
 import core.plugin.spring.database.route.DynamicDataSource;
 import model.database.ColumnMetaData;
 import model.database.JdbcProps;
@@ -95,8 +95,9 @@ public class DataBaseMetadataHelper {
             dynamicDataSource.selectDataSource(jdbcProps.getUrl(), jdbcProps.getUsername(), jdbcProps.getPassword());
             conn = dynamicDataSource.getConnection();
             DatabaseMetaData metaData = conn.getMetaData();
+            String userName = metaData.getUserName();
             String[] tableTypes = {"TABLE","VIEW"};
-
+            String dbType = SqlDialetHelper.getDbTypeByUrl(jdbcProps.getUrl());
             tRs = metaData.getTables(null, null, null, tableTypes);
             while (tRs.next()) {
                 TableMetaData tableMetaData = new TableMetaData();
@@ -104,8 +105,14 @@ public class DataBaseMetadataHelper {
                 tableMetaData.setTableType(tRs.getString("TABLE_TYPE"));
                 tableMetaData.setTableRemark(tRs.getString("REMARKS"));
                 String tableSchem = tRs.getString("TABLE_SCHEM");
-                if(!"INFORMATION_SCHEMA".equalsIgnoreCase(tRs.getString("TABLE_SCHEM")) && !"sys".equalsIgnoreCase(tRs.getString("TABLE_SCHEM"))){
-                    tableMetaDatas.add(tableMetaData);
+                if(!"INFORMATION_SCHEMA".equalsIgnoreCase(tableSchem) && !"sys".equalsIgnoreCase(tableSchem)){
+                    if("ORACLE".equalsIgnoreCase(dbType)){
+                        if(userName.equalsIgnoreCase(tableSchem)){
+                            tableMetaDatas.add(tableMetaData);
+                        }
+                    }else{
+                        tableMetaDatas.add(tableMetaData);
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -222,6 +229,7 @@ public class DataBaseMetadataHelper {
      * @throws Exception
      */
     private long executeCountSql(Connection conn,String countSql) throws Exception{
+        L.info("统计sql:"+countSql);
         long count = 0;
         Statement st = null;
         st = conn.createStatement();
@@ -237,7 +245,7 @@ public class DataBaseMetadataHelper {
         return count;
     }
 
-    /**
+     /**
      * 根据数据源和sql执行sql并返回表头及数据
      * @param jdbcProps
      * @return
@@ -256,33 +264,51 @@ public class DataBaseMetadataHelper {
         if(StringUtils.isNotBlank(sql)){
             if(sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX)){
                 int maxRows = jdbcProps.getQueryMaxRows();
+                String dbType = SqlDialetHelper.getDbTypeByUrl(jdbcProps.getUrl());
                 if(maxRows > 0 && !jdbcProps.isPaging()){
                     st.setMaxRows(maxRows);
                 }else if(jdbcProps.isPaging()){//分页
                     RowBounds rowBounds = getRowBounds(jdbcProps);
-                    long totalCount = executeCountSql(conn,SqlUtil.getCountSqlByDialet(jdbcProps.getUrl(),sql));
+                    long totalCount  = executeCountSql(conn, SqlDialetHelper.getCountSqlByDialet(jdbcProps.getUrl(),sql));
                     jdbcProps.setTotalCount(totalCount);
-                    sql = SqlUtil.getQuerySqlByDialet(jdbcProps.getUrl(),sql,rowBounds);
+                    sql = SqlDialetHelper.getQuerySqlByDialet(jdbcProps.getUrl(),sql,rowBounds);
+                    L.info("查询sql:"+sql);
                 }
                 cRs = st.executeQuery(sql);
                 rsmd = cRs.getMetaData();
-                String[] columnNameDatas = new String[rsmd.getColumnCount()];
-                for( int i=1; i<=rsmd.getColumnCount(); i++ ){
-                    columnNameDatas[i-1] = rsmd.getColumnName(i);
-                }
-                datas.add(columnNameDatas);
-                while (cRs.next()){
-                    String[] columnCellDatas = new String[rsmd.getColumnCount()];
-                    for( int j=1; j<=rsmd.getColumnCount(); j++ ){
-                        columnCellDatas[j-1] = cRs.getString(j);
+                //sqlserver,oracle特殊处理，分页sql去掉rownumber列
+                if(jdbcProps.isPaging() && ("SQLSERVER".equalsIgnoreCase(dbType) || "ORACLE".equalsIgnoreCase(dbType)) && rsmd.getColumnCount()>1){
+                    String[] columnNameDatas = new String[rsmd.getColumnCount()-1];
+                    for( int i=1; i<rsmd.getColumnCount(); i++ ){
+                        columnNameDatas[i-1] = rsmd.getColumnName(i+1);
                     }
-                    datas.add(columnCellDatas);
+                    datas.add(columnNameDatas);
+                    while (cRs.next()){
+                        String[] columnCellDatas = new String[rsmd.getColumnCount()-1];
+                        for( int j=1; j<rsmd.getColumnCount(); j++ ){
+                            columnCellDatas[j-1] = cRs.getString(j+1);
+                        }
+                        datas.add(columnCellDatas);
+                    }
+                }else{
+                    String[] columnNameDatas = new String[rsmd.getColumnCount()];
+                    for( int i=1; i<=rsmd.getColumnCount(); i++ ){
+                        columnNameDatas[i-1] = rsmd.getColumnName(i);
+                    }
+                    datas.add(columnNameDatas);
+                    while (cRs.next()){
+                        String[] columnCellDatas = new String[rsmd.getColumnCount()];
+                        for( int j=1; j<=rsmd.getColumnCount(); j++ ){
+                            columnCellDatas[j-1] = cRs.getString(j);
+                        }
+                        datas.add(columnCellDatas);
+                    }
                 }
             }else{
-                throw new RuntimeException("query sql must be select statement!");
+                throw new RuntimeException("Only select statement can be executed!");
             }
         }else{
-            throw new RuntimeException("query sql is empty!");
+            throw new RuntimeException( "SQL is required!");
         }
         JdbcUtils.closeResultSet(cRs);
         JdbcUtils.closeStatement(st);

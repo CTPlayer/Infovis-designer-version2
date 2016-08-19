@@ -11,46 +11,55 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  ************************************************************************/
-package core.plugin.mybatis.dialect;
+package core.plugin.mybatis.dialect.impl;
 
+import core.plugin.mybatis.dialect.Dialect;
 import org.apache.ibatis.session.RowBounds;
 
 /**
  * <p>
- * MySQL 通用分页语句
- *
+ * Oracle 通用分页语句
+ * 
  * @author CSJ
  */
-public class MysqlDialect implements Dialect {
-
+public class OracleDialect implements Dialect {
     /**
-     * MySQL SQL:
+     * ORACLE Pagination SQL:
      * 
      * <pre>
-     * SELECT * FROM table limit pageSize offset START
+     * SELECT * FROM (
+     *     SELECT row_.*, ROWNUM rownum_ FROM (
+     *         orginSQL
+     *     ) row_ WHERE ROWNUM <= MAX
+     * )
+     * WHERE rownum_ > START
      * </pre>
      */
     @Override
     public String getSqlWithPagination(String sql, RowBounds rowBounds) {
         StringBuilder sqlBuilder = new StringBuilder();
-        long pageSize = rowBounds.getLimit() - rowBounds.getOffset();
-        sqlBuilder.append(sql).append(" limit " + pageSize + " offset " + rowBounds.getOffset());
+        sqlBuilder
+                .append("SELECT * FROM (SELECT ROWNUM rownum_ ,row_.* FROM ( ")
+                .append(sql)
+                .append(" ) row_ WHERE ROWNUM <= " + rowBounds.getLimit() + ") WHERE rownum_ > "
+                        + rowBounds.getOffset());
         return sqlBuilder.toString();
     }
 
     /**
-     * MySQL Count SQL:
+     * ORACLE Count SQL:
      * 
      * <pre>
      * SELECT COUNT(0) FROM (
      *     orginSQL
-     * ) as t
+     * )
      * </pre>
      * 
      */
     public String getSqlWithCount(String sql) {
         StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("SELECT COUNT(0) FROM ( ").append(sql).append(" ) as t1");
+        sqlBuilder.append("SELECT COUNT(0) FROM ( ").append(sql).append(" )");
         return sqlBuilder.toString();
     }
+
 }

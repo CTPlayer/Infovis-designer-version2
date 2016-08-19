@@ -11,45 +11,47 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  ************************************************************************/
-package core.plugin.mybatis.dialect;
+package core.plugin.mybatis.dialect.impl;
 
+import core.plugin.mybatis.dialect.Dialect;
 import org.apache.ibatis.session.RowBounds;
 
 /**
  * <p>
- * H2 通用分页语句
+ * MySQL 通用分页语句
  *
  * @author CSJ
  */
-public class H2Dialect implements Dialect {
+public class MysqlDialect implements Dialect {
 
     /**
-     * H2 SQL:
+     * MySQL SQL:
      * 
      * <pre>
-     * SELECT * FROM table limit MAX offset START
+     * SELECT * FROM table limit pageSize offset START
      * </pre>
      */
     @Override
     public String getSqlWithPagination(String sql, RowBounds rowBounds) {
         StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append(sql).append(" limit " + rowBounds.getLimit() + " offset " + rowBounds.getOffset());
+        long pageSize = rowBounds.getLimit() - rowBounds.getOffset();
+        sqlBuilder.append(sql).append(" limit " + pageSize + " offset " + rowBounds.getOffset());
         return sqlBuilder.toString();
     }
 
     /**
-     * H2 Count SQL:
+     * MySQL Count SQL:
      * 
      * <pre>
      * SELECT COUNT(0) FROM (
      *     orginSQL
-     * )
+     * ) as t
      * </pre>
      * 
      */
     public String getSqlWithCount(String sql) {
         StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("SELECT COUNT(0) FROM ( ").append(sql).append(" )");
+        sqlBuilder.append("SELECT COUNT(0) FROM ( ").append(sql).append(" ) as t1");
         return sqlBuilder.toString();
     }
 }

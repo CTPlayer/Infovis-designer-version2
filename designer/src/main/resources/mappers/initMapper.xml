@@ -42,5 +42,14 @@
         CREATE_TIME VARCHAR(14) NOT NULL COMMENT '创建日期',
         CREATE_PEOPLE VARCHAR(50) COMMENT '创建人'
       );
+
+      <!--导出代码保存表-->
+      CREATE TABLE  IF NOT EXISTS T_MY_CHARTS(
+        id BIGINT AUTO_INCREMENT NOT NULL COMMENT '主键',
+        EXPORT_ID VARCHAR(36) DEFAULT NULL COMMENT '外部标识UUID',
+        HTML_CODE CLOB NOT NULL COMMENT 'html代码',
+        JS_CODE CLOB NOT NULL COMMENT 'JS代码',
+        CREATE_TIME VARCHAR(14) NOT NULL COMMENT '创建日期'
+      )
     </update>
 </mapper>

@@ -11,14 +11,13 @@ require.config({
         "jquery-ui": "lib/jquery-ui.min",
         "lodash": "lib/gridstack/js/lodash.min",
         "gridstack": "lib/gridstack/js/gridstack.min",
-        "exportHtml": "lib/export/exportHtml",
         "knockout": "lib/knockout/knockout-3.4.0",
         "backbone": "lib/backbone/backbone-min",
         "underscore": "lib/underscore/underscore-min",
         "knockback": "lib/knockback.min",
-        "bootsnav": "lib/bootstrap/js/bootsnav",
         "spectrum": "lib/bootstrap/js/spectrum",
-        "infovis": "lib/infovis.min"
+        "infovis": "lib/infovis.min",
+        "Clipboard": "lib/export/clipboard.min"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -26,9 +25,9 @@ require.config({
     }
 });
 
-require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'exportHtml', 'app/appViewModel',
-        'bootstrap', 'gridstack', 'bootsnav', 'spectrum'],
-    function($, infovis, ko, kb, baseOptions, formatData, exportHtml, appViewModel){
+require(['jquery', 'infovis', 'knockout', 'knockback', 'Clipboard', 'options', 'formatData', 'app/appViewModel',
+        'bootstrap', 'gridstack', 'spectrum'],
+    function($, infovis, ko, kb, Clipboard, baseOptions, formatData, appViewModel){
 
         $(function() {
             $(".navbar-expand-toggle").click(function() {
@@ -78,7 +77,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     '</div>'),node.x, node.y, node.width, node.height);
             }
 
-            grid.add_widget($('<div style="display: none">'+
+            grid.add_widget($('<div style="display: none" id="fill">'+
                 '<div class="grid-stack-item-content">'+
                 '</div>'+
                 '</div>'),0, 0, 0, 10);
@@ -104,8 +103,6 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 add_new_widget(pagex,pagey);
                 var container = $("div[order = "+order+"]");
                 var index = container.attr("order");
-                //console.log(ev.originalEvent.clientX);
-                // console.log(ev.originalEvent.client);
                 if(engine){
                     if(data=="bar01"){
                         engine.render(order,"datasetOfBar","bar01");
@@ -193,41 +190,31 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 domId = e.relatedTarget.parentNode.parentNode.parentNode.getAttribute('order');
             });
 
-            $(".modal-footer").click(function(){
+            $(".modal-footer").eq(0).click(function(){
                 var instance = engine.chart.getInstanceByDom(document.getElementById("optionContainer"));
                 engine.chart.getInstanceByDom(document.getElementById(domId)).setOption(instance.getOption());
                 exportOptions[currentIndex-1] = instance.getOption();
             });
 
-            //导出HTML
             $("#exportHtml").click(function(){
-                $(".grid-stack").children(":first").remove();
-                $(".grid-stack").children(":first").remove();
-                var template = '<!DOCTYPE html>'+
-                    '<html lang="zh-CN">'+
-                    '<head>'+
-                    '<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content=""><meta name="author" content="">'+
-                    '<title>报表</title>'+
-                    '<link href="css/bootstrap.min.css" rel="stylesheet"><link rel="stylesheet" href="css/gridstack.css"/><link rel="stylesheet" type="text/css" href="css/default.css">'+
-                    '<style type="text/css">'+
-                    '.grid-stack {'+
-                    'border : 1px solid rgb(200,200,200)'+
-                    '}'+
-                    '</style>'+
-                    '</head>'+
-                    '<body>'+
-                    '<div class="container"style="margin-top:50px;">'+
-                    '<div class="grid-stack" id="exportContainer">'+
-                    $(".grid-stack").html()+
-                    '</div>'+
-                    '</div>'+
-                    '<div id="exportOption" style="display:none">'+
-                    JSON.stringify(exportOptions)+
-                    '</div>'+
-                    '<script src="require.js" defer async="true" data-main="exportmain"></script>'+
-                    '</body>'+
-                    '</html>'
-                exportHtml.downloadHtml(template);
+                $(".grid-stack-placeholder").remove();
+                $("#fill").remove();
+
+                var arr = window.location.href.split("/");
+                $.ajax({
+                   type: 'POST',
+                   url: "../export",
+                   data: {"htmlCode" : $(".grid-stack").html().trim() , "jsCode" : JSON.stringify(exportOptions)},
+                   success : function(data){
+                       new Clipboard("#copy");
+                       var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+data;
+                       $("#copy").html("复制到剪贴板");
+                       $(".modal-body").eq(1).find("p").eq(1).html(shareHref);
+                   },
+                   error : function(){
+                       $(".modal-body").eq(1).find("p").eq(1).html("链接生成失败，请重试！");
+                   }
+                });
             });
         })
     });

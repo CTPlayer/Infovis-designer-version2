@@ -13,26 +13,19 @@
  ************************************************************************/
 package core.plugin.mybatis;
 
-import java.sql.Connection;
-import java.util.Properties;
-
+import core.plugin.mybatis.dialect.Dialect;
+import core.plugin.mybatis.dialect.SqlDialetHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.ibatis.executor.statement.PreparedStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.plugin.Intercepts;
-import org.apache.ibatis.plugin.Invocation;
-import org.apache.ibatis.plugin.Plugin;
-import org.apache.ibatis.plugin.Signature;
+import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 
-import core.plugin.mybatis.dialect.Dialect;
-import core.plugin.mybatis.dialect.H2Dialect;
-import core.plugin.mybatis.dialect.MysqlDialect;
-import core.plugin.mybatis.dialect.OracleDialect;
+import java.sql.Connection;
+import java.util.Properties;
 
 /**
  * 通用分页根据不同的数据库实现
@@ -61,16 +54,7 @@ public class PageInterceptor implements Interceptor {
             // 拦截到的prepare方法参数是一个Connection对象
             Connection connection = (Connection) inv.getArgs()[0];
             String dbType = connection.getMetaData().getDatabaseProductName();
-            Dialect dialect = null;
-            if (StringUtils.equalsIgnoreCase("ORACLE", dbType)) {
-                dialect = new OracleDialect();
-            } else if (StringUtils.equalsIgnoreCase("H2", dbType)) {
-                dialect = new H2Dialect();
-            } else if (StringUtils.equalsIgnoreCase("MYSQL", dbType)) {
-                dialect = new MysqlDialect();
-            } else {
-                throw new RuntimeException("A404: Not Support ['" + dbType + "'] Pagination Yet!");
-            }
+            Dialect dialect = SqlDialetHelper.getDialetByDbType(dbType);
             Object obj = FieldUtils.readField(target, "delegate", true);
             // 反射获取 RowBounds 对象。
             RowBounds rowBounds = (RowBounds) FieldUtils.readField(obj, "rowBounds", true);
