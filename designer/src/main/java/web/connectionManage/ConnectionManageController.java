@@ -58,18 +58,23 @@ public class ConnectionManageController {
         if("0".equals(lv)){
             connectionManage.setId(connectionManage.getQueryParam());
             connectionManage = connectionManageService.queryAsObject(connectionManage);
-            new Socket(connectionManage.getDbHost(),Integer.parseInt(connectionManage.getDbPort()));
             JdbcProps jdbcProps = new JdbcProps();
             jdbcProps.setUrl(connectionManage.getDbUrl());
             jdbcProps.setUsername(connectionManage.getUserName());
             jdbcProps.setPassword(connectionManage.getPassword());
-            List<TableMetaData> tableMetaDatas = dataBaseMetadataHelper.getSchemaTables(jdbcProps);
-            for(TableMetaData tableMetaData : tableMetaDatas){
-                ConnectionManage treeNode = new ConnectionManage();
-                treeNode.setDbName(tableMetaData.getTableName());
-                treeNode.setId(tableMetaData.getTableName());
-                treeNode.setIsParent("false");
-                treeNodes.add(treeNode);
+            jdbcProps.setDbPort(connectionManage.getDbPort());
+            jdbcProps.setDbHost(connectionManage.getDbHost());
+            if(dataBaseMetadataHelper.isEffectiveDataSouce(jdbcProps)){
+                List<TableMetaData> tableMetaDatas = dataBaseMetadataHelper.getSchemaTables(jdbcProps);
+                for(TableMetaData tableMetaData : tableMetaDatas){
+                    ConnectionManage treeNode = new ConnectionManage();
+                    treeNode.setDbName(tableMetaData.getTableName());
+                    treeNode.setId(tableMetaData.getTableName());
+                    treeNode.setIsParent("false");
+                    treeNodes.add(treeNode);
+                }
+            }else{
+                throw new RuntimeException("数据库连接失败!");
             }
         }else{
             return connectionManageService.query(connectionManage);

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.*;
@@ -91,36 +92,31 @@ public class DataBaseMetadataHelper {
         Connection conn = null;
         ResultSet tRs = null;
         List<TableMetaData> tableMetaDatas = new ArrayList<>();
-        try {
-            dynamicDataSource.selectDataSource(jdbcProps.getUrl(), jdbcProps.getUsername(), jdbcProps.getPassword());
-            conn = dynamicDataSource.getConnection();
-            DatabaseMetaData metaData = conn.getMetaData();
-            String userName = metaData.getUserName();
-            String[] tableTypes = {"TABLE","VIEW"};
-            String dbType = SqlDialetHelper.getDbTypeByUrl(jdbcProps.getUrl());
-            tRs = metaData.getTables(null, null, null, tableTypes);
-            while (tRs.next()) {
-                TableMetaData tableMetaData = new TableMetaData();
-                tableMetaData.setTableName(tRs.getString("TABLE_NAME").toLowerCase());
-                tableMetaData.setTableType(tRs.getString("TABLE_TYPE"));
-                tableMetaData.setTableRemark(tRs.getString("REMARKS"));
-                String tableSchem = tRs.getString("TABLE_SCHEM");
-                if(!"INFORMATION_SCHEMA".equalsIgnoreCase(tableSchem) && !"sys".equalsIgnoreCase(tableSchem)){
-                    if("ORACLE".equalsIgnoreCase(dbType)){
-                        if(userName.equalsIgnoreCase(tableSchem)){
-                            tableMetaDatas.add(tableMetaData);
-                        }
-                    }else{
+        dynamicDataSource.selectDataSource(jdbcProps.getUrl(), jdbcProps.getUsername(), jdbcProps.getPassword());
+        conn = dynamicDataSource.getConnection();
+        DatabaseMetaData metaData = conn.getMetaData();
+        String userName = metaData.getUserName();
+        String[] tableTypes = {"TABLE","VIEW"};
+        String dbType = SqlDialetHelper.getDbTypeByUrl(jdbcProps.getUrl());
+        tRs = metaData.getTables(null, null, null, tableTypes);
+        while (tRs.next()) {
+            TableMetaData tableMetaData = new TableMetaData();
+            tableMetaData.setTableName(tRs.getString("TABLE_NAME").toLowerCase());
+            tableMetaData.setTableType(tRs.getString("TABLE_TYPE"));
+            tableMetaData.setTableRemark(tRs.getString("REMARKS"));
+            String tableSchem = tRs.getString("TABLE_SCHEM");
+            if(!"INFORMATION_SCHEMA".equalsIgnoreCase(tableSchem) && !"sys".equalsIgnoreCase(tableSchem)){
+                if("ORACLE".equalsIgnoreCase(dbType)){
+                    if(userName.equalsIgnoreCase(tableSchem)){
                         tableMetaDatas.add(tableMetaData);
                     }
+                }else{
+                    tableMetaDatas.add(tableMetaData);
                 }
             }
-        } catch (SQLException e) {
-            L.error("获取数据库表元数据异常", e);
-        } finally {
-            JdbcUtils.closeResultSet(tRs);
-            JdbcUtils.closeConnection(conn);
         }
+        JdbcUtils.closeResultSet(tRs);
+        JdbcUtils.closeConnection(conn);
         return tableMetaDatas;
     }
 
@@ -204,7 +200,8 @@ public class DataBaseMetadataHelper {
     public boolean isEffectiveDataSouce(JdbcProps jdbcProps){
         Boolean isSuccessConnect = true;
         try {
-            new Socket(jdbcProps.getDbHost(),Integer.parseInt(jdbcProps.getDbPort()));
+            Socket s = new Socket();
+            s.connect(new InetSocketAddress(jdbcProps.getDbHost(),Integer.parseInt(jdbcProps.getDbPort())),10000);
             DruidDataSource druidDataSource = dynamicDataSource.createDataSource(jdbcProps.getUrl(),jdbcProps.getUsername(),jdbcProps.getPassword());
             druidDataSource.getConnection();
         } catch (SQLException e) {
