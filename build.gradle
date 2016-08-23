@@ -160,6 +160,10 @@ project(":util") {
                 "com.belerweb:pinyin4j:$pinyin4j",
                 "commons-codec:commons-codec:$codec",
                 "org.javassist:javassist:$javassist",
+                "com.moodysalem:phantomjs-wrapper:$phantomjs",
+                "com.moodysalem:phantomjs-wrapper-windows-binary:$phantomjs",
+                "com.moodysalem:phantomjs-wrapper-linux-binary:$phantomjs",
+                "com.moodysalem:phantomjs-wrapper-macosx-binary:$phantomjs",
                 "javax.servlet:javax.servlet-api:$servlet"
     }
 
