@@ -12,6 +12,6 @@
         WHERE ID = #{id}
     </select>
     <select id="query" parameterType="ConnectionManage" resultType="ConnectionManage" databaseId="h2" >
-        SELECT ID,DBTYPE,DBNAME,DBURL,USERNAME,PASSWORD,CREATETIME, 'true' as isParent, ID as queryParam FROM T_DB_CONNECTION
+        SELECT ID,DBTYPE,DBNAME,DBURL,USERNAME,PASSWORD,CREATETIME, 'true' as isParent, 'database' as type, ID as queryParam FROM T_DB_CONNECTION
     </select>
 </mapper>

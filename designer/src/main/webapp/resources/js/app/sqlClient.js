@@ -127,10 +127,12 @@ require([
                 dataFilter: function(treeId, parentNode, responseData) {
                     //批量增加iconSkin
                     $.each(responseData,function(index,object){
-                        if(object.dbUrl){
+                        if(object.type === 'database'){
                             object.iconSkin = "dbIcon";
-                        }else{
+                        }else if((object.type === 'table')){
                             object.iconSkin = "tableIcon";
+                        }else{
+                            object.iconSkin = "fieldIcon";
                         }
                     });
                     return responseData;
@@ -151,7 +153,7 @@ require([
                     dataSourceTree.updateNode(treeNode);
                 },
                 onClick: function(event, treeId, treeNode) {
-                    if(!treeNode.isParent){
+                    if(treeNode.level === 1){
                         var editor = $('.CodeMirror')[0].CodeMirror;
                         var sql = editor.getDoc().getValue();
                         if(sql === ''){
@@ -291,11 +293,17 @@ require([
                 //去除换行符
                 queryParam.sql = queryParam.sql.replace(/[\r\n]/g,' ');
                 queryParam.queryMaxRows = 30;
-                if(nodes[0].dbUrl){
-                    queryParam.id = nodes[0].id;
-                }else{
-                    queryParam.id = nodes[0].getParentNode().id
+
+
+                var parentNode = nodes[0];
+                //循环找到根节点
+                while(parentNode.getParentNode())
+                {
+                    parentNode = parentNode.getParentNode();
                 }
+
+
+                queryParam.id = parentNode.id;
 
                 var deferred = $.ajax({
                     type: 'POST',

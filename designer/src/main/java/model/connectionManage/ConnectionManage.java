@@ -20,6 +20,7 @@ public class ConnectionManage extends BaseModel {
     private String queryParam;
     private String lv;
     private String sql;
+    private String type;//标识是database table 还是field
     private int queryMaxRows;
 
     public String getId() {
@@ -132,5 +133,13 @@ public class ConnectionManage extends BaseModel {
 
     public void setDbType(String dbType) {
         this.dbType = dbType;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
