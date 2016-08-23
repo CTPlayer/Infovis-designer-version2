@@ -18,7 +18,13 @@ require.config({
 require(['jquery', 'infovis', 'options', 'gridstack', 'bootstrap'],function($, infovis, baseOptions){
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
+
         if($("#exportContainer")){
+            var ids = [];
+            var containers = $("#exportContainer").children();
+            for(var i=0;i<containers.length;i++){
+                ids.push($(containers[i]).children().first().attr("id"));
+            }
             var options = {
                 float: true
             };
@@ -27,7 +33,7 @@ require(['jquery', 'infovis', 'options', 'gridstack', 'bootstrap'],function($, i
             var containers = $("#exportContainer").children();
             for(var i=0;i<containers.length-1;i++){
                 var exportChart = engine.chart.init(containers[i]);
-                exportChart.setOption(JSON.parse($("#exportOption").html())[i]);
+                exportChart.setOption(JSON.parse($("#exportOption").html())[ids[i]]);
                 window.addEventListener("resize",function(){
                     exportChart.resize();                                            //自适应窗口
                 });

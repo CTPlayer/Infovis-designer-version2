@@ -82,7 +82,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'Clipboard', 'options', '
                 '</div>'+
                 '</div>'),0, 0, 0, 10);
 
-            var exportOptions = [];                            //记录并保存每个图表的option并与容器对应
+            var optionsArray = {};                                   //记录并保存每个图表的option并与容器对应
             var allOptions = baseOptions.makeAllOptions();
             var engine = infovis.init(allOptions || {});
             var currentIndex;                                        //记录当前所修改的option下标
@@ -123,7 +123,8 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'Clipboard', 'options', '
                     }
                 }
 
-                exportOptions[index-1] = engine.chart.getInstanceByDom(document.getElementById(order)).getOption();
+                if(optionsArray[order] == null)
+                    optionsArray[order] = engine.chart.getInstanceByDom(document.getElementById(order)).getOption();
 
                 // 图表初始化完成后添加菜单
                 container.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
@@ -151,11 +152,8 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'Clipboard', 'options', '
                 container.find('a').eq(0).click(function(){
                     var area = $(this).parent().parent().parent();
                     var index = $(area).attr("order");
-                    for(var i=0,n=0;i<exportOptions.length;i++){
-                        if(i!=(index-1)){
-                            exportOptions[n++]=exportOptions[i];
-                        }
-                    }
+
+                    delete optionsArray[index];
                     $(area).parent().remove();
                 });
 
@@ -195,7 +193,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'Clipboard', 'options', '
             $(".modal-footer").eq(0).click(function(){
                 var instance = engine.chart.getInstanceByDom(document.getElementById("optionContainer"));
                 engine.chart.getInstanceByDom(document.getElementById(domId)).setOption(instance.getOption());
-                exportOptions[currentIndex-1] = instance.getOption();
+                optionsArray[currentIndex] = instance.getOption();
             });
 
             $("#exportHtml").click(function(){
@@ -206,7 +204,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'Clipboard', 'options', '
                 $.ajax({
                    type: 'POST',
                    url: "../export",
-                   data: {"htmlCode" : $(".grid-stack").html().trim() , "jsCode" : JSON.stringify(exportOptions)},
+                   data: {"htmlCode" : $(".grid-stack").html().trim() , "jsCode" : JSON.stringify(optionsArray)},
                    success : function(data){
                        new Clipboard("#copy");
                        var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+data;
