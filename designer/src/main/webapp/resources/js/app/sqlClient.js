@@ -331,6 +331,7 @@ require([
                 });
                 deferred.done(function(result){
                     $('#pagebar').empty();
+                    $('#savebar').show();
                     $('#pagebar').bootpag({
                         total: result.total,
                         page: result.page,
@@ -431,6 +432,52 @@ require([
             editor.setValue("");
             //editor.clearHistory();
 
+        })
+
+        //保存sql
+        $("#saveQuerySql").click(function() {
+            $("#saveQuerySqlModal").modal('toggle');
+        })
+
+        //新增保存
+        $("#saveQuerySqlModal .btn-primary").click(function(){
+            $('#saveQuerySqlForm').submit();
+        })
+
+        $('#saveQuerySqlForm').validate({
+            errorElement : 'div',
+            errorClass : 'warning-block',
+            focusInvalid : true,
+            ignore : "",
+            rules : {
+                recordingName : {
+                    required : true
+                }
+            },
+            messages : {
+                recordingName : {
+                    required : "数据集名称为必填项"
+                }
+            },
+            submitHandler : function(form) {
+                var recordingName = $(form).find("input[name='recordingName']").val();
+                var data = {
+                    "recordingName" : recordingName,
+                    "connectionId" : queryParam.id,
+                    "sqlRecording" : queryParam.sql,
+                };
+
+                var deferred = $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '../sqlRecordingManage/add',
+                    data : data
+                });
+                deferred.done(function(){
+                    $(form)[0].reset();
+                    $("#saveQuerySqlModal").modal('toggle');
+                })
+            }
         })
 
         //打开模态框绑定数据

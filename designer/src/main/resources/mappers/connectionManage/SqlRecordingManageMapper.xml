@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.mapper.connectionManage.SqlRecordingManageMapper">
+    <insert id="add" parameterType="SqlRecordingManage" databaseId="h2">
+        insert into T_DB_SQLRECORDING(ID,RECORDING_NAME,SQL_RECORDING,CONNECTION_ID,CREATE_TIME,CREATE_PEOPLE)
+        VALUES(#{id},#{recordingName},#{sqlRecording},#{connectionId},#{createTime},#{createPeople})
+    </insert>
+    <delete id="delete" parameterType="SqlRecordingManage" databaseId="h2">
+        delete from T_DB_SQLRECORDING where id=#{id}
+    </delete>
+    <select id="queryAsObject" parameterType="SqlRecordingManage" resultType="SqlRecordingManage" databaseId="h2" >
+        SELECT * FROM T_DB_SQLRECORDING
+        WHERE ID = #{id}
+    </select>
+    <select id="query" parameterType="SqlRecordingManage" resultType="SqlRecordingManage" databaseId="h2" >
+        SELECT * FROM T_DB_SQLRECORDING
+    </select>
+</mapper>

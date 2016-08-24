@@ -173,6 +173,7 @@
     <div class="outer-center">
         <div class="middle-center">
             <div class="inner-center scrollable">
+                <div id="savebar" style="display: none"><button type="button" class="btn btn-success" id="saveQuerySql">结果集保存</button></div>
                 <div id="resultArea"></div>
                 <div id="pagebar"></div>
             </div>
@@ -227,6 +228,29 @@
                             <div class="form-group">
                                 <input type="hidden" class="form-control" name="dbUrl" data-bind="value: dbUrl" placeholder="数据库连接地址">
                             </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="saveQuerySqlModal" tabindex="-1" role="dialog" >
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" >保存数据集</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="saveQuerySqlForm" method="post">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="recordingName" placeholder="数据集名称" />
                         </div>
                     </form>
                 </div>
