@@ -77,7 +77,7 @@ require([
             center__paneSelector:	".outer-center"
             ,	west__paneSelector:		".outer-west"
             ,	east__paneSelector:		".outer-east"
-            ,	west__size:				200
+            ,	west__size:				350
             ,	east__size:				125
             ,	spacing_open:			8 // ALL panes
             ,	spacing_closed:			12 // ALL panes
