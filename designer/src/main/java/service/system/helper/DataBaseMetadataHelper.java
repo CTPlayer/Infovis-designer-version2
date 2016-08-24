@@ -1,6 +1,5 @@
 package service.system.helper;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import common.model.BaseModel;
 import core.plugin.mybatis.dialect.SqlDialetHelper;
 import core.plugin.spring.database.route.DynamicDataSource;

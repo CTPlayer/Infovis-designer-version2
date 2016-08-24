@@ -128,7 +128,25 @@ require([
                     //批量增加iconSkin
                     $.each(responseData,function(index,object){
                         if(object.type === 'database'){
-                            object.iconSkin = "dbIcon";
+                            console.log(object.dbType);
+                            switch(object.dbType)
+                            {
+                                case 'Oracle':
+                                    object.iconSkin = "oracleIcon";
+                                    break;
+                                case 'MySql':
+                                    object.iconSkin = "mysqlIcon";
+                                    break;
+                                case 'SqlServer':
+                                    object.iconSkin = "sqlserverIcon";
+                                    break;
+                                case 'H2':
+                                    object.iconSkin = "h2Icon";
+                                    break;
+                                default:
+                                    object.iconSkin = "dbIcon";
+                            }
+
                         }else if((object.type === 'table')){
                             object.iconSkin = "tableIcon";
                         }else{
