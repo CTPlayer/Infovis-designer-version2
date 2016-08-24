@@ -127,10 +127,29 @@ require([
                 dataFilter: function(treeId, parentNode, responseData) {
                     //批量增加iconSkin
                     $.each(responseData,function(index,object){
-                        if(object.dbUrl){
-                            object.iconSkin = "dbIcon";
-                        }else{
+                        if(object.type === 'database'){
+                            switch(object.dbType)
+                            {
+                                case 'Oracle':
+                                    object.iconSkin = "oracleIcon";
+                                    break;
+                                case 'MySql':
+                                    object.iconSkin = "mysqlIcon";
+                                    break;
+                                case 'SqlServer':
+                                    object.iconSkin = "sqlserverIcon";
+                                    break;
+                                case 'H2':
+                                    object.iconSkin = "h2Icon";
+                                    break;
+                                default:
+                                    object.iconSkin = "dbIcon";
+                            }
+
+                        }else if((object.type === 'table')){
                             object.iconSkin = "tableIcon";
+                        }else{
+                            object.iconSkin = "fieldIcon";
                         }
                     });
                     return responseData;
@@ -151,7 +170,7 @@ require([
                     dataSourceTree.updateNode(treeNode);
                 },
                 onClick: function(event, treeId, treeNode) {
-                    if(!treeNode.isParent){
+                    if(treeNode.level === 1){
                         var editor = $('.CodeMirror')[0].CodeMirror;
                         var sql = editor.getDoc().getValue();
                         if(sql === ''){
@@ -291,11 +310,17 @@ require([
                 //去除换行符
                 queryParam.sql = queryParam.sql.replace(/[\r\n]/g,' ');
                 queryParam.queryMaxRows = 30;
-                if(nodes[0].dbUrl){
-                    queryParam.id = nodes[0].id;
-                }else{
-                    queryParam.id = nodes[0].getParentNode().id
+
+
+                var parentNode = nodes[0];
+                //循环找到根节点
+                while(parentNode.getParentNode())
+                {
+                    parentNode = parentNode.getParentNode();
                 }
+
+
+                queryParam.id = parentNode.id;
 
                 var deferred = $.ajax({
                     type: 'POST',
@@ -305,6 +330,7 @@ require([
                 });
                 deferred.done(function(result){
                     $('#pagebar').empty();
+                    $('#savebar').show();
                     $('#pagebar').bootpag({
                         total: result.total,
                         page: result.page,
@@ -405,6 +431,52 @@ require([
             editor.setValue("");
             //editor.clearHistory();
 
+        })
+
+        //保存sql
+        $("#saveQuerySql").click(function() {
+            $("#saveQuerySqlModal").modal('toggle');
+        })
+
+        //新增保存
+        $("#saveQuerySqlModal .btn-primary").click(function(){
+            $('#saveQuerySqlForm').submit();
+        })
+
+        $('#saveQuerySqlForm').validate({
+            errorElement : 'div',
+            errorClass : 'warning-block',
+            focusInvalid : true,
+            ignore : "",
+            rules : {
+                recordingName : {
+                    required : true
+                }
+            },
+            messages : {
+                recordingName : {
+                    required : "数据集名称为必填项"
+                }
+            },
+            submitHandler : function(form) {
+                var recordingName = $(form).find("input[name='recordingName']").val();
+                var data = {
+                    "recordingName" : recordingName,
+                    "connectionId" : queryParam.id,
+                    "sqlRecording" : queryParam.sql,
+                };
+
+                var deferred = $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '../sqlRecordingManage/add',
+                    data : data
+                });
+                deferred.done(function(){
+                    $(form)[0].reset();
+                    $("#saveQuerySqlModal").modal('toggle');
+                })
+            }
         })
 
         //打开模态框绑定数据

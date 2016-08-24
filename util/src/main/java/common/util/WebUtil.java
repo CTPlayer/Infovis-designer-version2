@@ -13,13 +13,19 @@
  ************************************************************************/
 package common.util;
 
+import com.moodysalem.phantomjs.wrapper.CommandLineArgument;
+import com.moodysalem.phantomjs.wrapper.PhantomJS;
+import com.moodysalem.phantomjs.wrapper.beans.PhantomJSExecutionResponse;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
 /**
  * <p>
  * WEB工具
@@ -144,5 +150,36 @@ public final class WebUtil {
 
     private static boolean getBrowserType(HttpServletRequest request, String brosertype) {
         return request.getHeader("USER-AGENT").toLowerCase().indexOf(brosertype) > 0 ? true : false;
+    }
+
+    /**
+     * 生成URL页面缩略图
+     *
+     * @param url
+     * @param filename
+     * @param jsWait
+     * @return
+     * @throws IOException
+     */
+    public static final String snapshotHtmlImageBase64Format(String url, String filename, long jsWait) throws IOException {
+        String tmpdir = System.getProperty("java.io.tmpdir", "/tmp");
+        String base64 = null;
+        PhantomJSExecutionResponse resp = PhantomJS.exec(WebUtil.class.getClassLoader().getResourceAsStream("ScreenCapture.js"),
+                new CommandLineArgument(url),
+                new CommandLineArgument(filename),
+                new CommandLineArgument(String.valueOf(jsWait)),
+                new CommandLineArgument(tmpdir));
+        int renderExitCode = resp.getExitCode();
+        if (renderExitCode == 0) {
+            File tmp = new File(tmpdir + "/" + filename + ".JPEG");
+            byte[] data = FileUtils.readFileToByteArray(tmp);
+            base64 = Base64.encodeBase64String(data);
+            FileUtils.forceDeleteOnExit(tmp);
+        }
+        return base64;
+    }
+
+    public static final String snapshotHtmlImageBase64Format(String url, String filename) throws IOException {
+        return snapshotHtmlImageBase64Format(url, filename, 2000l);
     }
 }
