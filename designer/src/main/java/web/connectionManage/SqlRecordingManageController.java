@@ -1,10 +1,12 @@
 package web.connectionManage;
 
 import model.connectionManage.ConnectionManage;
+import model.connectionManage.SqlRecordingManage;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import service.connectionManage.ConnectionManageService;
+import service.connectionManage.SqlRecordingManageService;
 
 import javax.annotation.Resource;
 
@@ -16,23 +18,23 @@ import javax.annotation.Resource;
 public class SqlRecordingManageController {
 
     @Resource
-    private ConnectionManageService connectionManageService;
+    private SqlRecordingManageService sqlRecordingManageService;
 
     @RequestMapping("/add")
     @ResponseBody
-    public Object add(ConnectionManage connectionManage){
-        return connectionManageService.add(connectionManage);
+    public Object add(SqlRecordingManage sqlRecordingManage){
+        return sqlRecordingManageService.add(sqlRecordingManage);
     }
 
     @RequestMapping("/delete")
     @ResponseBody
-    public Object delete(ConnectionManage connectionManage){
-        return connectionManageService.delete(connectionManage);
+    public Object delete(SqlRecordingManage sqlRecordingManage){
+        return sqlRecordingManageService.delete(sqlRecordingManage);
     }
 
     @RequestMapping("/query")
     @ResponseBody
-    public Object query(ConnectionManage connectionManage){
-        return connectionManageService.query(connectionManage);
+    public Object query(SqlRecordingManage sqlRecordingManage){
+        return sqlRecordingManageService.query(sqlRecordingManage);
     }
 }
