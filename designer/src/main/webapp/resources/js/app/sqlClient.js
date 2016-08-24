@@ -128,7 +128,6 @@ require([
                     //批量增加iconSkin
                     $.each(responseData,function(index,object){
                         if(object.type === 'database'){
-                            console.log(object.dbType);
                             switch(object.dbType)
                             {
                                 case 'Oracle':
