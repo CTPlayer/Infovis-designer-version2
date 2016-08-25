@@ -45,9 +45,9 @@
 </head>
 
 <body class="flat-blue">
-<div class="app-container">
+<div class="app-container" style="background-color: rgb(240,240,240)">
     <div class="row content-container">
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-default navbar-static-top" style="margin-left:-60px;background-color: rgb(238,238,238)">
             <div class="container-fluid">
             <ul class="nav navbar-nav navbar-left">
                 <h2>设计面板</h2>
@@ -85,22 +85,54 @@
         </nav>
         <!-- Main Content -->
         <div class="container-fluid">
-            <div class="row" style="padding-left: 10px;">
-                <c:forEach var="myPanel" items="${myPanels}">
-                <div>
-                    <div class="thumbnail no-margin-bottom col-md-2">
-                        <img src="data:image/jpg;base64,${myPanel.img}" class="img-thumbnail">
-                        <div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">
-                            <span style="display:none;">
-                                ${myPanel.panelName}
-                                <a href="deleteOne?exportId=${myPanel.exportId}"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>
-                                <a href="showPanel.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>
-                                <a href="share.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-zoom-in" style="color: white"></i></a>
-                            </span>
+            <%--<div class="row">--%>
+                <%--<c:forEach var="myPanel" items="${myPanels}">--%>
+                <%--<div>--%>
+                    <%--<div class="thumbnail no-margin-bottom col-md-2" style="margin-top: 25px;margin-left: 40px;">--%>
+                        <%--<img src="data:image/jpg;base64,${myPanel.img}" style="box-shadow: 0 0 3px #000;">--%>
+                        <%--<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">--%>
+                            <%--<span style="display:none;">--%>
+                                <%--${myPanel.panelName}--%>
+                                <%--<a href="deleteOne?exportId=${myPanel.exportId}"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>--%>
+                                <%--<a href="showPanel.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>--%>
+                                <%--<a href="share.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-zoom-in" style="color: white"></i></a>--%>
+                            <%--</span>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+                <%--</c:forEach>--%>
+            <%--</div>--%>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="card">
+                        <div class="card-header" style="background-color: rgb(77,124,190);">
+                            <div class="card-title">
+
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <div class="row">
+                                    <c:forEach var="myPanel" items="${myPanels}">
+                                    <div>
+                                        <div class="thumbnail no-margin-bottom col-md-2" style="margin-top: 25px;margin-left: 40px;">
+                                            <img src="data:image/jpg;base64,${myPanel.img}" style="box-shadow: 0 0 3px #000;">
+                                            <div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">
+                                                <span style="display:none;">
+                                                    ${myPanel.panelName}
+                                                    <a href="deleteOne?exportId=${myPanel.exportId}"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>
+                                                    <a href="showPanel.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>
+                                                    <a href="share.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-zoom-in" style="color: white"></i></a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </c:forEach>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                </c:forEach>
             </div>
         </div>
     </div>

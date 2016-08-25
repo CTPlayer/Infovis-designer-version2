@@ -90,12 +90,12 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             grid.add_widget($('<div style="display: none" id="fill">'+
                 '<div class="grid-stack-item-content">'+
                 '</div>'+
-                '</div>'),0, 0, 0, 10);
+                '</div>'),0, 0, 0, 9);
 
             //为了防止再次进入以后设计面板时先前的图表不能自定义大小，这里获取先前图表的容器属性，重新添加容器并渲染图表
             var containers = $(".grid-stack").children();
             $(containers).remove();
-            for(var i=0;i<containers.length-2;i++){
+            for(var i=0;i<containers.length-2;i++) {
                 var x = $(containers[i]).attr("data-gs-x");
                 var y = $(containers[i]).attr("data-gs-y");
                 var width = $(containers[i]).attr("data-gs-width");

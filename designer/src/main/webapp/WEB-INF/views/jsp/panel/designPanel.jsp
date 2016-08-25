@@ -30,6 +30,8 @@
         }
         .grid-stack {
             margin-bottom: 2em;
+            margin-left: 3em;
+            margin-top: 5em;
         }
 
         #operate i {
@@ -65,7 +67,7 @@
 
 <body class="flat-blue">
 <div class="app-container">
-    <div class="loader-container text-center color-white" style="display: none;margin-top:-400px;">
+    <div class="loader-container text-center color-white" style="display: none;position :fixed;top:300px;">
         <div><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
         <div>正在生成外部可访问页面，请稍后...</div>
     </div>
