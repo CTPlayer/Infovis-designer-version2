@@ -13,10 +13,12 @@ import java.util.List;
 public interface SqlRecordingManageMapper {
     int add(SqlRecordingManage connectionManage);
 
+    int update(SqlRecordingManage connectionManage);
+
     int delete(SqlRecordingManage connectionManage);
 
-    List<ConnectionManage> query(SqlRecordingManage connectionManage);
+    List<SqlRecordingManage> query(SqlRecordingManage connectionManage);
 
-    ConnectionManage queryAsObject(SqlRecordingManage connectionManage);
+    SqlRecordingManage queryAsObject(SqlRecordingManage connectionManage);
 
 }

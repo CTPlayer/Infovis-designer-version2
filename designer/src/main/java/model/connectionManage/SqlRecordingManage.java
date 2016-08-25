@@ -12,6 +12,8 @@ public class SqlRecordingManage extends BaseModel{
     private String connectionId;
     private String createTime;
     private String createPeople;
+    private String lv;
+    private String queryParam;
 
     public String getId() {
         return id;
@@ -59,5 +61,21 @@ public class SqlRecordingManage extends BaseModel{
 
     public void setCreatePeople(String createPeople) {
         this.createPeople = createPeople;
+    }
+
+    public String getLv() {
+        return lv;
+    }
+
+    public void setLv(String lv) {
+        this.lv = lv;
+    }
+
+    public String getQueryParam() {
+        return queryParam;
+    }
+
+    public void setQueryParam(String queryParam) {
+        this.queryParam = queryParam;
     }
 }

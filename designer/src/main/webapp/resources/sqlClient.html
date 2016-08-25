@@ -130,12 +130,13 @@
         }
 
         .ztree li span.button.dbIcon_ico_open, .ztree li span.button.dbIcon_ico_close{margin-right:2px; background: url(img/database.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
-        .ztree li span.button.tableIcon_ico_open, .ztree li span.button.tableIcon_ico_close{margin-right:2px; background: url(img/table.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+        .ztree li span.button.tableIcon_ico_docu,.ztree li span.button.tableIcon_ico_open, .ztree li span.button.tableIcon_ico_close{margin-right:2px; background: url(img/table.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
         .ztree li span.button.fieldIcon_ico_docu{margin-right:2px; background: url(img/field.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
         .ztree li span.button.oracleIcon_ico_open, .ztree li span.button.oracleIcon_ico_close{margin-right:2px; background: url(img/oracle.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
         .ztree li span.button.mysqlIcon_ico_open, .ztree li span.button.mysqlIcon_ico_close{margin-right:2px; background: url(img/mysql.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
         .ztree li span.button.sqlserverIcon_ico_open, .ztree li span.button.sqlserverIcon_ico_close{margin-right:2px; background: url(img/sqlserver.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
         .ztree li span.button.h2Icon_ico_open, .ztree li span.button.h2Icon_ico_close{margin-right:2px; background: url(img/h2.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+        .ztree li span.button.sqlrunnerIcon_ico_docu,.ztree li span.button.sqlrunnerIcon_ico_open, .ztree li span.button.sqlrunnerIcon_ico_close{margin-right:2px; background: url(img/sql_runner.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
 
     </style>
     <script src="js/lib/require.js" defer async="true" data-main="js/app/sqlClient"></script>
@@ -175,10 +176,16 @@
         <div class="middle-center">
             <div class="inner-center scrollable">
                 <div id="savebar" style="display: none"><button type="button" class="btn btn-success" id="saveQuerySql">结果集保存</button></div>
+                <div class="btn-group" role="group" id="sqlresultbargroup" style="display: none">
+                    <button type="button" class="btn btn-success" id="updateSqlResultBar">更新</button>
+                    <button type="button" class="btn btn-warning" id="deleteSqlResultBar">删除</button>
+                </div>
+                <div id="sqlResultId" style="display: none;"></div>
+                <div id="sqlRecordingName" style="display: none;"></div>
                 <div id="resultArea"></div>
                 <div id="pagebar"></div>
             </div>
-            <div class="ui-layout-north scrollable">
+            <div class="ui-layout-north">
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-success" id="executeQuerySql">查询SQL</button>
                     <button type="button" class="btn btn-primary" id="formattSelectSql">美化SQL</button>
@@ -195,7 +202,7 @@
                 <div class="panel-heading" role="tab" id="headingOne">
                     <h4 class="panel-title">
                         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            数据源
+                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span> 数据源
                         </a>
                     </h4>
                 </div>
@@ -209,13 +216,13 @@
                 <div class="panel-heading" role="tab" id="headingTwo">
                     <h4 class="panel-title">
                         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            数据集
+                            <span class="glyphicon glyphicon-indent-left" aria-hidden="true"></span> 数据集
                         </a>
                     </h4>
                 </div>
                 <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                     <div class="panel-body">
-                        content 2
+                        <ul id="dataListTree" class="ztree"></ul>
                     </div>
                 </div>
             </div>
