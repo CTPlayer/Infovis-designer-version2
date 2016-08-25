@@ -28,14 +28,19 @@ public class SqlRecordingManageServiceImpl implements SqlRecordingManageService 
     }
 
     @Override
+    public int update(SqlRecordingManage sqlRecordingManage) {
+        return sqlRecordingManageMapper.update(sqlRecordingManage);
+    }
+
+    @Override
     public int delete(SqlRecordingManage sqlRecordingManage) {
         return sqlRecordingManageMapper.delete(sqlRecordingManage);    }
 
     @Override
-    public List<ConnectionManage> query(SqlRecordingManage sqlRecordingManage) {
+    public List<SqlRecordingManage> query(SqlRecordingManage sqlRecordingManage) {
         return sqlRecordingManageMapper.query(sqlRecordingManage);    }
 
     @Override
-    public ConnectionManage queryAsObject(SqlRecordingManage sqlRecordingManage) {
+    public SqlRecordingManage queryAsObject(SqlRecordingManage sqlRecordingManage) {
         return sqlRecordingManageMapper.queryAsObject(sqlRecordingManage);    }
 }

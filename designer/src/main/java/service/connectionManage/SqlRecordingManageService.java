@@ -12,9 +12,11 @@ public interface SqlRecordingManageService {
 
     int add(SqlRecordingManage sqlRecordingManage);
 
+    int update(SqlRecordingManage sqlRecordingManage);
+
     int delete(SqlRecordingManage sqlRecordingManage);
 
-    List<ConnectionManage> query(SqlRecordingManage sqlRecordingManage);
+    List<SqlRecordingManage> query(SqlRecordingManage sqlRecordingManage);
 
-    ConnectionManage queryAsObject(SqlRecordingManage sqlRecordingManage);
+    SqlRecordingManage queryAsObject(SqlRecordingManage sqlRecordingManage);
 }

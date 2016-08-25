@@ -14,6 +14,7 @@ require.config({
         "DT-bootstrap": "lib/dataTables/js/dataTables.bootstrap.min",
         "underscore": "lib/underscore/underscore-min",
         "bootpag": "lib/bootpag/jquery.bootpag.min",
+        "confirmModal": "lib/confirm/confirm-bootstrap"
     },
     shim : {
         "ztree" : { "deps" :['jquery'] },
@@ -22,7 +23,8 @@ require.config({
         "jquery-layout" : { "deps" :['jquery','jquery-ui'] },
         "bootstrap" : { "deps" :['jquery'] },
         "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] },
-        "bootpag" : { "deps" :['jquery'] }
+        "bootpag" : { "deps" :['jquery'] },
+        "confirmModal" : { "deps" :['jquery'] }
     },
     packages: [{
         name: "codemirror",
@@ -70,14 +72,15 @@ require([
     'knockback',
     'datatables.net',
     'DT-bootstrap',
-    'bootpag'],
+    'bootpag',
+    'confirmModal'],
     function($,bootstrap,jquery_ui,jquery_ayout,ztree,validate,ko,bo,kb,dataTables,DT_bootstrap,bootpag){
     $(function(){
         var outerLayout = $('body').layout({
             center__paneSelector:	".outer-center"
             ,	west__paneSelector:		".outer-west"
             ,	east__paneSelector:		".outer-east"
-            ,	west__size:				200
+            ,	west__size:				350
             ,	east__size:				125
             ,	spacing_open:			8 // ALL panes
             ,	spacing_closed:			12 // ALL panes
@@ -117,7 +120,6 @@ require([
                     return true; // false = Cancel
                 }
         });
-
         var setting = {
             async: {
                 enable: true,
@@ -178,12 +180,79 @@ require([
                         }else{
                             editor.replaceSelection(" " + treeNode.dbName);
                         }
+                        queryParam.accordingType = 'dataSource';
                     }
                 }
             }
         };
 
         var dataSourceTree = $.fn.zTree.init($("#dataSourceTree"),setting);
+        var setting_datalist = {
+            async: {
+                enable: true,
+                url:"../sqlRecordingManage/queryTree",
+                autoParam:["queryParam", "level=lv"],
+                dataType: "JSON",
+                dataFilter: function(treeId, parentNode, responseData) {
+                    //批量增加iconSkin
+                    $.each(responseData,function(index,object){
+                        if(object.type === 'database'){
+                            switch(object.dbType)
+                            {
+                                case 'Oracle':
+                                    object.iconSkin = "oracleIcon";
+                                    break;
+                                case 'MySql':
+                                    object.iconSkin = "mysqlIcon";
+                                    break;
+                                case 'SqlServer':
+                                    object.iconSkin = "sqlserverIcon";
+                                    break;
+                                case 'H2':
+                                    object.iconSkin = "h2Icon";
+                                    break;
+                                default:
+                                    object.iconSkin = "dbIcon";
+                            }
+
+                        }else{
+                            object.iconSkin = "tableIcon";
+                        }
+                    });
+                    return responseData;
+                }
+            },
+            data: {
+                key: {
+                    name: "dbName"
+                }
+            },
+            callback: {
+                onAsyncError: function (event,treeId,treeNode,XMLHttpRequest,textStatus,errorThrown) {
+                    //记录旧的节点名称以免重复增加无法连接
+                    if(!treeNode.oldDbName){
+                        treeNode.oldDbName = treeNode.dbName;
+                    }
+                    treeNode.dbName = treeNode.oldDbName +"(无法连接)"
+                    setting_datalist.updateNode(treeNode);
+                },
+                onClick: function(event, treeId, treeNode) {
+                    if(treeNode.level === 1){
+                        var editor = $('.CodeMirror')[0].CodeMirror;
+                        editor.getDoc().setValue("");
+                        editor.replaceSelection(treeNode.sql);
+                        if(editor.getDoc().getValue() != ''){
+                            excuteSqlFunction();
+                        }
+                        $('#sqlResultId').html(treeNode.id);
+                        $('#sqlRecordingName').html(treeNode.dbName);
+                        queryParam.accordingType = 'dataList';
+                    }
+                }
+            }
+        };
+
+        var dataListTree = $.fn.zTree.init($("#dataListTree"),setting_datalist);
 
 
         //删除
@@ -293,9 +362,12 @@ require([
         })
 
         var queryParam = {};
-        //点击查询只查询第一页后面由分页插件去查询
-        $("#executeQuerySql").click(function(e){
+
+        var excuteSqlFunction = function () {
             var nodes = dataSourceTree.getSelectedNodes();
+            if(nodes.length == 0){
+                nodes = dataListTree.getSelectedNodes();
+            }
             if(nodes.length != 1){
                 $("#isCheckDataSourceModal").modal('toggle');
             }else{
@@ -330,7 +402,15 @@ require([
                 });
                 deferred.done(function(result){
                     $('#pagebar').empty();
-                    $('#savebar').show();
+                    console.log(queryParam.accordingType);
+                    if(queryParam.accordingType == 'dataSource'){
+                        $('#savebar').show();
+                        $('#sqlresultbargroup').hide();
+                    }else if(queryParam.accordingType == 'dataList'){
+                        $('#savebar').hide();
+                        $('#sqlresultbargroup').show();
+                    }
+
                     $('#pagebar').bootpag({
                         total: result.total,
                         page: result.page,
@@ -378,7 +458,7 @@ require([
                         }
                     });
                 }
-                
+
                 deferred.fail(function(result){
                     $("#resultArea").empty();
                     $("#resultArea").append(result.responseText)
@@ -389,6 +469,11 @@ require([
                     return div.innerHTML;
                 }
             }
+        }
+
+        //点击查询只查询第一页后面由分页插件去查询
+        $("#executeQuerySql").click(function(e){
+            excuteSqlFunction();
         })
 
         //格式化sql
@@ -435,13 +520,31 @@ require([
 
         //保存sql
         $("#saveQuerySql").click(function() {
+            queryParam.oper = 'save';
+            $('#saveQuerySqlForm').find("input[name='recordingName']").val('');
+            $('#saveQuerySqlModal .modal-title').html('保存数据集');
             $("#saveQuerySqlModal").modal('toggle');
+        })
+
+        //更新sql
+        $("#updateSqlResultBar").click(function() {
+            queryParam.oper = 'update';
+            queryParam.sqlRecordId = $('#sqlResultId').html();
+            var editor = $('.CodeMirror')[0].CodeMirror;
+            if(editor.getDoc().getSelection() === "") {
+                queryParam.sql = editor.getDoc().getValue();
+            }else{
+                queryParam.sql = editor.getDoc().getSelection();
+            }
+            $('#saveQuerySqlModal .modal-title').html('更新数据集');
+            $("#saveQuerySqlModal").modal('toggle');
+            $('#saveQuerySqlForm').find("input[name='recordingName']").val($('#sqlRecordingName').html());
         })
 
         //新增保存
         $("#saveQuerySqlModal .btn-primary").click(function(){
             $('#saveQuerySqlForm').submit();
-        })
+        });
 
         $('#saveQuerySqlForm').validate({
             errorElement : 'div',
@@ -464,20 +567,55 @@ require([
                     "recordingName" : recordingName,
                     "connectionId" : queryParam.id,
                     "sqlRecording" : queryParam.sql,
+                    "id":queryParam.sqlRecordId
                 };
 
                 var deferred = $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: '../sqlRecordingManage/add',
-                    data : data
+                    url: '../sqlRecordingManage/crud',
+                    data : data,
+                    headers :{
+                        oper : queryParam.oper
+                    }
                 });
                 deferred.done(function(){
                     $(form)[0].reset();
                     $("#saveQuerySqlModal").modal('toggle');
+                    $.fn.zTree.init($("#dataListTree"),setting_datalist);
                 })
             }
-        })
+        });
+
+        /**
+         * 删除结果集
+         */
+        $('#deleteSqlResultBar').confirmModal({
+            confirmTitle     : '提示',
+            confirmMessage   : '你确定删除该结果集 ?',
+            confirmOk        : '是的',
+            confirmCancel    : '取消',
+            confirmDirection : 'rtl',
+            confirmStyle     : 'primary',
+            confirmCallback  : function () {
+                var deferred = $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '../sqlRecordingManage/crud',
+                    data : {
+                        id:$('#sqlResultId').html()
+                    },
+                    headers :{
+                        oper : 'delete'
+                    }
+                });
+                deferred.done(function(){
+                    $.fn.zTree.init($("#dataListTree"),setting_datalist);
+                })
+            },
+            confirmDismiss   : true,
+            confirmAutoOpen  : false
+        });
 
         //打开模态框绑定数据
         $('#addConnectionModal').on('show.bs.modal', function () {
