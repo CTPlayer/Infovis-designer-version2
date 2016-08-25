@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.mapper.myPanel.MyPanelMapper">
+    <insert id="add" parameterType="MyPanel" databaseId="h2">
+        insert into T_MY_PANEL(PANEL_NAME,PANEL_REMARK,CREATE_TIME,UPDATE_TIME,HTML_CODE,JS_CODE,IMG,EXPORT_ID)
+        values(#{panelName},#{panelRemark},#{createTime},#{updateTime},#{htmlCode},#{jsCode},#{img},#{exportId})
+    </insert>
+    <update id="update" parameterType="MyPanel" databaseId="h2">
+        update T_MY_PANEL
+          <set>
+              <if test="panelName != null and panelName !=''">PANEL_NAME = #{panelName},</if>
+              <if test="panelRemark != null">PANEL_REMARK = #{panelRemark},</if>
+              <if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+              <if test="htmlCode != null">HTML_CODE = #{htmlCode},</if>
+              <if test="jsCode != null">JS_CODE = #{jsCode},</if>
+              <if test="img != null">IMG = #{img},</if>
+          </set>
+          <where>
+              EXPORT_ID = #{exportId}
+          </where>
+    </update>
+    <select id="queryAsObject" parameterType="String" resultType="MyPanel" databaseId="h2">
+        select PANEL_NAME,PANEL_REMARK,CREATE_TIME,UPDATE_TIME,HTML_CODE,JS_CODE,IMG,EXPORT_ID from T_MY_PANEL where EXPORT_ID = #{exportId}
+    </select>
+    <select id="query" resultType="MyPanel" databaseId="h2">
+        select ID,PANEL_NAME,PANEL_REMARK,CREATE_TIME,UPDATE_TIME,IMG,EXPORT_ID from T_MY_PANEL order by UPDATE_TIME DESC
+    </select>
+
+    <delete id="deleteOne" parameterType="String" databaseId="h2">
+        delete from T_MY_PANEL where EXPORT_ID = #{exportId}
+    </delete>
+</mapper>

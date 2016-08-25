@@ -412,7 +412,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
             self.selectedSeriesBarShowLabel = ko.observable("显示");
         }
         self.gridCenter = ko.observable(series.center);
-        self.gridRadius = ko.observable(series.radius);
+        
 
         var optionChart = engine.chart.init(document.getElementById("optionContainer"));
 
@@ -495,7 +495,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 }
             }
             option.series[0].center = self.gridCenter()+'%';
-            option.series[0].radius = self.gridRadius()+'%';
+
 
             optionChart.setOption(option,true);
         })

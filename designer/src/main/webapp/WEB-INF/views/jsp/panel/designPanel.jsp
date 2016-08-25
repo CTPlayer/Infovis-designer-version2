@@ -1,32 +1,32 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-CN">
 <head>
     <title>Infovis-Designer</title>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap Core CSS -->
-    <link href="js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="js/lib/bootstrap/css/bootstrap.vertical-tabs.css" rel="stylesheet">
+    <link href="resources/js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="resources/js/lib/bootstrap/css/bootstrap.vertical-tabs.css" rel="stylesheet">
     <!-- Font Icons -->
-    <link href="js/lib/bootstrap/css/font-awesome.css" rel="stylesheet">
+    <link href="resources/js/lib/bootstrap/css/font-awesome.css" rel="stylesheet">
     <!-- Animate -->
-    <link href="js/lib/bootstrap/css/animate.css" rel="stylesheet">
+    <link href="resources/js/lib/bootstrap/css/animate.css" rel="stylesheet">
     <!-- gridstack CSS -->
-    <link rel="stylesheet" href="js/lib/gridstack/css/gridstack.min.css"/>
-    <link rel="stylesheet" type="text/css" href="js/lib/gridstack/css/default.css">
+    <link rel="stylesheet" href="resources/js/lib/gridstack/css/gridstack.min.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/js/lib/gridstack/css/default.css">
     <!--Color Picker CSS-->
-    <link rel="stylesheet" type="text/css" href="js/lib/bootstrap/css/spectrum.css">
+    <link rel="stylesheet" type="text/css" href="resources/js/lib/bootstrap/css/spectrum.css">
     <!--flat admin-->
-    <link rel="stylesheet" type="text/css" href="js/lib/flatadmin/css/style.css">
-    <link rel="stylesheet" type="text/css" href="js/lib/flatadmin/css/themes/flat-blue.css">
+    <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/css/style.css">
+    <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/css/themes/flat-blue.css">
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <style type="text/css">
         body {
-            background-image: url("img/pattern.png");
+            background-image: url("resources/img/pattern.png");
         }
         .grid-stack {
             margin-bottom: 2em;
@@ -52,11 +52,23 @@
         #optionModal form {
             font-size: 10px;
         }
+
+        .loader .loader-container {
+            z-index: 99999999;
+        }
+
+        .loader:after {
+            z-index: 1000000;
+        }
     </style>
 </head>
 
 <body class="flat-blue">
 <div class="app-container">
+    <div class="loader-container text-center color-white" style="display: none;margin-top:-400px;">
+        <div><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
+        <div>正在生成外部可访问页面，请稍后...</div>
+    </div>
     <div class="row content-container">
         <nav class="navbar navbar-default navbar-fixed-top navbar-top">
             <div class="container-fluid">
@@ -69,19 +81,17 @@
                     </button>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#"  role="button">
-                            <i class="glyphicon glyphicon-folder-close"></i>
-                        </a>
+                    <li class="dropdown danger">
+                        <a href="query.page"  role="button"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;我的作品</a>
                     </li>
                     <li class="dropdown danger" id="exportHtml">
-                        <a href="#"  role="button" data-toggle="modal" data-target="#modalSuccess"><i class="glyphicon glyphicon-download-alt"></i></a>
+                        <a href="#"  role="button"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;&nbsp;保存</a>
                     </li>
                     <li class="dropdown profile">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">试用人员1<span class="caret"></span></a>
                         <ul class="dropdown-menu animated fadeInDown">
                             <li class="profile-img">
-                                <img src="js/lib/flatadmin/img/profile/picjumbo.com_HNCK4153_resize.jpg" class="profile-img">
+                                <img src="resources/js/lib/flatadmin/img/profile/picjumbo.com_HNCK4153_resize.jpg" class="profile-img">
                             </li>
                             <li>
                                 <div class="profile-info">
@@ -121,13 +131,13 @@
                                     <ul class="nav navbar-nav">
                                         <li>
                                             <div id="bar01" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="img/bar01.png" alt="..." class="img-thumbnail">
+                                                <img draggable="true" src="resources/img/bar01.png" alt="..." class="img-thumbnail">
                                             </div>
                                             <div id="bar02" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="img/bar02.png" alt="..." class="img-thumbnail">
+                                                <img draggable="true" src="resources/img/bar02.png" alt="..." class="img-thumbnail">
                                             </div>
                                             <div id="bar03" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="img/bar03.png" alt="..." class="img-thumbnail">
+                                                <img draggable="true" src="resources/img/bar03.png" alt="..." class="img-thumbnail">
                                             </div>
                                         </li>
                                     </ul>
@@ -144,10 +154,10 @@
                                     <ul class="nav navbar-nav">
                                         <li>
                                             <div id="pie01" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="img/pie01.png" alt="..." class="img-thumbnail">
+                                                <img draggable="true" src="resources/img/pie01.png" alt="..." class="img-thumbnail">
                                             </div>
                                             <div id="pie02" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="img/pie02.png" alt="..." class="img-thumbnail">
+                                                <img draggable="true" src="resources/img/pie02.png" alt="..." class="img-thumbnail">
                                             </div>
                                         </li>
                                     </ul>
@@ -164,23 +174,18 @@
                                     <ul class="nav navbar-nav">
                                         <li>
                                             <div id="line01" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="img/line01.png" alt="..." class="img-thumbnail">
+                                                <img draggable="true" src="resources/img/line01.png" alt="..." class="img-thumbnail">
                                             </div>
                                             <div id="line02" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="img/line02.png" alt="..." class="img-thumbnail">
+                                                <img draggable="true" src="resources/img/line02.png" alt="..." class="img-thumbnail">
                                             </div>
                                             <div id="line03" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="img/line03.png" alt="..." class="img-thumbnail">
+                                                <img draggable="true" src="resources/img/line03.png" alt="..." class="img-thumbnail">
                                             </div>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-                        </li>
-                        <li class="panel-default">
-                            <a href="sqlClient.html" target="_blank">
-                                <span class="icon fa fa-database" style="font-size: 20px;"></span><span class="title">数据源</span>
-                            </a>
                         </li>
                     </ul>
                 </div>
@@ -190,11 +195,12 @@
         <!-- Main Content -->
         <div class="container-fluid">
             <div class="grid-stack">
+                ${htmlCode}
             </div>
         </div>
     </div>
 </div>
-<input type="hidden" id="exportId" value=${exportId} />
+<input type="hidden" value="${exportId}" id="exportId">
 <!--Strart Config Panel-->
 <div class="modal fade bs-option-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="optionModal">
     <div class="modal-dialog modal-lg" style="width: 90%">
@@ -216,25 +222,32 @@
     </div>
 </div>
 
-<div class="modal fade modal-success" id="modalSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">访问连接</h4>
-            </div>
-            <div class="modal-body">
-                <p style="text-align: center">复制以下链接到浏览器即可访问！</p>
-                <br>
-                <p style="text-align: center" id="targetText"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" style="float: right" id="copy" data-clipboard-target="#targetText">复制到剪贴板</button>
-            </div>
-        </div>
-    </div>
+<%--<div class="modal fade modal-success" id="modalSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--%>
+    <%--<div class="modal-dialog">--%>
+        <%--<div class="modal-content loader">--%>
+            <%--<div class="loader-container text-center color-white">--%>
+                <%--<div><i class="fa fa-spinner fa-pulse fa-3x"></i></div>--%>
+                <%--<div>Loading</div>--%>
+            <%--</div>--%>
+            <%--<div class="modal-header">--%>
+                <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--%>
+                <%--<h4 class="modal-title" id="myModalLabel">访问连接</h4>--%>
+            <%--</div>--%>
+            <%--<div class="modal-body">--%>
+                <%--<p style="text-align: center">复制以下链接到浏览器即可访问！</p>--%>
+                <%--<br>--%>
+                <%--<p style="text-align: center" id="targetText"></p>--%>
+            <%--</div>--%>
+            <%--<div class="modal-footer">--%>
+                <%--<button type="button" class="btn btn-info" style="float: right" id="copy" data-clipboard-target="#targetText">复制到剪贴板</button>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</div>--%>
+<div id="exportOption" style="display:none">
+    ${jsCode}
 </div>
-<script src="js/lib/require.js" defer async="true" data-main="js/app/designPanel"></script>
+<script src="resources/js/lib/require.js" defer async="true" data-main="resources/js/app/designPanel"></script>
 </body>
 
 </html>

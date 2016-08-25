@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: '/designer/resources/js',
+    baseUrl: 'resources/js',
     paths: {
         "jquery": "lib/bootstrap/js/jquery-2.1.4.min",
         "bootstrap": "lib/bootstrap/js/bootstrap.min",

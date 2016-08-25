@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Infovis-Designer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap Core CSS -->
+    <link href="js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="js/lib/bootstrap/css/bootstrap.vertical-tabs.css" rel="stylesheet">
+    <!-- Font Icons -->
+    <link href="js/lib/bootstrap/css/font-awesome.css" rel="stylesheet">
+    <!-- Animate -->
+    <link href="js/lib/bootstrap/css/animate.css" rel="stylesheet">
+    <!--flat admin-->
+    <link rel="stylesheet" type="text/css" href="js/lib/flatadmin/css/style.css">
+    <link rel="stylesheet" type="text/css" href="js/lib/flatadmin/css/themes/flat-blue.css">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        .warning-block{
+            color : #d16e6c;
+        }
+    </style>
+</head>
+
+<body class="flat-blue">
+<div class="app-container">
+    <div class="row content-container">
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container-fluid">
+            <ul class="nav navbar-nav navbar-left">
+                <h2>设计面板</h2>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown danger" id="exportHtml">
+                    <a href="#"  role="button" data-toggle="modal" data-target="#addPanelModal"><i class="glyphicon glyphicon-plus"></i></a>
+                </li>
+                <li class="dropdown profile">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">试用人员1<span class="caret"></span></a>
+                    <ul class="dropdown-menu animated fadeInDown">
+                        <li class="profile-img">
+                            <img src="js/lib/flatadmin/img/profile/picjumbo.com_HNCK4153_resize.jpg" class="profile-img">
+                        </li>
+                        <li>
+                            <div class="profile-info">
+                                <h4 class="username">试用人员1</h4>
+                                <p>test@jiudaotech.com</p>
+                                <div class="btn-group margin-bottom-2x" role="group">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-user"></i> 个人信息</button>
+                                    <button type="button" class="btn btn-default"><i class="fa fa-sign-out"></i> 登出</button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            </div>
+        </nav>
+        <!-- Main Content -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3 col-sm-12">
+                    <div class="thumbnail no-margin-bottom">
+                        <img src="../img/thumbnails/picjumbo.com_IMG_3241.jpg" class="img-responsive">
+                        <div class="caption">
+                            <h3 id="thumbnail-label">Thumbnail label<a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
+                            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                            <p><a href="#" class="btn btn-success" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <div class="thumbnail no-margin-bottom">
+                        <img src="../img/thumbnails/picjumbo.com_IMG_3241.jpg" class="img-responsive">
+                        <div class="caption">
+                            <h3 id="thumbnail-label">Thumbnail label<a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
+                            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                            <p><a href="#" class="btn btn-success" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-success" id="addPanelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">新建设计面板</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="addPanelForm" method="post">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">面板名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="panelName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">面板备注</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="3" name="panelRemark"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/lib/require.js" defer async="true" data-main="js/app/myPanel"></script>
+</body>
+</html>
