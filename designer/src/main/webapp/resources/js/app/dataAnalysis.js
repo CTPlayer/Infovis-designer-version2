@@ -114,16 +114,21 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
             onClick: function(event, treeId, treeNode){
                 if(!treeNode.dbUrl) {
                     $('#side-menu li a:eq(0)').html("<i class='fa fa-sitemap fa-fw'></i>" + treeNode.dbName + "<span class='fa arrow'></span>");
+                    var queryParam = {};
+                    queryParam.id = treeNode.id;
+                    queryParam.sql = treeNode.sql;
+                    queryParam.queryMaxRows = 1;
+                    queryParam.paging = false;
+                    var deferred = $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '../connectionManage/executeQuerySql',
+                        data : queryParam
+                    });
+                    deferred.done(function(result){
+                        console.log(result.data[0]);
+                    });
                 }
-                // var deferred = $.ajax({
-                //     type: 'POST',
-                //     dataType: 'json',
-                //     url: '../connectionManage/executeQuerySql',
-                //     data : queryParam
-                // });
-                // deferred.done(function(result){
-                //
-                // });
             }
         }
     };
