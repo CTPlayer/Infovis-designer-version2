@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>玖道数据分析</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap Core CSS -->
+    <link href="js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="js/lib/bootstrap/css/bootstrap.vertical-tabs.css" rel="stylesheet">
+    <!-- Animate -->
+    <link href="js/lib/bootstrap/css/animate.css" rel="stylesheet">
+    <!--flat admin-->
+    <link rel="stylesheet" type="text/css" href="js/lib/flatadmin/css/style.css">
+    <link rel="stylesheet" type="text/css" href="js/lib/flatadmin/css/themes/flat-blue.css">
+
+    <!-- Font Icons -->
+    <link href="js/lib/bootstrap/css/font-awesome.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        .flat-blue .navbar .navbar-nav > li > a, .flat-blue .navbar.navbar-default .navbar-nav > li > a{
+            color: #0f77b1;
+        }
+
+        #page-wrapper {
+            padding: 0 15px;
+            min-height: 568px;
+            background-color: white;
+        }
+        @media (min-width: 768px) {
+            #page-wrapper {
+                position: inherit;
+                margin: 0 0 0 250px;
+                padding: 0 30px;
+                border-left: 1px solid #e7e7e7;
+            }
+        }
+
+        .sidebar .sidebar-nav.navbar-collapse {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .sidebar ul li {
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .sidebar ul li a.active {
+            background-color: #eeeeee;
+        }
+
+        .sidebar .arrow {
+            float: right;
+        }
+        .sidebar .fa.arrow:before {
+            content: "\f104";
+        }
+        .sidebar .active > a > .fa.arrow:before {
+            content: "\f107";
+        }
+        .sidebar .nav-second-level li,
+        .sidebar .nav-third-level li {
+            border-bottom: none !important;
+        }
+        .sidebar .nav-second-level li a {
+            padding-left: 37px;
+        }
+        .sidebar .nav-third-level li a {
+            padding-left: 52px;
+        }
+        @media (min-width: 768px) {
+            .sidebar {
+                z-index: 1;
+                position: absolute;
+                width: 250px;
+            }
+        }
+
+    </style>
+
+</head>
+<body class="flat-blue">
+<div class="app-container" style="background-color: rgb(240,240,240)">
+    <div class="row content-container">
+        <nav class="navbar navbar-default navbar-static-top" style="margin-left:-60px;background-color: rgb(238,238,238)">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-left">
+                    <a class="navbar-brand" href="#" style="color: #0f77b1"><i class="glyphicon glyphicon-equalizer" aria-hidden="true"></i> 数据分析</a>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" role="button"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;我的作品</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="resources/sqlClient.html"  role="button"><i class="icon fa fa-database"></i>&nbsp;&nbsp;数据源</a>
+                    </li>
+                    <li class="dropdown" id="exportHtml">
+                        <a href="#"  role="button" data-toggle="modal" data-target="#addPanelModal"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;新建面板</a>
+                    </li>
+                    <li class="dropdown profile">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">试用人员1<span class="caret"></span></a>
+                        <ul class="dropdown-menu animated fadeInDown">
+                            <li class="profile-img">
+                                <img src="js/lib/flatadmin/img/profile/picjumbo.com_HNCK4153_resize.jpg" class="profile-img">
+                            </li>
+                            <li>
+                                <div class="profile-info">
+                                    <h4 class="username">试用人员1</h4>
+                                    <p>test@jiudaotech.com</p>
+                                    <div class="btn-group margin-bottom-2x" role="group">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-user"></i> 个人信息</button>
+                                        <button type="button" class="btn btn-default"><i class="fa fa-sign-out"></i> 登出</button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav  navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="active">
+                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> 某公司销售数据<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li class="active">
+                                <a href="#"><b>维度</b> <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="#">区域</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">产品类别</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">产品子类别</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">省份</a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                            <li class="active">
+                                <a href="#"><b>度量</b> <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="#">订单数量</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">销售额</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">折扣点</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">单价</a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">Dashboard</h2>
+                    正文
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="js/lib/require.js" defer async="true" data-main="js/app/dataAnalysis"></script>
+</body>
+</html>
