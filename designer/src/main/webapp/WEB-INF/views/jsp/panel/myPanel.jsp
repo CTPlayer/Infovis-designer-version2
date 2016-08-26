@@ -29,6 +29,10 @@
             color: #0f77b1;
         }
 
+        .flat-blue .navbar.navbar-inverse .navbar-nav > li.danger > a{
+            color: red;
+        }
+
         #operate i {
             font-size: 20px;
             float:right;
@@ -51,10 +55,10 @@
 <body class="flat-blue">
 <div class="app-container" style="background-color: rgb(240,240,240)">
     <div class="row content-container">
-        <nav class="navbar navbar-default navbar-static-top" style="margin-left:-60px;background-color: rgb(238,238,238)">
+        <nav class="navbar navbar-inverse navbar-static-top" style="margin-left:-60px;background-color: rgb(238,238,238)">
             <div class="container-fluid">
                 <ul class="nav navbar-nav navbar-left">
-                    <a class="navbar-brand" href="#" style="color: #0f77b1">控制面板</a>
+                    <a class="navbar-brand" href="#" style="color: #ffffff">控制面板</a>
                 </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
