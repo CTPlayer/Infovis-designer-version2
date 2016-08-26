@@ -179,9 +179,9 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 // 图表初始化完成后添加菜单
                 container.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
                     '<span style="display:none;">'+
-                    '<a href="resources/dataAnalysis.html"><i class="fa fa-cog" style="color: white"></i></a>'+
                     '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
                     '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
+                    '<a href="#"><i class="fa fa-cog" style="color: white"></i></a>'+
                     '</span>'+
                     '</div>');
                 container.on('mouseenter mouseleave',function(e){
@@ -227,6 +227,42 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         } else if (type == "pie") {
                             $("#optionPanel").html(formatData.tableAndConfigOfPie());
                             ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
+                        }
+                    });
+                });
+
+                container.find('a').eq(2).click(function(){
+                    $("title").html("Infovis-Designer");
+
+                    $(".grid-stack-placeholder").remove();
+                    $("#fill").remove();
+
+                    $(".app-container").addClass("loader");
+                    $(".loader-container").css("display","block");
+
+                    var arr = window.location.href.split("/");
+                    var exportId = $("#exportId").val();
+                    var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
+                    $.ajax({
+                        type: 'POST',
+                        url: "export",
+                        data: {
+                            "htmlCode": $(".grid-stack").html().trim(),
+                            "jsCode": JSON.stringify(optionsArray),
+                            "exportId": exportId,
+                            "extraMsg": shareHref
+                        },
+                        success : function(){
+                            window.isSave = true;                     //点击导出后表明已保存
+
+                            $("body").removeClass("loader");
+                            $(".loader-container").css("display","none");
+                            top.window.location = "resources/dataAnalysis.html";
+                            // new Clipboard("#copy");
+                            // $(".modal-body").eq(1).find("p").eq(1).html(shareHref);
+                        },
+                        error : function(){
+                            alert("保存失败，请重试！");
                         }
                     });
                 });
@@ -290,11 +326,12 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         // $(".modal-body").eq(1).find("p").eq(1).html(shareHref);
                     },
                     error : function(){
-                        $(".modal-body").eq(1).find("p").eq(1).html("链接生成失败，请重试！");
+                        alert("保存失败，请重试！");
                     }
                 });
             });
 
+            /*********************************************************/
             //重新打开设计面板后渲染之前的图表
             var ids = [];
             var containers = $(".grid-stack").children();
@@ -313,9 +350,9 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             for(var i=0;i<container.length;i++){
                 $(container[i]).append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
                     '<span style="display:none;">'+
-                    '<a href="resources/dataAnalysis.html"><i class="fa fa-cog" style="color: white"></i></a>'+
                     '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
                     '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
+                    '<a href="#"><i class="fa fa-cog" style="color: white"></i></a>'+
                     '</span>'+
                     '</div>');
                 $(container[i]).on('mouseenter mouseleave',function(e){
@@ -361,6 +398,42 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         } else if (type == "pie") {
                             $("#optionPanel").html(formatData.tableAndConfigOfPie());
                             ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
+                        }
+                    });
+                });
+
+                $(container[i]).find('a').eq(2).click(function(){
+                    $("title").html("Infovis-Designer");
+
+                    $(".grid-stack-placeholder").remove();
+                    $("#fill").remove();
+
+                    $(".app-container").addClass("loader");
+                    $(".loader-container").css("display","block");
+
+                    var arr = window.location.href.split("/");
+                    var exportId = $("#exportId").val();
+                    var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
+                    $.ajax({
+                        type: 'POST',
+                        url: "export",
+                        data: {
+                            "htmlCode": $(".grid-stack").html().trim(),
+                            "jsCode": JSON.stringify(optionsArray),
+                            "exportId": exportId,
+                            "extraMsg": shareHref
+                        },
+                        success : function(){
+                            window.isSave = true;                     //点击导出后表明已保存
+
+                            $("body").removeClass("loader");
+                            $(".loader-container").css("display","none");
+                            top.window.location = "resources/dataAnalysis.html";
+                            // new Clipboard("#copy");
+                            // $(".modal-body").eq(1).find("p").eq(1).html(shareHref);
+                        },
+                        error : function(){
+                            alert("保存失败，请重试！");
                         }
                     });
                 });

@@ -51,21 +51,18 @@ require(['jquery','validate','bootstrap'], function($,validate){
         if(e.type == 'mouseenter'){
             target.stop();
             target.children().css("display","block");
-            target.animate({height:'40px'});
+            target.animate({height:"100%"},"fast");
         }else if(e.type == 'mouseleave'){
             target.stop();
             target.children().css("display","none");
             if(target.css('height') != '0px') {
-                target.animate({height: "0"});
+                target.animate({height: "0"},"fast");
             }
         }
     });
 
-    $(".dropdown").on('mouseenter mouseleave',function(e){
-        if(e.type == 'mouseenter'){
-            $(this).addClass("danger");
-        }else if(e.type == 'mouseleave'){
-            $(this).removeClass("danger");
-        }
+    $(".dropdown").click(function(){
+        $(".dropdown").removeClass("danger");
+        $(this).addClass("danger");
     });
 });
