@@ -78,12 +78,13 @@ require([
     $(function(){
         var outerLayout = $('body').layout({
             center__paneSelector:	".outer-center"
+            ,   applyDefaultStyles: false
             ,	west__paneSelector:		".outer-west"
             ,	east__paneSelector:		".outer-east"
             ,	west__size:				350
             ,	east__size:				125
-            ,	spacing_open:			8 // ALL panes
-            ,	spacing_closed:			12 // ALL panes
+            ,	spacing_open:			2 // ALL panes
+            ,	spacing_closed:			5 // ALL panes
             ,	north__spacing_open:	0
             ,	south__spacing_open:	0
             ,   resizerTip :            ""
@@ -93,12 +94,13 @@ require([
 
         var middleLayout = $('div.outer-center').layout({
             center__paneSelector:	".middle-center"
+            ,   applyDefaultStyles: false
             ,	west__paneSelector:		".middle-west"
             ,	east__paneSelector:		".middle-east"
             ,	west__size:				100
             ,	east__size:				100
-            ,	spacing_open:			8  // ALL panes
-            ,	spacing_closed:			12 // ALL panes
+            ,	spacing_open:			2  // ALL panes
+            ,	spacing_closed:			5  // ALL panes
             ,   resizerTip :            ""
             ,   togglerTip_open :          ""
             ,   togglerTip_closed :        ""
@@ -106,10 +108,10 @@ require([
 
         var innerLayout = $('div.middle-center').layout({
             center__paneSelector:	".inner-center"
+            ,   applyDefaultStyles: false
             ,	north__size:		    240
-            ,	spacing_open:			8  // ALL panes
-            ,	spacing_closed:			8  // ALL panes
-            ,	north__spacing_closed:	12
+            ,	spacing_open:			2  // ALL panes
+            ,	spacing_closed:			5  // ALL panes
             ,   resizerTip :            ""
             ,   togglerTip_open :          ""
             ,   togglerTip_closed :        ""
@@ -405,7 +407,6 @@ require([
                 });
                 deferred.done(function(result){
                     $('#pagebar').empty();
-                    console.log(queryParam.accordingType);
                     if(queryParam.accordingType == 'dataSource'){
                         $('#savebar').show();
                         $('#sqlresultbargroup').hide();

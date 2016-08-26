@@ -15,11 +15,14 @@
 
     <!-- Font Icons -->
     <link href="js/lib/bootstrap/css/font-awesome.css" rel="stylesheet">
+    <!--ztree-->
+    <link href="js/lib/ztree/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
     <![endif]-->
     <style type="text/css">
         .flat-blue .navbar .navbar-nav > li > a, .flat-blue .navbar.navbar-default .navbar-nav > li > a,.leftBarLiIcon{
@@ -49,7 +52,7 @@
             padding-right: 0;
         }
 
-        .sidebar ul li {
+        .sidebar ul li{
             border-bottom: 1px solid #e7e7e7;
         }
 
@@ -83,7 +86,22 @@
                 width: 250px;
             }
         }
-
+        .nav-third-level{
+            min-height: 30px;
+        }
+    </style>
+    <style>
+        .ztree li span.button.dbIcon_ico_open, .ztree li span.button.dbIcon_ico_close{margin-right:2px; background: url(img/database.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+        .ztree li span.button.tableIcon_ico_docu,.ztree li span.button.tableIcon_ico_open, .ztree li span.button.tableIcon_ico_close{margin-right:2px; background: url(img/table.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+        .ztree li span.button.fieldIcon_ico_docu{margin-right:2px; background: url(img/field.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+        .ztree li span.button.oracleIcon_ico_open, .ztree li span.button.oracleIcon_ico_close{margin-right:2px; background: url(img/oracle.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+        .ztree li span.button.mysqlIcon_ico_open, .ztree li span.button.mysqlIcon_ico_close{margin-right:2px; background: url(img/mysql.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+        .ztree li span.button.sqlserverIcon_ico_open, .ztree li span.button.sqlserverIcon_ico_close{margin-right:2px; background: url(img/sqlserver.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+        .ztree li span.button.h2Icon_ico_open, .ztree li span.button.h2Icon_ico_close{margin-right:2px; background: url(img/h2.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+        .ztree li span.button.sqlrunnerIcon_ico_docu,.ztree li span.button.sqlrunnerIcon_ico_open, .ztree li span.button.sqlrunnerIcon_ico_close{margin-right:2px; background: url(img/sql_runner.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+        .scrollable {
+            overflow: scroll;
+        }
     </style>
 
 </head>
@@ -127,10 +145,26 @@
             </div>
         </nav>
         <div class="navbar-default sidebar" role="navigation">
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                        <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <span class="glyphicon glyphicon-indent-left" aria-hidden="true"></span> 数据集
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body scrollable">
+                            <div id="dataListTree" class="ztree"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="sidebar-nav  navbar-collapse">
                 <ul class="nav" id="side-menu">
                     <li class="active">
-                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> 某公司销售数据<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-sitemap fa-fw"></i>资产表<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li class="active">
                                 <a href="#"><b>维度</b> <span class="fa arrow"></span></a>

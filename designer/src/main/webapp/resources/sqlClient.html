@@ -137,7 +137,31 @@
         .ztree li span.button.sqlserverIcon_ico_open, .ztree li span.button.sqlserverIcon_ico_close{margin-right:2px; background: url(img/sqlserver.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
         .ztree li span.button.h2Icon_ico_open, .ztree li span.button.h2Icon_ico_close{margin-right:2px; background: url(img/h2.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
         .ztree li span.button.sqlrunnerIcon_ico_docu,.ztree li span.button.sqlrunnerIcon_ico_open, .ztree li span.button.sqlrunnerIcon_ico_close{margin-right:2px; background: url(img/sql_runner.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
-
+        .container-fluid{
+            background:	#FFF;
+        }
+        .navbar-default{
+            border: 0px;
+        }
+    </style>
+    <style>
+        /**
+	     *	Cosmetic Styling for Layout Elements
+	     */
+        .ui-layout-pane {
+             background:	#FFF;
+             padding:	10px;
+             overflow:	auto;
+        }
+        .ui-layout-pane-west{
+            border-top:	#FFF;
+        }
+        .ui-layout-resizer {
+            background:	#FFF;
+        }
+        .ui-layout-toggler {
+            display: none;
+        }
     </style>
     <script src="js/lib/require.js" defer async="true" data-main="js/app/sqlClient"></script>
 </head>
@@ -221,7 +245,7 @@
                     </h4>
                 </div>
                 <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                    <div class="panel-body">
+                    <div class="panel-body scrollable">
                         <ul id="dataListTree" class="ztree"></ul>
                     </div>
                 </div>
