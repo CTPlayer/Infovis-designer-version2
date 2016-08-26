@@ -50,7 +50,17 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 $(".panel-default").removeClass("active");
                 $(this).addClass("active");
             })
-        })
+        });
+
+        $(function(){
+            $(".navbar-right").children().on('mouseenter mouseleave',function(e){
+                if(e.type == 'mouseenter'){
+                    $(this).addClass("danger");
+                }else if(e.type == 'mouseleave'){
+                    $(this).removeClass("danger");
+                }
+            });
+        });
 
         $(function(){
             window.isSave = true;   //记录页面是否有改动

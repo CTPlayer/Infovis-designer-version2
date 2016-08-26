@@ -53,13 +53,13 @@
                 <h2>设计面板</h2>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown danger">
+                <li class="dropdown">
                     <a href="query.page"  role="button"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;我的作品</a>
                 </li>
-                <li class="dropdown danger">
+                <li class="dropdown">
                     <a href="resources/sqlClient.html"  role="button"><i class="icon fa fa-database"></i>&nbsp;&nbsp;数据源</a>
                 </li>
-                <li class="dropdown danger" id="exportHtml">
+                <li class="dropdown" id="exportHtml">
                     <a href="#"  role="button" data-toggle="modal" data-target="#addPanelModal"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;新建面板</a>
                 </li>
                 <li class="dropdown profile">
@@ -105,9 +105,9 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="card">
-                        <div class="card-header" style="background-color: rgb(77,124,190);">
+                        <div class="card-header">
                             <div class="card-title">
-
+                                <h3>我的作品</h3>
                             </div>
                         </div>
                         <div class="card-body">

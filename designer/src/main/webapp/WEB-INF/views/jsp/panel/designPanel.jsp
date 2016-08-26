@@ -83,10 +83,10 @@
                     </button>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown danger">
+                    <li class="dropdown">
                         <a href="query.page"  role="button"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;我的作品</a>
                     </li>
-                    <li class="dropdown danger" id="exportHtml">
+                    <li class="dropdown" id="exportHtml">
                         <a href="#"  role="button"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;&nbsp;保存</a>
                     </li>
                     <li class="dropdown profile">

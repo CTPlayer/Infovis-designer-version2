@@ -60,4 +60,12 @@ require(['jquery','validate','bootstrap'], function($,validate){
             }
         }
     });
+
+    $(".dropdown").on('mouseenter mouseleave',function(e){
+        if(e.type == 'mouseenter'){
+            $(this).addClass("danger");
+        }else if(e.type == 'mouseleave'){
+            $(this).removeClass("danger");
+        }
+    });
 });
