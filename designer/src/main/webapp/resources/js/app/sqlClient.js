@@ -364,10 +364,13 @@ require([
         var queryParam = {};
 
         var excuteSqlFunction = function () {
-            var nodes = dataSourceTree.getSelectedNodes();
-            if(nodes.length == 0){
+            var nodes ;
+            if(queryParam.accordingType == 'dataSource'){
+                nodes = dataSourceTree.getSelectedNodes();
+            }else if(queryParam.accordingType == 'dataList'){
                 nodes = dataListTree.getSelectedNodes();
             }
+
             if(nodes.length != 1){
                 $("#isCheckDataSourceModal").modal('toggle');
             }else{
