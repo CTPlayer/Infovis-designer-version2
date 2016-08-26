@@ -29,10 +29,6 @@
             background-image: url("resources/img/pattern.png");
         }
 
-        .flat-blue .navbar .navbar-nav > li > a, .flat-blue .navbar.navbar-default .navbar-nav > li > a{
-            color: #0f77b1;
-        }
-
         .grid-stack {
             margin-bottom: 2em;
             margin-left: 3em;
@@ -140,12 +136,12 @@
                                             <div id="bar01" class="col-md-6" style="margin-top: 10px">
                                                 <img draggable="true" src="resources/img/bar01.png" alt="..." class="img-thumbnail">
                                             </div>
-                                            <div id="bar02" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="resources/img/bar02.png" alt="..." class="img-thumbnail">
-                                            </div>
-                                            <div id="bar03" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="resources/img/bar03.png" alt="..." class="img-thumbnail">
-                                            </div>
+                                            <%--<div id="bar02" class="col-md-6" style="margin-top: 10px">--%>
+                                                <%--<img draggable="true" src="resources/img/bar02.png" alt="..." class="img-thumbnail">--%>
+                                            <%--</div>--%>
+                                            <%--<div id="bar03" class="col-md-6" style="margin-top: 10px">--%>
+                                                <%--<img draggable="true" src="resources/img/bar03.png" alt="..." class="img-thumbnail">--%>
+                                            <%--</div>--%>
                                         </li>
                                     </ul>
                                 </div>
@@ -163,9 +159,9 @@
                                             <div id="pie01" class="col-md-6" style="margin-top: 10px">
                                                 <img draggable="true" src="resources/img/pie01.png" alt="..." class="img-thumbnail">
                                             </div>
-                                            <div id="pie02" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="resources/img/pie02.png" alt="..." class="img-thumbnail">
-                                            </div>
+                                            <%--<div id="pie02" class="col-md-6" style="margin-top: 10px">--%>
+                                                <%--<img draggable="true" src="resources/img/pie02.png" alt="..." class="img-thumbnail">--%>
+                                            <%--</div>--%>
                                         </li>
                                     </ul>
                                 </div>
@@ -183,12 +179,12 @@
                                             <div id="line01" class="col-md-6" style="margin-top: 10px">
                                                 <img draggable="true" src="resources/img/line01.png" alt="..." class="img-thumbnail">
                                             </div>
-                                            <div id="line02" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="resources/img/line02.png" alt="..." class="img-thumbnail">
-                                            </div>
-                                            <div id="line03" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="resources/img/line03.png" alt="..." class="img-thumbnail">
-                                            </div>
+                                            <%--<div id="line02" class="col-md-6" style="margin-top: 10px">--%>
+                                                <%--<img draggable="true" src="resources/img/line02.png" alt="..." class="img-thumbnail">--%>
+                                            <%--</div>--%>
+                                            <%--<div id="line03" class="col-md-6" style="margin-top: 10px">--%>
+                                                <%--<img draggable="true" src="resources/img/line03.png" alt="..." class="img-thumbnail">--%>
+                                            <%--</div>--%>
                                         </li>
                                     </ul>
                                 </div>
@@ -217,6 +213,10 @@
                 <h4 class="modal-title">自定义配置</h4>
             </div>
             <div class="modal-body">
+                <div id="loading" class="loader-container text-center color-black" style="display: none;">
+                    <div><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
+                    <div>正在加载,请稍后...</div>
+                </div>
                 <div id="optionContainer" style="width:40%;height:410px;float:left">
                 </div>
                 <div id="optionPanel" style="width:50%;height:410px;float:left;margin-left:50px;">

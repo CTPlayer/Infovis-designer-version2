@@ -5,7 +5,7 @@ require.config({
         "jquery-ui": "lib/jquery-ui.min",
         "bootstrap": "lib/bootstrap/js/bootstrap.min",
         "validate": "lib/jquery.validate.min",
-        "metisMenu": "lib/metisMenu/metisMenu",
+        "metisMenu": "lib/metisMenu/metisMenu.min",
         "ztree": "lib/ztree/js/jquery.ztree.all.min",
     },
     shim : {

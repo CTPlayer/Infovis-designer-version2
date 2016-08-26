@@ -100,14 +100,20 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             grid.add_widget($('<div style="display: none" id="fill">'+
                 '<div class="grid-stack-item-content">'+
                 '</div>'+
-                '</div>'),0, 0, 0, 9);
+                '</div>'),0, 99, 0, 0);
 
             //为了防止再次进入以后设计面板时先前的图表不能自定义大小，这里获取先前图表的容器属性，重新添加容器并渲染图表
             var containers = $(".grid-stack").children();
-            $(containers).remove();
+            containers.remove();
+            //每个已存在容器的y坐标需要单独获取
+            var positionY = [];
+            for(var i=0;i<containers.length-2;i++) {
+                positionY.push($(containers[i]).attr("data-gs-y"));
+                console.log($(containers[i]).attr("data-gs-y"));
+            }
             for(var i=0;i<containers.length-2;i++) {
                 var x = $(containers[i]).attr("data-gs-x");
-                var y = $(containers[i]).attr("data-gs-y");
+                var y = positionY[i];
                 var width = $(containers[i]).attr("data-gs-width");
                 var height = $(containers[i]).attr("data-gs-height");
                 var od = $(containers[i]).children().attr("order");
@@ -208,7 +214,12 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     currentIndex = $(this).parent().parent().parent().attr("order");
                     var type = instance.getOption().series[0].type;
 
+                    $("#loading").css("display","block");
+                    $("#optionContainer").empty();
+                    $("#optionPanel").empty();
+
                     $("#optionModal").on("shown.bs.modal",function(e) {
+                        $("#loading").css("display","none");
                         if (type == "bar" || type == "line") {
                             $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
                             ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
@@ -336,7 +347,12 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     currentIndex = $(this).parent().parent().parent().attr("order");
                     var type = instance.getOption().series[0].type;
 
+                    $("#loading").css("display","block");
+                    $("#optionContainer").empty();
+                    $("#optionPanel").empty();
+
                     $("#optionModal").on("shown.bs.modal",function(e) {
+                        $("#loading").css("display","none");
                         if (type == "bar" || type == "line") {
                             $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
                             ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听

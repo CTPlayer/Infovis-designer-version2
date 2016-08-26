@@ -25,7 +25,7 @@
             color : #d16e6c;
         }
 
-        .flat-blue .navbar .navbar-nav > li > a, .flat-blue .navbar.navbar-default .navbar-nav > li > a{
+        .card-title, .flat-blue .navbar .navbar-nav > li > a, .flat-blue .navbar.navbar-default .navbar-nav > li > a{
             color: #0f77b1;
         }
 
@@ -48,6 +48,10 @@
 
         .thumbnail {
             margin-left: 20px;
+        }
+
+        .card {
+            background-color: #f5f5f5;
         }
     </style>
 </head>
@@ -115,7 +119,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">
-                                <h3>我的作品</h3>
+                                <h4>我的作品</h4>
                             </div>
                         </div>
                         <div class="card-body">
@@ -124,7 +128,7 @@
                                     <c:forEach var="myPanel" items="${myPanels}">
                                     <div>
                                         <div class="thumbnail no-margin-bottom col-md-2" style="margin-top: 25px;margin-left: 40px;">
-                                            <img src="data:image/jpg;base64,${myPanel.img}" style="box-shadow: 0 0 3px #000;">
+                                            <img src="data:image/jpg;base64,${myPanel.img}">
                                             <div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">
                                                 <span style="display:none;">
                                                     ${myPanel.panelName}
