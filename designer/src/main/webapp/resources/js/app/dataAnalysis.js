@@ -5,7 +5,7 @@ require.config({
         "jquery-ui": "lib/jquery-ui.min",
         "bootstrap": "lib/bootstrap/js/bootstrap.min",
         "validate": "lib/jquery.validate.min",
-        "metisMenu": "lib/metisMenu/metisMenu",
+        "metisMenu": "lib/metisMenu/metisMenu.min",
         "ztree": "lib/ztree/js/jquery.ztree.all.min",
     },
     shim : {
@@ -42,21 +42,6 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
     });
     $('#side-menu').metisMenu({
         toggle: false
-    });
-    $('#side-menu ul.nav.nav-third-level li').draggable({
-        helper: 'clone'
-    });
-    $('#side-menu ul.nav.nav-third-level li').droppable({
-        over: function(event, ui) {
-            var target = $(event.target);
-            target.after(ui.draggable);
-        }
-    });
-    $('#side-menu ul.nav.nav-third-level').droppable({
-        over: function(event, ui) {
-            var target = $(event.target);
-            target.append(ui.draggable);
-        }
     });
 });
 
@@ -126,7 +111,25 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
                         data : queryParam
                     });
                     deferred.done(function(result){
-                        console.log(result.data[0]);
+                        $('#side-menu ul.nav.nav-third-level').empty();
+                        $.each(result.data[0],function(index,element){
+                            $('#side-menu ul.nav.nav-third-level:eq(0)').append("<li><a href='#'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i> "+element+"</a></li>");
+                        });
+                        $('#side-menu ul.nav.nav-third-level li').draggable({
+                            helper: 'clone'
+                        });
+                        $('#side-menu ul.nav.nav-third-level li').droppable({
+                            over: function(event, ui) {
+                                var target = $(event.target);
+                                target.after(ui.draggable);
+                            }
+                        });
+                        $('#side-menu ul.nav.nav-second-level a').droppable({
+                            over: function(event, ui) {
+                                var target = $(event.target).next();
+                                target.append(ui.draggable);
+                            }
+                        });
                     });
                 }
             }
