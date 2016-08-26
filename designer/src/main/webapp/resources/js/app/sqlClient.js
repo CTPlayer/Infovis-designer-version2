@@ -174,6 +174,7 @@ require([
                     dataSourceTree.updateNode(treeNode);
                 },
                 onClick: function(event, treeId, treeNode) {
+                    queryParam.accordingType = 'dataSource';
                     if(treeNode.level === 1){
                         var editor = $('.CodeMirror')[0].CodeMirror;
                         var sql = editor.getDoc().getValue();
@@ -182,7 +183,6 @@ require([
                         }else{
                             editor.replaceSelection(" " + treeNode.dbName);
                         }
-                        queryParam.accordingType = 'dataSource';
                     }
                 }
             }
@@ -239,11 +239,11 @@ require([
                     setting_datalist.updateNode(treeNode);
                 },
                 onClick: function(event, treeId, treeNode) {
+                    queryParam.accordingType = 'dataList';
                     if(treeNode.level === 1){
                         var editor = $('.CodeMirror')[0].CodeMirror;
                         editor.getDoc().setValue("");
                         editor.replaceSelection(treeNode.sql);
-                        queryParam.accordingType = 'dataList';
                         if(editor.getDoc().getValue() != ''){
                             excuteSqlFunction();
                         }
