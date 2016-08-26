@@ -179,6 +179,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 // 图表初始化完成后添加菜单
                 container.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
                     '<span style="display:none;">'+
+                    '<a href="resources/dataAnalysis.html"><i class="fa fa-cog" style="color: white"></i></a>'+
                     '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
                     '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
                     '</span>'+
@@ -312,6 +313,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             for(var i=0;i<container.length;i++){
                 $(container[i]).append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
                     '<span style="display:none;">'+
+                    '<a href="resources/dataAnalysis.html"><i class="fa fa-cog" style="color: white"></i></a>'+
                     '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
                     '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
                     '</span>'+
