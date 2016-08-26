@@ -28,6 +28,11 @@
         body {
             background-image: url("resources/img/pattern.png");
         }
+
+        .flat-blue .navbar .navbar-nav > li > a, .flat-blue .navbar.navbar-default .navbar-nav > li > a{
+            color: #0f77b1;
+        }
+
         .grid-stack {
             margin-bottom: 2em;
             margin-left: 3em;

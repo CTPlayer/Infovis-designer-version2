@@ -25,6 +25,10 @@
             color : #d16e6c;
         }
 
+        .flat-blue .navbar .navbar-nav > li > a, .flat-blue .navbar.navbar-default .navbar-nav > li > a{
+            color: #0f77b1;
+        }
+
         #operate i {
             font-size: 20px;
             float:right;
@@ -49,9 +53,9 @@
     <div class="row content-container">
         <nav class="navbar navbar-default navbar-static-top" style="margin-left:-60px;background-color: rgb(238,238,238)">
             <div class="container-fluid">
-            <ul class="nav navbar-nav navbar-left">
-                <h2>设计面板</h2>
-            </ul>
+                <ul class="nav navbar-nav navbar-left">
+                    <a class="navbar-brand" href="#" style="color: #0f77b1">控制面板</a>
+                </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="query.page"  role="button"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;我的作品</a>
