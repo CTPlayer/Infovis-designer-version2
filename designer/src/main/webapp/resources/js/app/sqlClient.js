@@ -241,12 +241,12 @@ require([
                         var editor = $('.CodeMirror')[0].CodeMirror;
                         editor.getDoc().setValue("");
                         editor.replaceSelection(treeNode.sql);
+                        queryParam.accordingType = 'dataList';
                         if(editor.getDoc().getValue() != ''){
                             excuteSqlFunction();
                         }
                         $('#sqlResultId').html(treeNode.id);
                         $('#sqlRecordingName').html(treeNode.dbName);
-                        queryParam.accordingType = 'dataList';
                     }
                 }
             }
