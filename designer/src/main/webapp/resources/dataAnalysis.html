@@ -79,6 +79,19 @@
         .sidebar .nav-third-level li a {
             padding-left: 52px;
         }
+
+        form.make-model-region > div .col-lg-6 {
+            padding: 0;
+        }
+
+        form.make-model-region >div .col-lg-6 label{
+            padding:7px 0 0;
+        }
+
+        form.make-model-region > div .col-sm-11 {
+            padding: 0 0 0 10px;
+        }
+
         @media (min-width: 768px) {
             .sidebar {
                 z-index: 1;
@@ -103,7 +116,7 @@
 
 </head>
 <body class="flat-blue">
-<div class="app-container" style="background-color: rgb(240,240,240)">
+<div class="app-container">
     <div class="row content-container">
         <nav class="navbar navbar-inverse navbar-static-top" style="margin-left:-60px;background-color: rgb(238,238,238)">
             <div class="container-fluid">
@@ -116,9 +129,6 @@
                     </li>
                     <li class="dropdown">
                         <a href="resources/sqlClient.html"  role="button"><i class="icon fa fa-database"></i>&nbsp;&nbsp;数据源</a>
-                    </li>
-                    <li class="dropdown" id="exportHtml">
-                        <a href="#"  role="button" data-toggle="modal" data-target="#addPanelModal"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;新建面板</a>
                     </li>
                     <li class="dropdown profile">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">试用人员1<span class="caret"></span></a>
@@ -197,25 +207,33 @@
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <form class="form-horizontal">
+                    <form class="form-horizontal make-model-region">
                         <div class="form-group">
-                            <label for="inputEmail1" class="col-sm-1 control-label"><i class="glyphicon glyphicon-barcode leftBarLiIcon"></i> 列</label>
-                            <div class="col-sm-5">
-                                <input type="email" class="form-control" id="inputEmail1" placeholder="Email">
+                            <div class="col-lg-6">
+                                <label for="inputEmail1" class="col-sm-1 control-label"><i class="glyphicon glyphicon-barcode leftBarLiIcon"></i> 列</label>
+                                <div class="col-sm-11">
+                                    <input type="email" class="form-control" id="inputEmail1" placeholder="列">
+                                </div>
                             </div>
-                            <label for="inputEmail2" class="col-sm-1 control-label"><i class="glyphicon glyphicon-align-justify leftBarLiIcon"></i> 行</label>
-                            <div class="col-sm-5">
-                                <input type="email" class="form-control" id="inputEmail2" placeholder="Email">
+                            <div class="col-lg-6">
+                                <label for="inputEmail2" class="col-sm-1 control-label"><i class="glyphicon glyphicon-align-justify leftBarLiIcon"></i> 行</label>
+                                <div class="col-sm-11">
+                                    <input type="email" class="form-control" id="inputEmail2" placeholder="行">
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-1 control-label"><i class="fa fa-bookmark-o leftBarLiIcon"></i> 标记</label>
-                            <div class="col-sm-5">
-                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            <div class="col-lg-6">
+                                <label for="inputEmail3" class="col-sm-1 control-label">标记</label>
+                                <div class="col-sm-11">
+                                    <input type="email" class="form-control" id="inputEmail3" placeholder="标记">
+                                </div>
                             </div>
-                            <label for="inputEmail4" class="col-sm-1 control-label"><i class="glyphicon glyphicon-filter leftBarLiIcon"></i> 筛选</label>
-                            <div class="col-sm-5">
-                                <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                            <div class="col-lg-6">
+                                <label for="inputEmail4" class="col-sm-1 control-label">筛选</label>
+                                <div class="col-sm-11">
+                                    <input type="email" class="form-control" id="inputEmail4" placeholder="筛选">
+                                </div>
                             </div>
                         </div>
                     </form>

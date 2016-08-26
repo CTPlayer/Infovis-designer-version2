@@ -53,6 +53,12 @@
         .card {
             background-color: #f5f5f5;
         }
+
+        .overhide {
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
     </style>
 </head>
 
@@ -65,7 +71,7 @@
                     <a class="navbar-brand" href="#" style="color: #ffffff">控制面板</a>
                 </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
+                <li class="dropdown danger">
                     <a href="query.page"  role="button"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;我的作品</a>
                 </li>
                 <li class="dropdown">
@@ -131,10 +137,13 @@
                                             <img src="data:image/jpg;base64,${myPanel.img}">
                                             <div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">
                                                 <span style="display:none;">
-                                                    ${myPanel.panelName}
                                                     <a href="deleteOne?exportId=${myPanel.exportId}"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>
                                                     <a href="showPanel.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>
                                                     <a href="share.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-zoom-in" style="color: white"></i></a>
+                                                    <br>
+                                                    <br>
+                                                    <p class="overhide">${myPanel.panelName}</p>
+                                                    <p class="overhide" style="font-size: 15px;">${myPanel.panelRemark}</p>
                                                 </span>
                                             </div>
                                         </div>
