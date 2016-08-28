@@ -229,28 +229,6 @@
     </div>
 </div>
 
-<%--<div class="modal fade modal-success" id="modalSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--%>
-    <%--<div class="modal-dialog">--%>
-        <%--<div class="modal-content loader">--%>
-            <%--<div class="loader-container text-center color-white">--%>
-                <%--<div><i class="fa fa-spinner fa-pulse fa-3x"></i></div>--%>
-                <%--<div>Loading</div>--%>
-            <%--</div>--%>
-            <%--<div class="modal-header">--%>
-                <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--%>
-                <%--<h4 class="modal-title" id="myModalLabel">访问连接</h4>--%>
-            <%--</div>--%>
-            <%--<div class="modal-body">--%>
-                <%--<p style="text-align: center">复制以下链接到浏览器即可访问！</p>--%>
-                <%--<br>--%>
-                <%--<p style="text-align: center" id="targetText"></p>--%>
-            <%--</div>--%>
-            <%--<div class="modal-footer">--%>
-                <%--<button type="button" class="btn btn-info" style="float: right" id="copy" data-clipboard-target="#targetText">复制到剪贴板</button>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</div>--%>
 <div id="exportOption" style="display:none">
     ${jsCode}
 </div>

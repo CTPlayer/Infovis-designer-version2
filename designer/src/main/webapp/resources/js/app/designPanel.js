@@ -109,7 +109,6 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             var positionY = [];
             for(var i=0;i<containers.length-2;i++) {
                 positionY.push($(containers[i]).attr("data-gs-y"));
-                console.log($(containers[i]).attr("data-gs-y"));
             }
             for(var i=0;i<containers.length-2;i++) {
                 var x = $(containers[i]).attr("data-gs-x");
@@ -243,28 +242,30 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     var arr = window.location.href.split("/");
                     var exportId = $("#exportId").val();
                     var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
-                    $.ajax({
-                        type: 'POST',
-                        url: "export",
-                        data: {
-                            "htmlCode": $(".grid-stack").html().trim(),
-                            "jsCode": JSON.stringify(optionsArray),
-                            "exportId": exportId,
-                            "extraMsg": shareHref
-                        },
-                        success : function(){
-                            window.isSave = true;                     //点击导出后表明已保存
+                    if(window.isSave == false) {
+                        $.ajax({
+                            type: 'POST',
+                            url: "export",
+                            data: {
+                                "htmlCode": $(".grid-stack").html().trim(),
+                                "jsCode": JSON.stringify(optionsArray),
+                                "exportId": exportId,
+                                "extraMsg": shareHref
+                            },
+                            success: function () {
+                                window.isSave = true;                     //点击导出后表明已保存
 
-                            $("body").removeClass("loader");
-                            $(".loader-container").css("display","none");
-                            top.window.location = "resources/dataAnalysis.html";
-                            // new Clipboard("#copy");
-                            // $(".modal-body").eq(1).find("p").eq(1).html(shareHref);
-                        },
-                        error : function(){
-                            alert("保存失败，请重试！");
-                        }
-                    });
+                                $("body").removeClass("loader");
+                                $(".loader-container").css("display", "none");
+                                top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+order;
+                            },
+                            error: function () {
+                                alert("保存失败，请重试！");
+                            }
+                        });
+                    }else{
+                        top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+order;
+                    }
                 });
 
             });
@@ -322,8 +323,6 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         $("body").removeClass("loader");
                         $(".loader-container").css("display","none");
                         top.window.location = "query.page";
-                        // new Clipboard("#copy");
-                        // $(".modal-body").eq(1).find("p").eq(1).html(shareHref);
                     },
                     error : function(){
                         alert("保存失败，请重试！");
@@ -405,6 +404,9 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 $(container[i]).find('a').eq(2).click(function(){
                     $("title").html("Infovis-Designer");
 
+                    var area = $(this).parent().parent().parent();
+                    var index = $(area).attr("order");
+
                     $(".grid-stack-placeholder").remove();
                     $("#fill").remove();
 
@@ -414,28 +416,30 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     var arr = window.location.href.split("/");
                     var exportId = $("#exportId").val();
                     var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
-                    $.ajax({
-                        type: 'POST',
-                        url: "export",
-                        data: {
-                            "htmlCode": $(".grid-stack").html().trim(),
-                            "jsCode": JSON.stringify(optionsArray),
-                            "exportId": exportId,
-                            "extraMsg": shareHref
-                        },
-                        success : function(){
-                            window.isSave = true;                     //点击导出后表明已保存
+                    if(window.isSave == false) {
+                        $.ajax({
+                            type: 'POST',
+                            url: "export",
+                            data: {
+                                "htmlCode": $(".grid-stack").html().trim(),
+                                "jsCode": JSON.stringify(optionsArray),
+                                "exportId": exportId,
+                                "extraMsg": shareHref
+                            },
+                            success: function () {
+                                window.isSave = true;                     //点击导出后表明已保存
 
-                            $("body").removeClass("loader");
-                            $(".loader-container").css("display","none");
-                            top.window.location = "resources/dataAnalysis.html";
-                            // new Clipboard("#copy");
-                            // $(".modal-body").eq(1).find("p").eq(1).html(shareHref);
-                        },
-                        error : function(){
-                            alert("保存失败，请重试！");
-                        }
-                    });
+                                $("body").removeClass("loader");
+                                $(".loader-container").css("display", "none");
+                                top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+index;
+                            },
+                            error: function () {
+                                alert("保存失败，请重试！");
+                            }
+                        });
+                    }else{
+                        top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+index;
+                    }
                 });
             }
 

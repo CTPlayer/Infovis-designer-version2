@@ -7,6 +7,8 @@ require.config({
         "validate": "lib/jquery.validate.min",
         "metisMenu": "lib/metisMenu/metisMenu.min",
         "ztree": "lib/ztree/js/jquery.ztree.all.min",
+        "options": "lib/charts/options",
+        "infovis": "lib/infovis.min"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -14,6 +16,26 @@ require.config({
         "metisMenu" : { "deps" :['jquery'] },
         "ztree" : { "deps" :['jquery'] }
     }
+});
+
+require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
+    $(function(){
+        var engine = infovis.init(baseOptions.makeAllOptions() || {});
+        var exportId = window.location.href.split("=")[1].replace("&order","");
+        var order = window.location.href.split("=")[2];
+        $.ajax({
+            type: 'POST',
+            url: '../getOptions',
+            data: "exportId="+exportId,
+            success: function(data){
+                var editChart = engine.chart.init(document.getElementById("editArea"));
+                editChart.setOption(JSON.parse(data["jsCode"])[order]);
+            },
+            error: function(){
+                alert("图表配置加载失败，请重试");
+            }
+        });
+    })
 });
 
 require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jqueryui,validate){

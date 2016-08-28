@@ -103,23 +103,6 @@
         </nav>
         <!-- Main Content -->
         <div class="container-fluid">
-            <%--<div class="row">--%>
-                <%--<c:forEach var="myPanel" items="${myPanels}">--%>
-                <%--<div>--%>
-                    <%--<div class="thumbnail no-margin-bottom col-md-2" style="margin-top: 25px;margin-left: 40px;">--%>
-                        <%--<img src="data:image/jpg;base64,${myPanel.img}" style="box-shadow: 0 0 3px #000;">--%>
-                        <%--<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">--%>
-                            <%--<span style="display:none;">--%>
-                                <%--${myPanel.panelName}--%>
-                                <%--<a href="deleteOne?exportId=${myPanel.exportId}"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>--%>
-                                <%--<a href="showPanel.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>--%>
-                                <%--<a href="share.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-zoom-in" style="color: white"></i></a>--%>
-                            <%--</span>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-                <%--</c:forEach>--%>
-            <%--</div>--%>
             <div class="row">
                 <div class="col-xs-12">
                     <div class="card">
@@ -139,7 +122,7 @@
                                                 <span style="display:none;">
                                                     <a href="deleteOne?exportId=${myPanel.exportId}"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>
                                                     <a href="showPanel.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>
-                                                    <a href="share.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-zoom-in" style="color: white"></i></a>
+                                                    <a href="share.page?exportId=${myPanel.exportId}" target="_black"><i class="glyphicon glyphicon-zoom-in" style="color: white"></i></a>
                                                     <br>
                                                     <br>
                                                     <p class="overhide">${myPanel.panelName}</p>

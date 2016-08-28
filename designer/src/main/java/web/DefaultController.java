@@ -67,4 +67,13 @@ public class DefaultController {
         myPanelService.deleteOne(exportId);
         return "redirect:/query.page";
     }
+
+    /*
+     *根据exportId返回对应的图表options
+     */
+    @RequestMapping("/getOptions")
+    @ResponseBody
+    public Object getOptions(String exportId){
+        return myPanelService.queryAsObject(exportId);
+    }
 }
