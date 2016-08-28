@@ -122,7 +122,7 @@
 
 </head>
 <body class="flat-blue">
-<div class="app-container" style="background-color: rgb(240,240,240)">
+<div class="app-container">
     <div class="row content-container">
         <nav class="navbar navbar-inverse navbar-static-top" style="margin-left:-60px;background-color: rgb(238,238,238)">
             <div class="container-fluid">
@@ -135,9 +135,6 @@
                     </li>
                     <li class="dropdown">
                         <a href="resources/sqlClient.html"  role="button"><i class="icon fa fa-database"></i>&nbsp;&nbsp;数据源</a>
-                    </li>
-                    <li class="dropdown" id="exportHtml">
-                        <a href="#"  role="button" data-toggle="modal" data-target="#addPanelModal"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;新建面板</a>
                     </li>
                     <li class="dropdown profile">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">试用人员1<span class="caret"></span></a>
@@ -163,14 +160,14 @@
         <div class="navbar-default sidebar" role="navigation">
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingTwo">
+                    <div class="panel-heading" role="tab" id="heading">
                         <h4 class="panel-title">
-                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse" aria-expanded="false" aria-controls="collapse">
                                 <span class="glyphicon glyphicon-indent-left" aria-hidden="true"></span> 数据集
                             </a>
                         </h4>
                     </div>
-                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div id="collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading">
                         <div class="panel-body scrollable">
                             <div id="dataListTree" class="ztree"></div>
                         </div>
@@ -233,13 +230,13 @@
                         </div>
                         <div class="form-group">
                             <div class="col-lg-6">
-                                <label for="inputEmail3" class="col-sm-1" style="padding-top: 7px"><i class="fa fa-bookmark-o leftBarLiIcon"></i> 标记</label>
+                                <label for="inputEmail3" class="col-sm-1 control-label">标记</label>
                                 <div class="col-sm-11">
                                     <input type="email" class="form-control" id="inputEmail3" placeholder="标记">
                                 </div>
                             </div>
                             <div class="col-lg-6">
-                                <label for="inputEmail4" class="col-sm-1" style="padding-top: 7px"><i class="glyphicon glyphicon-filter leftBarLiIcon"></i> 筛选</label>
+                                <label for="inputEmail4" class="col-sm-1 control-label">筛选</label>
                                 <div class="col-sm-11">
                                     <input type="email" class="form-control" id="inputEmail4" placeholder="筛选">
                                 </div>
