@@ -129,10 +129,11 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
                     var deferred = $.ajax({
                         type: 'POST',
                         dataType: 'json',
-                        url: '../connectionManage/executeQuerySql',
+                        url: '../connectionManage/getQuerySqlInfo',
                         data : queryParam
                     });
                     deferred.done(function(result){
+                        console.log(result);
                         $('#side-menu ul.nav.nav-third-level').empty();
                         $.each(result,function(index,element){
                             if(element.type === 'varchar') {
