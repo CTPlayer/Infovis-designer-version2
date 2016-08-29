@@ -13,10 +13,12 @@
  ************************************************************************/
 package core.plugin.mybatis;
 
+import common.model.BaseModel;
 import core.plugin.mybatis.dialect.Dialect;
 import core.plugin.mybatis.dialect.SqlDialetHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.PreparedStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -58,6 +60,19 @@ public class PageInterceptor implements Interceptor {
             Object obj = FieldUtils.readField(target, "delegate", true);
             // 反射获取 RowBounds 对象。
             RowBounds rowBounds = (RowBounds) FieldUtils.readField(obj, "rowBounds", true);
+            // 添加Mapper接口情况下,分页支持
+            if(rowBounds == null || rowBounds == RowBounds.DEFAULT) {
+                ParameterHandler parameterHandler = (ParameterHandler) FieldUtils.readField(obj, "parameterHandler", true);
+                Object paramObj = parameterHandler.getParameterObject();
+                if(paramObj != null && paramObj instanceof BaseModel) {
+                    BaseModel entity = (BaseModel) paramObj;
+                    if(entity.isPaging()) {
+                        int offset = entity.getStart();
+                        int limit = entity.getLimit();
+                        rowBounds = new RowBounds(offset, limit);
+                    }
+                }
+            }
             // 分页参数存在且不为默认值时进行分页SQL构造
             if (rowBounds != null && rowBounds != RowBounds.DEFAULT) {
                 // 保存此次查询的记录总数
