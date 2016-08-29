@@ -141,6 +141,7 @@ project(":designer") {
                 "com.h2database:h2:$h2",
                 "mysql:mysql-connector-java:$mysql",
                 "com.alibaba:druid:$druid",
+                "com.github.abel533:ECharts:3.0.0.1",
                 "jstl:jstl:$jstlib",
                 "taglibs:standard:$standard"
 

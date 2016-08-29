@@ -124,6 +124,22 @@ public class ConnectionManageController {
         return resultSet;
     }
 
+    @RequestMapping("/getQuerySqlInfo")
+    @ResponseBody
+    public Object getQuerySqlInfo(ConnectionManage connectionManage) throws Exception {
+        JdbcProps jdbcProps = new JdbcProps();
+        jdbcProps.setSql(connectionManage.getSql());
+        jdbcProps.setPage(connectionManage.getPage());
+        jdbcProps.setPageSize(connectionManage.getPageSize());
+        jdbcProps.setQueryMaxRows(connectionManage.getQueryMaxRows());
+
+        connectionManage = connectionManageService.queryAsObject(connectionManage);
+        jdbcProps.setUrl(connectionManage.getDbUrl());
+        jdbcProps.setUsername(connectionManage.getUserName());
+        jdbcProps.setPassword(connectionManage.getPassword());
+        return dataBaseMetadataHelper.getQuerySqlInfo(jdbcProps);
+    }
+
     @RequestMapping("/formatSql")
     @ResponseBody
     public static String formatSql(ConnectionManage connectionManage) throws Exception {
