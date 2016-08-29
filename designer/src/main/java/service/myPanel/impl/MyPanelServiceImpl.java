@@ -33,6 +33,7 @@ public class MyPanelServiceImpl implements MyPanelService {
     @Override
     public MyPanel queryAsObject(String exportId) throws Exception {
         MyPanel myPanel = new MyPanel();
+        myPanel.setPaging(false);
         myPanel.setExportId(exportId);
         myPanel.setStatmentId(NAMESPACE + ".selectOne");
         return baseMapper.selectOne(myPanel);
