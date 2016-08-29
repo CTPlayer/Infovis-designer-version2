@@ -129,13 +129,18 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
                     var deferred = $.ajax({
                         type: 'POST',
                         dataType: 'json',
-                        url: '../connectionManage/executeQuerySql',
+                        url: '../connectionManage/getQuerySqlInfo',
                         data : queryParam
                     });
                     deferred.done(function(result){
                         $('#side-menu ul.nav.nav-third-level').empty();
-                        $.each(result.data[0],function(index,element){
-                            $('#side-menu ul.nav.nav-third-level:eq(0)').append("<li><a href='#'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i> "+element+"</a></li>");
+                        $.each(result,function(index,element){
+                            if(element.type === 'varchar') {
+                                $('#side-menu ul.nav.nav-third-level:eq(0)').append("<li><a href='#'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i> " + element.name + "</a></li>");
+                            }else{
+                                $('#side-menu ul.nav.nav-third-level:eq(1)').append("<li><a href='#'><i class='fa fa-sort-numeric-asc leftBarLiIcon'></i> " + element.name + "</a></li>");
+
+                            }
                         });
                         $('#side-menu ul.nav.nav-third-level li').draggable({
                             helper: 'clone'

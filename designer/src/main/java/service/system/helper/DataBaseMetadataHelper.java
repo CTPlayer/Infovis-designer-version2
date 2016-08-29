@@ -307,6 +307,46 @@ public class DataBaseMetadataHelper {
         return datas;
     }
 
+    /**
+     * 根据数据源和sql执行sql并返回表头以及表头数据类型
+     * @param jdbcProps
+     * @return
+     */
+    public List<Map<String,String>> getQuerySqlInfo(JdbcProps jdbcProps) throws Exception{
+        Connection conn;
+        Statement st;
+        ResultSet cRs;
+        ResultSetMetaData rsmd;
+        List<Map<String,String>> datas = new ArrayList<>();
+        dynamicDataSource.selectDataSource(jdbcProps.getUrl(), jdbcProps.getUsername(), jdbcProps.getPassword());
+        conn = dynamicDataSource.getConnection();
+        st = conn.createStatement();
+        String sql = jdbcProps.getSql();
+        //只查询表头以及表头的类型
+        if(StringUtils.isNotBlank(sql)){
+            if(sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX)){
+                st.setMaxRows(1);
+                cRs = st.executeQuery(sql);
+                rsmd = cRs.getMetaData();
+                Map<String,String> columnNameDatas;
+                for( int i=1; i<=rsmd.getColumnCount(); i++ ){
+                    columnNameDatas = new HashMap<>();
+                    columnNameDatas.put("name",rsmd.getColumnName(i));
+                    columnNameDatas.put("type",JDBC_TYPE_MAP.get(rsmd.getColumnType(i)));
+                    datas.add(columnNameDatas);
+                }
+            }else{
+                throw new RuntimeException("Only select statement can be executed!");
+            }
+        }else{
+            throw new RuntimeException( "SQL is required!");
+        }
+        JdbcUtils.closeResultSet(cRs);
+        JdbcUtils.closeStatement(st);
+        JdbcUtils.closeConnection(conn);
+        return datas;
+    }
+
     private RowBounds getRowBounds(BaseModel entity) {
         int offset = entity.getStart();
         int limit = entity.getLimit();
