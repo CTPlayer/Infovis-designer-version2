@@ -111,27 +111,13 @@
                                 <h4>我的作品</h4>
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="position: relative">
                             <div>
                                 <div class="row">
-                                    <c:forEach var="myPanel" items="${myPanels}">
-                                    <div>
-                                        <div class="thumbnail no-margin-bottom col-md-2" style="margin-top: 25px;margin-left: 40px;">
-                                            <img src="data:image/jpg;base64,${myPanel.img}">
-                                            <div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">
-                                                <span style="display:none;">
-                                                    <a href="deleteOne?exportId=${myPanel.exportId}"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>
-                                                    <a href="showPanel.page?exportId=${myPanel.exportId}" ><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>
-                                                    <a href="share.page?exportId=${myPanel.exportId}" target="_black"><i class="glyphicon glyphicon-zoom-in" style="color: white"></i></a>
-                                                    <br>
-                                                    <br>
-                                                    <p class="overhide">${myPanel.panelName}</p>
-                                                    <p class="overhide" style="font-size: 15px;">${myPanel.panelRemark}</p>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </c:forEach>
+
+                                </div>
+                                <div id="loading" class="loader-container text-center color-black" style="display: none;">
+                                    <div><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
                                 </div>
                             </div>
                         </div>

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import service.myPanel.MyPanelService;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ct on 2016/8/18.
@@ -23,12 +23,12 @@ public class DefaultController {
 
     @RequestMapping("/addPanel")
     @ResponseBody
-    public Object addPanel(MyPanel myPanel) {
-        return myPanelService.add(myPanel);
+    public Object addPanel(MyPanel myPanel) throws Exception {
+        return myPanelService.insert(myPanel);
     }
 
     @RequestMapping("/showPanel.page")
-    public Object showPanel(String exportId, ModelMap map) {
+    public Object showPanel(String exportId, ModelMap map) throws Exception {
         MyPanel myPanel = myPanelService.queryAsObject(exportId);
         map.addAttribute("exportId", myPanel.getExportId());
         map.addAttribute("htmlCode", myPanel.getHtmlCode());
@@ -38,7 +38,7 @@ public class DefaultController {
 
     @RequestMapping("/export")
     @ResponseBody
-    public Object export(MyPanel myPanel) throws IOException {
+    public Object export(MyPanel myPanel) throws Exception {
         myPanelService.update(myPanel);
         String snapshotImg = WebUtil.snapshotHtmlImageBase64Format(myPanel.getExtraMsg(), myPanel.getExportId());
         MyPanel panel = new MyPanel();
@@ -48,7 +48,7 @@ public class DefaultController {
     }
 
     @RequestMapping("/share.page")
-    public Object share(String exportId, ModelMap map) {
+    public Object share(String exportId, ModelMap map) throws Exception {
         MyPanel myPanel = myPanelService.queryAsObject(exportId);
         map.addAttribute("htmlCode", myPanel.getHtmlCode());
         map.addAttribute("jsCode", myPanel.getJsCode());
@@ -56,16 +56,28 @@ public class DefaultController {
     }
 
     @RequestMapping("/query.page")
-    public Object query(ModelMap map) {
-        List<MyPanel> myPanels = myPanelService.query();
-        map.addAttribute("myPanels", myPanels);
+    public Object query() throws Exception {
         return "panel/myPanel";
     }
 
+    /*
+     *分页查询panel
+     */
+    @RequestMapping("/selectList")
+    @ResponseBody
+    public Object selectList(MyPanel myPanel) throws Exception {
+        myPanel.setPageSize(myPanel.getPageSize());
+        myPanel.setPage(myPanel.getPage());
+        Map<String, Object> respMap = new HashMap<>();
+        respMap.put("data", myPanelService.queryAsList(myPanel));
+        respMap.put("totalPage", myPanel.getTotalPage());
+        return respMap;
+    }
+
     @RequestMapping("/deleteOne")
-    public Object deleteOne(String exportId){
-        myPanelService.deleteOne(exportId);
-        return "redirect:/query.page";
+    @ResponseBody
+    public Object deleteOne(String exportId) throws Exception {
+        return myPanelService.delete(exportId);
     }
 
     /*
@@ -73,7 +85,8 @@ public class DefaultController {
      */
     @RequestMapping("/getOptions")
     @ResponseBody
-    public Object getOptions(String exportId){
+    public Object getOptions(String exportId) throws Exception {
         return myPanelService.queryAsObject(exportId);
     }
+
 }
