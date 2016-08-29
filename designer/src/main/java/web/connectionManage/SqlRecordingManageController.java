@@ -59,6 +59,7 @@ public class SqlRecordingManageController {
             String[] queryParams = sqlRecordingManage.getQueryParam().split(",");
             String connectionId = queryParams[0];
             sqlRecordingManage.setConnectionId(connectionId);
+            sqlRecordingManage.setPaging(false);
             List<SqlRecordingManage> sqlRecordingManages = sqlRecordingManageService.query(sqlRecordingManage);
             for(SqlRecordingManage srm : sqlRecordingManages){
                 ConnectionManage treeNode = new ConnectionManage();
@@ -76,6 +77,7 @@ public class SqlRecordingManageController {
             for(ConnectionManage cm : connectionManageList){
                 String connectionId = cm.getId();
                 sqlRecordingManage.setConnectionId(connectionId);
+                sqlRecordingManage.setPaging(false);
                 List<SqlRecordingManage> sqlRecordingManages = sqlRecordingManageService.query(sqlRecordingManage);
                 if(sqlRecordingManages.size()>0){
                     treeNodes.add(cm);

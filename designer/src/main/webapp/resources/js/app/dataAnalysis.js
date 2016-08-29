@@ -136,12 +136,26 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
                         $('#side-menu ul.nav.nav-third-level').empty();
                         $.each(result,function(index,element){
                             if(element.type === 'varchar') {
-                                $('#side-menu ul.nav.nav-third-level:eq(0)').append("<li><a href='#'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i> " + element.name + "</a></li>");
+                                $('#side-menu ul.nav.nav-third-level:eq(0)').append("<li><a href='javascript:void(0)'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i><span style='display:inline-block;max-width: 150px;overflow: auto;'>" + element.name + "</span><i class='glyphicon glyphicon-download leftBarLiIcon pull-right'></i></a></li>");
                             }else{
-                                $('#side-menu ul.nav.nav-third-level:eq(1)').append("<li><a href='#'><i class='fa fa-sort-numeric-asc leftBarLiIcon'></i> " + element.name + "</a></li>");
-
+                                $('#side-menu ul.nav.nav-third-level:eq(1)').append("<li><a href='javascript:void(0)'><i class='fa fa-sort-numeric-asc leftBarLiIcon'></i><span style='display:inline-block;max-width: 10px;max-width: 150px;overflow: auto;'> " + element.name + "</span><i class='glyphicon glyphicon-upload leftBarLiIcon pull-right'></i></a></li>");
                             }
                         });
+
+                        //切换维度度量事件绑定
+                        $('#side-menu ul.nav.nav-third-level li i.leftBarLiIcon').on("click",function () {
+                            var li = $($(this).parent().parent());
+                            if($(this).hasClass("glyphicon-download")){
+                                $(this).removeClass("glyphicon-download").addClass("glyphicon-upload");
+                                li.find("i:not(.pull-right)").removeClass("glyphicon glyphicon-text-color").addClass("fa fa-sort-numeric-asc");
+                                $('#side-menu ul.nav.nav-third-level:eq(1)').append(li);
+                            }else{
+                                $(this).removeClass("glyphicon-upload").addClass("glyphicon-download");
+                                li.find("i:not(.pull-right)").removeClass("fa fa-sort-numeric-asc").addClass("glyphicon glyphicon-text-color");
+                                $('#side-menu ul.nav.nav-third-level:eq(0)').append(li);
+                            }
+                        })
+
                         $('#side-menu ul.nav.nav-third-level li').draggable({
                             helper: 'clone'
                         });
@@ -162,6 +176,5 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
             }
         }
     };
-
     var dataListTree = $.fn.zTree.init($("#dataListTree"),setting_datalist);
 });
