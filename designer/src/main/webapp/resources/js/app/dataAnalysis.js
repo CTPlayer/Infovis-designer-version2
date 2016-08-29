@@ -22,7 +22,7 @@ require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
         var exportId = window.location.href.split("=")[1].replace("&order","");
-        var order = window.location.href.split("=")[2];
+        var order = window.location.href.split("=")[2].replace("#","");
         $.ajax({
             type: 'POST',
             url: '../getOptions',

@@ -2,7 +2,6 @@ package service.myPanel;
 
 import model.myPanel.MyPanel;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -10,13 +9,14 @@ import java.util.List;
  * Created by ct on 2016/8/23.
  */
 public interface MyPanelService {
-    String add(MyPanel myPanel);
 
-    MyPanel queryAsObject(String exportId);
+    String insert(MyPanel myPanel) throws Exception;
 
-    int update(MyPanel myPanel) throws IOException;
+    MyPanel queryAsObject(String exportId) throws Exception;
 
-    List<MyPanel> query();
+    int update(MyPanel myPanel) throws Exception;
 
-    int deleteOne(String exportId);
+    List<MyPanel> queryAsList(MyPanel myPanel) throws Exception;
+
+    int delete(String exportId) throws Exception;
 }
