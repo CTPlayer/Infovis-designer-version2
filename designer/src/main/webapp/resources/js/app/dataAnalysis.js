@@ -75,7 +75,7 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
         target.html('');
-        var targetText = '<i class="'+iclass+'"></i> <span>'+targetNode+'</span>';
+        var targetText = '<span style="width:70px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span>';
         target.append(targetText);
         if(textTag){
             target.css("background-color",'#f6eedb');
