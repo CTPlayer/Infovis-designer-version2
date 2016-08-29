@@ -8,11 +8,14 @@ require.config({
         "metisMenu": "lib/metisMenu/metisMenu.min",
         "ztree": "lib/ztree/js/jquery.ztree.all.min",
         "options": "lib/charts/options",
-        "infovis": "lib/infovis.min"
+        "infovis": "lib/infovis.min",
+        "jqueryCookie": "lib/jquery.cookie",
+        "jqueryMd5": "lib/jquery.md5"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
         "jquery-ui" : { "deps" :['jquery'] },
+        "jqueryMd5" : { "deps" :['jquery'] },
         "metisMenu" : { "deps" :['jquery'] },
         "ztree" : { "deps" :['jquery'] }
     }
@@ -68,8 +71,7 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 });
 
 //数据集操作模块
-require(['jquery','ztree','bootstrap'], function($,ztree){
-
+require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree){
     function tagDropFunction(event, ui,iclass,target) {
         var targetNode = $(ui.draggable).find("a").find("span").html();
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
@@ -151,15 +153,18 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
                         data : queryParam
                     });
                     deferred.done(function(result){
-                        $('#side-menu ul.nav.nav-third-level').empty();
-                        $.each(result,function(index,element){
-                            if(element.type === 'varchar') {
-                                $('#side-menu ul.nav.nav-third-level:eq(0)').append("<li><a href='javascript:void(0)'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i><span style='display:inline-block;max-width: 150px;overflow: auto;'>" + element.name + "</span><i class='glyphicon glyphicon-download leftBarLiIcon pull-right'></i></a></li>");
-                            }else{
-                                $('#side-menu ul.nav.nav-third-level:eq(1)').append("<li><a href='javascript:void(0)'><i class='fa fa-sort-numeric-asc leftBarLiIcon'></i><span style='display:inline-block;max-width: 10px;max-width: 150px;overflow: auto;'> " + element.name + "</span><i class='glyphicon glyphicon-upload leftBarLiIcon pull-right'></i></a></li>");
-                            }
+                        var columnModle = getCookieInfo(result).data;
 
+                        $('#side-menu ul.nav.nav-third-level').empty();
+                        $.each(columnModle.dimensions,function (index,element) {
+                            $('#side-menu ul.nav.nav-third-level:eq(0)')
+                                .append("<li><a href='javascript:void(0)'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i><span style='display:inline-block;max-width: 150px;overflow: hidden;'>" + element + "</span><i class='glyphicon glyphicon-download leftBarLiIcon pull-right'></i></a></li>");
                         });
+                        $.each(columnModle.measure,function (index,element) {
+                            $('#side-menu ul.nav.nav-third-level:eq(1)')
+                                .append("<li><a href='javascript:void(0)'><i class='fa fa-sort-numeric-asc leftBarLiIcon'></i><span style='display:inline-block;max-width: 10px;max-width: 150px;overflow: hidden;'>" + element + "</span><i class='glyphicon glyphicon-upload leftBarLiIcon pull-right'></i></a></li>");
+                        });
+
 
                         //切换维度度量事件绑定
                         $('#side-menu ul.nav.nav-third-level li i.leftBarLiIcon').on("click",function () {
@@ -173,6 +178,8 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
                                 li.find("i:not(.pull-right)").removeClass("fa fa-sort-numeric-asc").addClass("glyphicon glyphicon-text-color");
                                 $('#side-menu ul.nav.nav-third-level:eq(0)').append(li);
                             }
+                            //移动后保存到cookie
+                            saveCookieInfo(result);
                         })
 
                         $('#side-menu ul.nav.nav-third-level li').draggable({
@@ -243,6 +250,54 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
         }
     };
     var dataListTree = $.fn.zTree.init($("#dataListTree"),setting_datalist);
+
+    //获取cookie中的维度与度量
+    var getCookieInfo = function(res){
+        var key = $.md5(res);
+        var result;
+        var cookieResult = $.cookie(key);
+        if(cookieResult){
+            result = {
+                data : JSON.parse(cookieResult),
+                type : 'cookie'
+            }
+        }else{
+            //维度和度量模型
+            var columnModle ={
+                dimensions :[],
+                measure :[],
+            }
+            $.each(res,function(index,element){
+                if(element.type === 'varchar') {
+                    columnModle.dimensions.push(element.name);
+                }else{
+                    columnModle.measure.push(element.name);
+                }
+            });
+            result = {
+                data : columnModle,
+                type : 'ajax'
+            }
+            $.cookie(key,JSON.stringify(columnModle),{ expires: 10 });
+        }
+        return result
+    }
+    //将维度与度量保存到cookie
+    var saveCookieInfo = function (result) {
+        //维度和度量模型
+        var columnModle ={
+            dimensions :[],
+            measure :[],
+        }
+        $.each($('#side-menu ul.nav.nav-third-level:eq(0) span'),function (index, element) {
+            columnModle.dimensions.push($(element).text());
+        })
+
+        $.each($('#side-menu ul.nav.nav-third-level:eq(1) span'),function (index, element) {
+            columnModle.measure.push($(element).text());
+        })
+        $.cookie($.md5(result),JSON.stringify(columnModle),{ expires: 10 });
+    }
 
     $("form.make-model-region .trigger-column").on('mouseenter mouseleave',function(e){
         var target = $(this);
