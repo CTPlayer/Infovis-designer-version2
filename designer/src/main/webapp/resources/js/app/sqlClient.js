@@ -83,6 +83,7 @@ require([
             ,	east__paneSelector:		".outer-east"
             ,	west__size:				350
             ,	east__size:				125
+            ,	north__size:		    65
             ,	spacing_open:			2 // ALL panes
             ,	spacing_closed:			5 // ALL panes
             ,	north__spacing_open:	0
