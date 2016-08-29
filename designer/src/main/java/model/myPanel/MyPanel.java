@@ -11,6 +11,7 @@
 package model.myPanel;
 
 import common.model.BaseModel;
+import org.apache.ibatis.type.Alias;
 
 /**
  * <p>
@@ -18,6 +19,7 @@ import common.model.BaseModel;
  *
  * Created by ct on 2016/8/23.
  */
+@Alias("MyPanel")
 public class MyPanel extends BaseModel {
     private String id;
     private String panelName;

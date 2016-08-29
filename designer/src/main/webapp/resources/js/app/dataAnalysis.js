@@ -25,7 +25,7 @@ require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
         var exportId = window.location.href.split("=")[1].replace("&order","");
-        var order = window.location.href.split("=")[2];
+        var order = window.location.href.split("=")[2].replace("#","");
         $.ajax({
             type: 'POST',
             url: '../getOptions',
@@ -72,6 +72,23 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 
 //数据集操作模块
 require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree){
+    function tagDropFunction(event, ui,iclass,target) {
+        var targetNode = $(ui.draggable).find("a").find("span").html();
+        var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
+        var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
+        target.html('');
+        var targetText = '<i class="'+iclass+'"></i> <span>'+targetNode+'</span>';
+        target.append(targetText);
+        if(textTag){
+            target.css("background-color",'#f6eedb');
+            target.css("border",'1px #f9e7bb solid');
+        }
+        if(numberTag){
+            target.css("background-color",'#d2ddf0');
+            target.css("border",'1px #b1caf4 solid');
+        }
+    };
+
     var setting_datalist = {
         async: {
             enable: true,
@@ -137,6 +154,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                     });
                     deferred.done(function(result){
                         var columnModle = getCookieInfo(result).data;
+
                         $('#side-menu ul.nav.nav-third-level').empty();
                         $.each(columnModle.dimensions,function (index,element) {
                             $('#side-menu ul.nav.nav-third-level:eq(0)')
@@ -177,15 +195,55 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                         $("form.make-model-region .trigger-column").droppable({
                             drop: function (event, ui) {
                                 var targetNode = $(ui.draggable).find("a").find("span").html();
-                                var targetText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;" >'+
+                                var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
+                                var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
+
+                                var targetText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color:#f6eedb;" >'+
+                                    '<span class="dragName">'+targetNode+'</span>'+
+                                    '<span></span>'+
+                                    '</div>';
+                                var targetNumberText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color: #d2ddf0;border:1px solid #b1caf4" >'+
                                     '<span class="dragName">'+targetNode+'</span>'+
                                     '<span></span>'+
                                     '</div>';
                                 var target = $(this);
-                                target.append(targetText);
+
+                                if(numberTag){
+                                    target.append(targetNumberText);
+                                }
+                                if(textTag){
+                                    target.append(targetText);
+                                }
                             }
                         });
 
+                        $("form.make-model-region .mark-down-column .mark-item-color").droppable({
+                            drop: function(event,ui){
+                                var target = $(this);
+                                tagDropFunction(event,ui,'fa fa-tachometer',target)
+                            }
+                        });
+
+                        $("form.make-model-region .mark-down-column .mark-item-size").droppable({
+                            drop: function(event,ui){
+                                var target = $(this);
+                                tagDropFunction(event,ui,'glyphicon glyphicon-zoom-in',target)
+                            }
+                        });
+
+                        $("form.make-model-region .mark-down-column .mark-item-tag").droppable({
+                            drop: function(event,ui){
+                                var target = $(this);
+                                tagDropFunction(event,ui,'fa fa-tags',target)
+                            }
+                        });
+
+                        $("form.make-model-region .mark-down-column .mark-item-desc").droppable({
+                            drop: function(event,ui){
+                                var target = $(this);
+                                tagDropFunction(event,ui,'fa fa-file-text-o',target)
+                            }
+                        });
                     });
                 }
             }
