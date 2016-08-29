@@ -22,6 +22,9 @@
     <link href="js/lib/dataTables/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="js/lib/dataTables/css/dataTables.bootstrap.min.css" rel="stylesheet">
 
+    <!--flat admin-->
+    <link rel="stylesheet" type="text/css" href="js/lib/flatadmin/css/style.css">
+    <link rel="stylesheet" type="text/css" href="js/lib/flatadmin/css/themes/flat-blue.css">
 
     <style type="text/css">
         .scrollable {
@@ -137,12 +140,12 @@
         .ztree li span.button.sqlserverIcon_ico_open, .ztree li span.button.sqlserverIcon_ico_close{margin-right:2px; background: url(img/sqlserver.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
         .ztree li span.button.h2Icon_ico_open, .ztree li span.button.h2Icon_ico_close{margin-right:2px; background: url(img/h2.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
         .ztree li span.button.sqlrunnerIcon_ico_docu,.ztree li span.button.sqlrunnerIcon_ico_open, .ztree li span.button.sqlrunnerIcon_ico_close{margin-right:2px; background: url(img/sql_runner.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
-        .container-fluid{
-            background:	#FFF;
-        }
-        .navbar-default{
-            border: 0px;
-        }
+        /*.container-fluid{*/
+            /*background:	#FFF;*/
+        /*}*/
+        /*.navbar-default{*/
+            /*border: 0px;*/
+        /*}*/
     </style>
     <style>
         /**
@@ -162,38 +165,70 @@
         .ui-layout-toggler {
             display: none;
         }
+        .ui-layout-north {
+            background:	#FFF;
+            padding:	10px;
+            overflow:	hidden;
+        }
+        .flat-blue .navbar .navbar-nav > li > a, .flat-blue .navbar.navbar-default .navbar-nav > li > a,.leftBarLiIcon{
+            color: #0f77b1;
+        }
+
+        .flat-blue .navbar.navbar-inverse .navbar-nav > li.danger > a{
+            color: red;
+        }
     </style>
+
     <script src="js/lib/require.js" defer async="true" data-main="js/app/sqlClient"></script>
 </head>
-<body>
+<body class="flat-blue">
     <div class="ui-layout-north">
         <div>
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="#">SQL在线查询</a>
-                    </div>
+            <!--<nav class="navbar navbar-default">-->
+                <!--<div class="container-fluid">-->
+                    <!--&lt;!&ndash; Brand and toggle get grouped for better mobile display &ndash;&gt;-->
+                    <!--<div class="navbar-header">-->
+                        <!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">-->
+                            <!--<span class="sr-only">Toggle navigation</span>-->
+                            <!--<span class="icon-bar"></span>-->
+                            <!--<span class="icon-bar"></span>-->
+                            <!--<span class="icon-bar"></span>-->
+                        <!--</button>-->
+                        <!--<a class="navbar-brand" href="#">SQL在线查询</a>-->
+                    <!--</div>-->
 
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li>
-                                <a href="javascript: void(0);" data-toggle="modal" data-target="#addConnectionModal">新增连接</a>
-                            </li>
-                            <li>
-                                <a href="javascript: void(0);" id="deleteDB" >删除连接</a>
-                            </li>
-                        </ul>
-                    </div><!-- /.navbar-collapse -->
-                </div><!-- /.container-fluid -->
-            </nav>
+                    <!--&lt;!&ndash; Collect the nav links, forms, and other content for toggling &ndash;&gt;-->
+                    <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
+                        <!--<ul class="nav navbar-nav">-->
+                            <!--<li>-->
+                                <!--<a href="javascript: void(0);" data-toggle="modal" data-target="#addConnectionModal">新增连接</a>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                                <!--<a href="javascript: void(0);" id="deleteDB" >删除连接</a>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                    <!--</div>&lt;!&ndash; /.navbar-collapse &ndash;&gt;-->
+                <!--</div>&lt;!&ndash; /.container-fluid &ndash;&gt;-->
+            <!--</nav>-->
+            <div class="app-container">
+                <div class="row content-container">
+                    <nav class="navbar navbar-inverse navbar-static-top" style="margin-left:-80px;margin-right:-15px;margin-top:-10px;background-color: rgb(238,238,238)">
+                        <div class="container-fluid">
+                            <ul class="nav navbar-nav navbar-left">
+                                <a class="navbar-brand" href="#" style="color: #ffffff"><i class="glyphicon glyphicon-equalizer" aria-hidden="true"></i> 数据源</a>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-left">
+                                <li>
+                                    <a href="javascript: void(0);" data-toggle="modal" data-target="#addConnectionModal">新增连接</a>
+                                </li>
+                                <li>
+                                    <a href="javascript: void(0);" id="deleteDB" >删除连接</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
         </div>
     </div>
     <div class="outer-center">
