@@ -135,23 +135,30 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
                     deferred.done(function(result){
                         $('#side-menu ul.nav.nav-third-level').empty();
                         $.each(result.data[0],function(index,element){
-                            $('#side-menu ul.nav.nav-third-level:eq(0)').append("<li><a href='#'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i> "+element+"</a></li>");
+                            $('#side-menu ul.nav.nav-third-level:eq(0)').append("<li><a href='#'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i><span>"+element+"</span></a></li>");
                         });
                         $('#side-menu ul.nav.nav-third-level li').draggable({
-                            helper: 'clone'
-                        });
-                        $('#side-menu ul.nav.nav-third-level li').droppable({
-                            over: function(event, ui) {
-                                var target = $(event.target);
-                                target.after(ui.draggable);
+                            cursor: "move",
+                            opacity: 0.7,
+                            cursorAt: { top: -12, left: -12 },
+                            helper: function(event) {
+                                var dragText = $(this).find("a").find("span").html();
+                                return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
                             }
                         });
-                        $('#side-menu ul.nav.nav-second-level a').droppable({
-                            over: function(event, ui) {
-                                var target = $(event.target).next();
-                                target.append(ui.draggable);
+
+                        $("form.make-model-region .trigger-column").droppable({
+                            drop: function (event, ui) {
+                                var targetNode = $(ui.draggable).find("a").find("span").html();
+                                var targetText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;" >'+
+                                    '<span class="dragName">'+targetNode+'</span>'+
+                                    '<span></span>'+
+                                    '</div>';
+                                var target = $(this);
+                                target.append(targetText);
                             }
                         });
+
                     });
                 }
             }
@@ -159,4 +166,17 @@ require(['jquery','ztree','bootstrap'], function($,ztree){
     };
 
     var dataListTree = $.fn.zTree.init($("#dataListTree"),setting_datalist);
+
+    $("form.make-model-region .trigger-column").on('mouseenter mouseleave',function(e){
+        var target = $(this);
+        if(e.type == 'mouseenter'){
+            if(target.html()!=''){
+                target.css("height","auto");
+            }
+            target.css("cursor","pointer");
+        }else if(e.type == 'mouseleave'){
+            target.css("height","28px");
+        }
+    });
+
 });

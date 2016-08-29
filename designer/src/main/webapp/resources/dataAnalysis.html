@@ -85,12 +85,44 @@
         }
 
         form.make-model-region >div .col-lg-6 label{
-            padding:7px 0 0;
+            padding:7px 5px 0 0;
         }
 
         form.make-model-region > div .col-sm-11 {
             padding: 0 0 0 10px;
         }
+
+        form.make-model-region .labelDiv{
+            border:1px dashed #ccc;
+            height: 30px;
+        }
+
+
+        form.make-model-region .labelDiv .mark-item{
+            padding-top: 7px;
+            border-right:1px dashed #ccc;
+            text-align: center;
+            height: 16px;
+        }
+
+        form.make-model-region .labelDiv .mark-item-right{
+            padding-top: 7px;
+            text-align: center;
+        }
+
+        .trigger-column-tag{
+            margin-top: 3px;
+            margin-left:5px;
+            display: inline-block;
+            width:100px;
+            background-color:#f6eedb;
+            border: 1px #f9e7bb solid;
+        }
+
+        .trigger-column-tag .dragName{
+            padding:4px;
+        }
+
 
         @media (min-width: 768px) {
             .sidebar {
@@ -168,7 +200,7 @@
                         </h4>
                     </div>
                     <div id="collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading">
-                        <div class="panel-body scrollable">
+                        <div class="panel-body" style="overflow-x:scroll;background-color: #f9f9f9">
                             <div id="dataListTree" class="ztree"></div>
                         </div>
                     </div>
@@ -216,29 +248,37 @@
                     <form class="form-horizontal make-model-region">
                         <div class="form-group">
                             <div class="col-lg-6">
-                                <label for="inputEmail1" class="col-sm-1 control-label"><i class="glyphicon glyphicon-barcode leftBarLiIcon"></i> 列</label>
-                                <div class="col-sm-11">
-                                    <input type="email" class="form-control" id="inputEmail1" placeholder="列">
-                                </div>
+                                <label class="col-sm-1 control-label"><i class="glyphicon glyphicon-barcode leftBarLiIcon"></i> 列</label>
+                                <div class="col-sm-11 labelDiv trigger-column" style="overflow: hidden;"></div>
                             </div>
                             <div class="col-lg-6">
-                                <label for="inputEmail2" class="col-sm-1 control-label"><i class="glyphicon glyphicon-align-justify leftBarLiIcon"></i> 行</label>
-                                <div class="col-sm-11">
-                                    <input type="email" class="form-control" id="inputEmail2" placeholder="行">
+                                <label class="col-sm-1 control-label"><i class="glyphicon glyphicon-align-justify leftBarLiIcon"></i> 行</label>
+                                <div class="col-sm-11 labelDiv trigger-column">
+                                    <div class="trigger-column-tag">
+                                        <span class="dragName">w</span>
+                                        <span></span>
+                                    </div>
+                                    <div class="trigger-column-tag">
+                                        <span class="dragName">产品子类别</span>
+                                        <span></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-lg-6">
-                                <label for="inputEmail3" class="col-sm-1 control-label">标记</label>
-                                <div class="col-sm-11">
-                                    <input type="email" class="form-control" id="inputEmail3" placeholder="标记">
+                                <label class="col-sm-1 control-label">标记</label>
+                                <div class="col-sm-11 labelDiv">
+                                    <div class="mark-item col-sm-3"><i class="fa fa-tachometer"></i> 颜色</div>
+                                    <div class="mark-item col-sm-3"><i class="glyphicon glyphicon-zoom-in"></i> 大小</div>
+                                    <div class="mark-item col-sm-3"><i class="fa fa-tags"></i> 标签</div>
+                                    <div class="mark-item-right col-sm-3"><i class="fa fa-file-text-o"></i> 描述</div>
                                 </div>
                             </div>
                             <div class="col-lg-6">
-                                <label for="inputEmail4" class="col-sm-1 control-label">筛选</label>
-                                <div class="col-sm-11">
-                                    <input type="email" class="form-control" id="inputEmail4" placeholder="筛选">
+                                <label class="col-sm-1 control-label">筛选</label>
+                                <div class="col-sm-11 labelDiv">
+
                                 </div>
                             </div>
                         </div>
