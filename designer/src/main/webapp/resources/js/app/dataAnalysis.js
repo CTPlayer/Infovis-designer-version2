@@ -265,7 +265,25 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                         $("form.make-model-region .mark-down-column .mark-item-color").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
-                                tagDropFunction(event,ui,'fa fa-tachometer',target)
+                                tagDropFunction(event,ui,'fa fa-tachometer',target);
+                                $.ajax({
+                                    type: 'POST',
+                                    contentType: "application/json; charset=utf-8",
+                                    url: '../render',
+                                    data: JSON.stringify({
+                                        'chartType': chartType,
+                                        'dataRecordId': sqlRecordingId,
+                                        'exportId': window.location.href.split("=")[1].replace("&order",""),
+                                        'builderModel': {
+                                            'mark': {
+                                                'color': ui.draggable[0].textContent
+                                            }
+                                        }
+                                    }),
+                                    success: function(data){
+                                        console.log(data);
+                                    }
+                                });
                             },
                             over: function (event, ui) {
                                 $(this).css("border","1px dashed #22a7f0");

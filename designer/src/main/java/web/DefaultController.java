@@ -5,6 +5,7 @@ import model.chart.ChatBuilderParams;
 import model.myPanel.MyPanel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
@@ -105,13 +106,13 @@ public class DefaultController {
      */
     @RequestMapping("/render")
     @ResponseBody
-    public Object render(ChatBuilderParams chatBuilderParams, HttpServletRequest request) throws Exception {
+    public Object render(@RequestBody ChatBuilderParams chatBuilderParams, HttpServletRequest request) throws Exception {
 
         WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
 
         ChartOption chartOption = null;
 
-        if (chatBuilderParams.getChartType() == ChatBuilderParams.ChartType.Pie) {
+        if (chatBuilderParams.getChartType() == ChatBuilderParams.ChartType.pie) {
             chartOption = context.getBean(Pie.class);
         }
 

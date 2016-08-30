@@ -59,6 +59,6 @@ public class ChatBuilderParams {
     }
 
     public enum ChartType {
-        Pie, Line, Bar
+        pie, line, bar
     }
 }
