@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import service.chart.ChartOption;
+import service.chart.line.echarts.Line;
 import service.chart.pie.echarts.Pie;
 import service.myPanel.MyPanelService;
 
@@ -116,6 +117,8 @@ public class DefaultController {
 
         if (chatBuilderParams.getChartType() == ChatBuilderParams.ChartType.pie) {
             chartOption = context.getBean(Pie.class);
+        } else if (chatBuilderParams.getChartType() == ChatBuilderParams.ChartType.line) {
+            chartOption = context.getBean(Line.class);
         }
 
         return TemplateUtil.genJsonStr4Obj(chartOption.transform(chatBuilderParams), true);
