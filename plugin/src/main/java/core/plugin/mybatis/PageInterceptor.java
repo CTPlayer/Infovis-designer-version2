@@ -69,7 +69,11 @@ public class PageInterceptor implements Interceptor {
                     if(entity.isPaging()) {
                         int offset = entity.getStart();
                         int limit = entity.getLimit();
-                        rowBounds = new RowBounds(offset, limit);
+                        if(offset == 0 && limit == 0) {
+                            rowBounds = RowBounds.DEFAULT;
+                        } else {
+                            rowBounds = new RowBounds(offset, limit);
+                        }
                     }
                 }
             }
