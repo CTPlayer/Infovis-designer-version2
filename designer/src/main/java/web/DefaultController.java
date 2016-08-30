@@ -1,5 +1,6 @@
 package web;
 
+import common.util.TemplateUtil;
 import common.util.WebUtil;
 import model.chart.ChatBuilderParams;
 import model.myPanel.MyPanel;
@@ -105,7 +106,7 @@ public class DefaultController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/render", method = RequestMethod.POST)
+    @RequestMapping(value = "/render", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
     @ResponseBody
     public Object render(@RequestBody ChatBuilderParams chatBuilderParams, HttpServletRequest request) throws Exception {
 
@@ -117,7 +118,7 @@ public class DefaultController {
             chartOption = context.getBean(Pie.class);
         }
 
-        return chartOption.transform(chatBuilderParams);
+        return TemplateUtil.genJsonStr4Obj(chartOption.transform(chatBuilderParams), true);
     }
 
 }

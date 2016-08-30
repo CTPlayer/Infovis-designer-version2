@@ -13,6 +13,7 @@
  ************************************************************************/
 package common.util;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,11 +56,26 @@ public final class TemplateUtil {
      * @return JSON String
      */
     public static final String genJsonStr4Obj(Object obj) {
+        return genJsonStr4Obj(obj, false);
+    }
+
+    /**
+     * 生成指定对象JSON格式是否包含NULL字段
+     *
+     * @param obj
+     * @param removeNull
+     * @return
+     */
+    public static final String genJsonStr4Obj(Object obj, boolean removeNull) {
         StringWriter sw = new StringWriter();
         String jsonStr = "{}";
         JsonGenerator jsonGenerator = null;
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            jsonGenerator = new ObjectMapper().getFactory().createGenerator(sw);
+            if (removeNull) {
+                mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            }
+            jsonGenerator = mapper.getFactory().createGenerator(sw);
             jsonGenerator.writeObject(obj);
             jsonStr = sw.toString();
         } catch (Exception e) {
