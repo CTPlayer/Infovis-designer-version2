@@ -191,7 +191,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             cursor: "move",
                             opacity: 0.7,
                             appendTo :'body',
-                            cursorAt: { top: -5, left: -5 },
+                            cursorAt: { top: 10, left: 34 },
                             helper: function(event) {
                                 var dragText = $(this).find("a").find("span").html();
                                 return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
@@ -229,7 +229,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                     cursor: "move",
                                     opacity: 0.7,
                                     appendTo:'body',
-                                    cursorAt: { top: 0, left: 0 },
+                                    cursorAt: { top: 10, left: 34 },
                                     helper: function(event) {
                                         var dragText = $(this).find("span").html();
                                         return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
@@ -266,6 +266,14 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             drop: function(event,ui){
                                 var target = $(this);
                                 tagDropFunction(event,ui,'fa fa-tachometer',target)
+                            },
+                            over: function (event, ui) {
+                                $(this).css("border","1px dashed #22a7f0");
+                                $(this).css("background-color","#cfe9f7");
+                            },
+                            out:function (event,ui) {
+                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("background-color","white");
                             }
                         });
 
@@ -276,6 +284,14 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             drop: function(event,ui){
                                 var target = $(this);
                                 tagDropFunction(event,ui,'fa fa-clock-o',target)
+                            },
+                            over: function (event, ui) {
+                                $(this).css("border","1px dashed #22a7f0");
+                                $(this).css("background-color","#cfe9f7");
+                            },
+                            out:function (event,ui) {
+                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("background-color","white");
                             }
                         });
 
@@ -286,6 +302,14 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             drop: function(event,ui){
                                 var target = $(this);
                                 tagDropFunction(event,ui,'fa fa-tags',target)
+                            },
+                            over: function (event, ui) {
+                                $(this).css("border","1px dashed #22a7f0");
+                                $(this).css("background-color","#cfe9f7");
+                            },
+                            out:function (event,ui) {
+                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("background-color","white");
                             }
                         });
 
