@@ -68,6 +68,7 @@ subprojects {
                 "ch.qos.logback:logback-classic:$logback",
                 "org.logback-extensions:logback-ext-spring:0.1.4",
                 "org.apache.commons:commons-lang3:$commonLang",
+                "org.apache.commons:commons-collections4:4.1",
                 "commons-io:commons-io:$commonIO",
                 "commons-fileupload:commons-fileupload:$commonFileupload",
                 "com.fasterxml.jackson.core:jackson-core:$jackson2",

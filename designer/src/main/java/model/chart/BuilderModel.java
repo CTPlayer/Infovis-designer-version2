@@ -13,10 +13,9 @@ package model.chart;
 import java.util.List;
 
 /**
- * <p>
  * 图表构建模型
- * <p>
- * Created by CSJ on 16/8/26.
+ *
+ * @author CSJ
  */
 public class BuilderModel {
 

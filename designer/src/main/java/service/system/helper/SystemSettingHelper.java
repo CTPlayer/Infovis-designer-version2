@@ -1,15 +1,15 @@
 /************************************************************************
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  ************************************************************************/
 package service.system.helper;
 
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import service.system.SystemDetectedService;
 
 import javax.annotation.Resource;
+
 /**
  * <p>
  * 系统配置工具类
@@ -37,11 +38,14 @@ public final class SystemSettingHelper {
     private DynamicDataSource dynamicDataSource;
 
     @Resource
-    private SystemDetectedService  systemDetectedService;
+    private SystemDetectedService systemDetectedService;
 
     @Value("${app.version}")
     private float appVersion;
 
+    /**
+     * 检测系统初始化状态
+     */
     public void checkSystemInitStatus() {
 
         // 选择默认数据源
@@ -56,7 +60,7 @@ public final class SystemSettingHelper {
             case HAS_INIT:
                 SystemMetaData metaData = systemDetectedService.querySystemMetaDataAsObject();
                 float currentVersion = metaData.getVersion();
-                if(currentVersion < appVersion) {
+                if (currentVersion < appVersion) {
                     L.info("更新版本, Ver: {} -> Ver: {}", currentVersion, appVersion);
                     systemDetectedService.upgradeSystem(currentVersion, appVersion);
                 } else {
@@ -65,5 +69,4 @@ public final class SystemSettingHelper {
                 break;
         }
     }
-
 }

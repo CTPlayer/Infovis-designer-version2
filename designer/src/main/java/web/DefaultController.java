@@ -1,14 +1,20 @@
 package web;
 
 import common.util.WebUtil;
+import model.chart.ChatBuilderParams;
 import model.myPanel.MyPanel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import service.chart.ChartOption;
+import service.chart.pie.echarts.Pie;
 import service.myPanel.MyPanelService;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,6 +93,29 @@ public class DefaultController {
     @ResponseBody
     public Object getOptions(String exportId) throws Exception {
         return myPanelService.queryAsObject(exportId);
+    }
+
+    /**
+     * 动态渲染图形
+     *
+     * @param chatBuilderParams
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/render")
+    @ResponseBody
+    public Object render(ChatBuilderParams chatBuilderParams, HttpServletRequest request) throws Exception {
+
+        WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
+
+        ChartOption chartOption = null;
+
+        if (chatBuilderParams.getChartType() == ChatBuilderParams.ChartType.Pie) {
+            chartOption = context.getBean(Pie.class);
+        }
+
+        return chartOption.transform(chatBuilderParams);
     }
 
 }

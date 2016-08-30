@@ -1,3 +1,13 @@
+/*************************************************************************
+ * Copyright (C) Unpublished JiuDaoTech Software, Inc. All rights reserved.
+ * JiuDaoTech Software, Inc., Confidential and Proprietary.
+ * <p>
+ * This software is subject to copyright protection
+ * under the laws of the Public of China and other countries.
+ * <p>
+ * Unless otherwise explicitly stated, this software is provided
+ * by JiuDaoTech "AS IS".
+ *************************************************************************/
 package service.system.helper;
 
 import common.model.BaseModel;
@@ -26,7 +36,8 @@ import java.util.Map;
 
 /**
  * 数据库元数据获取、动态查询sql辅助类
- * Created by gzy on 2016/8/11.
+ *
+ * @author CSJ, GZY, YX
  */
 @Component
 public class DataBaseMetadataHelper {
@@ -38,9 +49,6 @@ public class DataBaseMetadataHelper {
     private final static String SQL_SELECT_REGEX = "(?is)^\\s*SELECT.*$";
 
     private final static String SQL_COUNT_REGEX = "(?is)^\\s*SELECT\\s+COUNT\\s*\\(\\s*(?:\\*|\\w+)\\s*\\).*$";
-
-    @Resource
-    private DynamicDataSource dynamicDataSource;
 
     static {
         JDBC_TYPE_MAP.put(Types.ARRAY, "array");
@@ -81,43 +89,8 @@ public class DataBaseMetadataHelper {
         JDBC_TYPE_MAP.put(Types.VARCHAR, "varchar");
     }
 
-    /**
-     * 获取数据源所有的表
-     * @param jdbcProps
-     * @return
-     * @throws Exception
-     */
-    public List<TableMetaData> getSchemaTables(JdbcProps jdbcProps) throws Exception {
-        Connection conn = null;
-        ResultSet tRs = null;
-        List<TableMetaData> tableMetaDatas = new ArrayList<>();
-        dynamicDataSource.selectDataSource(jdbcProps.getUrl(), jdbcProps.getUsername(), jdbcProps.getPassword());
-        conn = dynamicDataSource.getConnection();
-        DatabaseMetaData metaData = conn.getMetaData();
-        String userName = metaData.getUserName();
-        String[] tableTypes = {"TABLE","VIEW"};
-        String dbType = SqlDialetHelper.getDbTypeByUrl(jdbcProps.getUrl());
-        tRs = metaData.getTables(null, null, null, tableTypes);
-        while (tRs.next()) {
-            TableMetaData tableMetaData = new TableMetaData();
-            tableMetaData.setTableName(tRs.getString("TABLE_NAME").toLowerCase());
-            tableMetaData.setTableType(tRs.getString("TABLE_TYPE"));
-            tableMetaData.setTableRemark(tRs.getString("REMARKS"));
-            String tableSchem = tRs.getString("TABLE_SCHEM");
-            if(!"INFORMATION_SCHEMA".equalsIgnoreCase(tableSchem) && !"sys".equalsIgnoreCase(tableSchem)){
-                if("ORACLE".equalsIgnoreCase(dbType)){
-                    if(userName.equalsIgnoreCase(tableSchem)){
-                        tableMetaDatas.add(tableMetaData);
-                    }
-                }else{
-                    tableMetaDatas.add(tableMetaData);
-                }
-            }
-        }
-        JdbcUtils.closeResultSet(tRs);
-        JdbcUtils.closeConnection(conn);
-        return tableMetaDatas;
-    }
+    @Resource
+    private DynamicDataSource dynamicDataSource;
 
     private static String checkTableColumnType(int type) {
         String typeName = "";
@@ -152,13 +125,53 @@ public class DataBaseMetadataHelper {
     }
 
     /**
+     * 获取数据源所有的表
+     *
+     * @param jdbcProps
+     * @return
+     * @throws Exception
+     */
+    public List<TableMetaData> getSchemaTables(JdbcProps jdbcProps) throws Exception {
+        Connection conn = null;
+        ResultSet tRs = null;
+        List<TableMetaData> tableMetaDatas = new ArrayList<>();
+        dynamicDataSource.selectDataSource(jdbcProps.getUrl(), jdbcProps.getUsername(), jdbcProps.getPassword());
+        conn = dynamicDataSource.getConnection();
+        DatabaseMetaData metaData = conn.getMetaData();
+        String userName = metaData.getUserName();
+        String[] tableTypes = {"TABLE", "VIEW"};
+        String dbType = SqlDialetHelper.getDbTypeByUrl(jdbcProps.getUrl());
+        tRs = metaData.getTables(null, null, null, tableTypes);
+        while (tRs.next()) {
+            TableMetaData tableMetaData = new TableMetaData();
+            tableMetaData.setTableName(tRs.getString("TABLE_NAME").toLowerCase());
+            tableMetaData.setTableType(tRs.getString("TABLE_TYPE"));
+            tableMetaData.setTableRemark(tRs.getString("REMARKS"));
+            String tableSchem = tRs.getString("TABLE_SCHEM");
+            if (!"INFORMATION_SCHEMA".equalsIgnoreCase(tableSchem) && !"sys".equalsIgnoreCase(tableSchem)) {
+                if ("ORACLE".equalsIgnoreCase(dbType)) {
+                    if (userName.equalsIgnoreCase(tableSchem)) {
+                        tableMetaDatas.add(tableMetaData);
+                    }
+                } else {
+                    tableMetaDatas.add(tableMetaData);
+                }
+            }
+        }
+        JdbcUtils.closeResultSet(tRs);
+        JdbcUtils.closeConnection(conn);
+        return tableMetaDatas;
+    }
+
+    /**
      * 根据数据源和表获取表字段
+     *
      * @param jdbcProps
      * @param tableName
      * @return
      * @throws Exception
      */
-    public List<ColumnMetaData> getSchemaTableColumns(JdbcProps jdbcProps,String tableName) throws Exception {
+    public List<ColumnMetaData> getSchemaTableColumns(JdbcProps jdbcProps, String tableName) throws Exception {
         Connection conn = null;
         ResultSet cRs = null;
         List<ColumnMetaData> columnMetaDatas = new ArrayList<>();
@@ -193,15 +206,16 @@ public class DataBaseMetadataHelper {
 
     /**
      * 判断当前连接是否有效
+     *
      * @param jdbcProps
      * @return
      */
-    public boolean isEffectiveDataSouce(JdbcProps jdbcProps){
+    public boolean isEffectiveDataSouce(JdbcProps jdbcProps) {
         Boolean isSuccessConnect = true;
         try {
             Socket s = new Socket();
-            s.connect(new InetSocketAddress(jdbcProps.getDbHost(),Integer.parseInt(jdbcProps.getDbPort())),10000);
-        }catch (UnknownHostException e) {
+            s.connect(new InetSocketAddress(jdbcProps.getDbHost(), Integer.parseInt(jdbcProps.getDbPort())), 10000);
+        } catch (UnknownHostException e) {
             isSuccessConnect = false;
             L.info("未知的端口");
         } catch (IOException e) {
@@ -214,20 +228,21 @@ public class DataBaseMetadataHelper {
 
     /**
      * 查询结果总数
+     *
      * @param conn
      * @param countSql
      * @return
      * @throws Exception
      */
-    private long executeCountSql(Connection conn,String countSql) throws Exception{
-        L.info("统计sql:"+countSql);
+    private long executeCountSql(Connection conn, String countSql) throws Exception {
+        L.info("统计sql:" + countSql);
         long count = 0;
         Statement st = null;
         st = conn.createStatement();
         ResultSet cRs = null;
-        if(StringUtils.isNotBlank(countSql)){
+        if (StringUtils.isNotBlank(countSql)) {
             cRs = st.executeQuery(countSql);
-            if(cRs.next()){
+            if (cRs.next()) {
                 count = cRs.getLong(1);
             }
         }
@@ -236,12 +251,13 @@ public class DataBaseMetadataHelper {
         return count;
     }
 
-     /**
+    /**
      * 根据数据源和sql执行sql并返回表头及数据
+     *
      * @param jdbcProps
      * @return
      */
-    public List<String[]> executeQuerySql(JdbcProps jdbcProps) throws Exception{
+    public List<String[]> executeQuerySql(JdbcProps jdbcProps) throws Exception {
         Connection conn = null;
         Statement st = null;
         ResultSet cRs = null;
@@ -252,54 +268,54 @@ public class DataBaseMetadataHelper {
         st = conn.createStatement();
         String sql = jdbcProps.getSql();
         //sql不为空，并且为查询语句或count语句
-        if(StringUtils.isNotBlank(sql)){
-            if(sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX)){
+        if (StringUtils.isNotBlank(sql)) {
+            if (sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX)) {
                 int maxRows = jdbcProps.getQueryMaxRows();
                 String dbType = SqlDialetHelper.getDbTypeByUrl(jdbcProps.getUrl());
-                if(maxRows > 0 && !jdbcProps.isPaging()){
+                if (maxRows > 0 && !jdbcProps.isPaging()) {
                     st.setMaxRows(maxRows);
-                }else if(jdbcProps.isPaging()){//分页
+                } else if (jdbcProps.isPaging()) {//分页
                     RowBounds rowBounds = getRowBounds(jdbcProps);
-                    long totalCount  = executeCountSql(conn, SqlDialetHelper.getCountSqlByDialet(jdbcProps.getUrl(),sql));
+                    long totalCount = executeCountSql(conn, SqlDialetHelper.getCountSqlByDialet(jdbcProps.getUrl(), sql));
                     jdbcProps.setTotalCount(totalCount);
-                    sql = SqlDialetHelper.getQuerySqlByDialet(jdbcProps.getUrl(),sql,rowBounds);
-                    L.info("查询sql:"+sql);
+                    sql = SqlDialetHelper.getQuerySqlByDialet(jdbcProps.getUrl(), sql, rowBounds);
+                    L.info("查询sql:" + sql);
                 }
                 cRs = st.executeQuery(sql);
                 rsmd = cRs.getMetaData();
                 //sqlserver,oracle特殊处理，分页sql去掉rownumber列
-                if(jdbcProps.isPaging() && ("SQLSERVER".equalsIgnoreCase(dbType) || "ORACLE".equalsIgnoreCase(dbType)) && rsmd.getColumnCount()>1){
-                    String[] columnNameDatas = new String[rsmd.getColumnCount()-1];
-                    for( int i=1; i<rsmd.getColumnCount(); i++ ){
-                        columnNameDatas[i-1] = rsmd.getColumnName(i+1);
+                if (jdbcProps.isPaging() && ("SQLSERVER".equalsIgnoreCase(dbType) || "ORACLE".equalsIgnoreCase(dbType)) && rsmd.getColumnCount() > 1) {
+                    String[] columnNameDatas = new String[rsmd.getColumnCount() - 1];
+                    for (int i = 1; i < rsmd.getColumnCount(); i++) {
+                        columnNameDatas[i - 1] = rsmd.getColumnName(i + 1);
                     }
                     datas.add(columnNameDatas);
-                    while (cRs.next()){
-                        String[] columnCellDatas = new String[rsmd.getColumnCount()-1];
-                        for( int j=1; j<rsmd.getColumnCount(); j++ ){
-                            columnCellDatas[j-1] = cRs.getString(j+1);
+                    while (cRs.next()) {
+                        String[] columnCellDatas = new String[rsmd.getColumnCount() - 1];
+                        for (int j = 1; j < rsmd.getColumnCount(); j++) {
+                            columnCellDatas[j - 1] = cRs.getString(j + 1);
                         }
                         datas.add(columnCellDatas);
                     }
-                }else{
+                } else {
                     String[] columnNameDatas = new String[rsmd.getColumnCount()];
-                    for( int i=1; i<=rsmd.getColumnCount(); i++ ){
-                        columnNameDatas[i-1] = rsmd.getColumnName(i);
+                    for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                        columnNameDatas[i - 1] = rsmd.getColumnName(i);
                     }
                     datas.add(columnNameDatas);
-                    while (cRs.next()){
+                    while (cRs.next()) {
                         String[] columnCellDatas = new String[rsmd.getColumnCount()];
-                        for( int j=1; j<=rsmd.getColumnCount(); j++ ){
-                            columnCellDatas[j-1] = cRs.getString(j);
+                        for (int j = 1; j <= rsmd.getColumnCount(); j++) {
+                            columnCellDatas[j - 1] = cRs.getString(j);
                         }
                         datas.add(columnCellDatas);
                     }
                 }
-            }else{
+            } else {
                 throw new RuntimeException("Only select statement can be executed!");
             }
-        }else{
-            throw new RuntimeException( "SQL is required!");
+        } else {
+            throw new RuntimeException("SQL is required!");
         }
         JdbcUtils.closeResultSet(cRs);
         JdbcUtils.closeStatement(st);
@@ -308,38 +324,87 @@ public class DataBaseMetadataHelper {
     }
 
     /**
+     * 执行查询语句,准备图表数据集
+     *
+     * @param jdbcProps
+     * @return
+     * @throws Exception
+     */
+    public List<Map<String, Object>> prepareDataSet(JdbcProps jdbcProps) throws Exception {
+        Connection conn = null;
+        PreparedStatement st = null;
+        ResultSet cRs = null;
+        ResultSetMetaData rsmd = null;
+        List<Map<String, Object>> datas = new ArrayList<>();
+        dynamicDataSource.selectDataSource(jdbcProps.getUrl(), jdbcProps.getUsername(), jdbcProps.getPassword());
+        conn = dynamicDataSource.getConnection();
+        String sql = jdbcProps.getSql();
+        try {
+            //sql不为空，并且为查询语句或count语句
+            if (StringUtils.isNotBlank(sql)) {
+                if (sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX)) {
+                    st = conn.prepareStatement(sql);
+                    cRs = st.executeQuery();
+                    rsmd = cRs.getMetaData();
+                    String[] columnNameDatas = new String[rsmd.getColumnCount()];
+                    for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                        columnNameDatas[i - 1] = rsmd.getColumnName(i);
+                    }
+                    while (cRs.next()) {
+                        Map<String, Object> rawDataMap = new HashMap<>();
+                        for (int j = 1; j <= rsmd.getColumnCount(); j++) {
+                            rawDataMap.put(columnNameDatas[j - 1], cRs.getObject(j));
+                        }
+                        datas.add(rawDataMap);
+                    }
+                } else {
+                    throw new RuntimeException("Only select statement can be executed!");
+                }
+            } else {
+                throw new RuntimeException("SQL is required!");
+            }
+        } finally {
+            JdbcUtils.closeResultSet(cRs);
+            JdbcUtils.closeStatement(st);
+            JdbcUtils.closeConnection(conn);
+        }
+        return datas;
+    }
+
+    /**
      * 根据数据源和sql执行sql并返回表头以及表头数据类型
+     *
      * @param jdbcProps
      * @return
      */
-    public List<Map<String,String>> getQuerySqlInfo(JdbcProps jdbcProps) throws Exception{
+    public List<Map<String, String>> getQuerySqlInfo(JdbcProps jdbcProps) throws Exception {
         Connection conn;
         Statement st;
         ResultSet cRs;
         ResultSetMetaData rsmd;
-        List<Map<String,String>> datas = new ArrayList<>();
+        List<Map<String, String>> datas = new ArrayList<>();
         dynamicDataSource.selectDataSource(jdbcProps.getUrl(), jdbcProps.getUsername(), jdbcProps.getPassword());
         conn = dynamicDataSource.getConnection();
         st = conn.createStatement();
         String sql = jdbcProps.getSql();
         //只查询表头以及表头的类型
-        if(StringUtils.isNotBlank(sql)){
-            if(sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX)){
+        if (StringUtils.isNotBlank(sql)) {
+            if (sql.matches(SQL_SELECT_REGEX) || sql.matches(SQL_COUNT_REGEX)) {
                 st.setMaxRows(1);
                 cRs = st.executeQuery(sql);
                 rsmd = cRs.getMetaData();
-                Map<String,String> columnNameDatas;
-                for( int i=1; i<=rsmd.getColumnCount(); i++ ){
+                Map<String, String> columnNameDatas;
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
                     columnNameDatas = new HashMap<>();
-                    columnNameDatas.put("name",rsmd.getColumnName(i));
-                    columnNameDatas.put("type",JDBC_TYPE_MAP.get(rsmd.getColumnType(i)));
+                    columnNameDatas.put("name", rsmd.getColumnName(i));
+                    columnNameDatas.put("type", JDBC_TYPE_MAP.get(rsmd.getColumnType(i)));
                     datas.add(columnNameDatas);
                 }
-            }else{
+            } else {
                 throw new RuntimeException("Only select statement can be executed!");
             }
-        }else{
-            throw new RuntimeException( "SQL is required!");
+        } else {
+            throw new RuntimeException("SQL is required!");
         }
         JdbcUtils.closeResultSet(cRs);
         JdbcUtils.closeStatement(st);

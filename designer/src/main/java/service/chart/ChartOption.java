@@ -8,28 +8,24 @@
  * Unless otherwise explicitly stated, this software is provided
  * by JiuDaoTech "AS IS".
  *************************************************************************/
-package model.chart;
+package service.chart;
+
+import com.github.abel533.echarts.Option;
+import model.chart.ChatBuilderParams;
 
 /**
- * <p>
- *     图表数据来源类型
+ * 图表构建接口
  *
- * Created by CSJ on 16/8/26.
+ * @author CSJ
  */
-public enum DataSourceType {
+public interface ChartOption {
 
-    FILE("文件类型(EXCEL, CVS)"),
-    RDMS("关系型数据库(MySQL, ORACLE..)");
-
-    private String desc;
-
-    private DataSourceType(String desc) {
-        this.desc = desc;
-    }
-
-    @Override
-    public String toString() {
-        return this.desc;
-    }
+    /**
+     * 转换图表配置参数
+     *
+     * @param chatBuilderParams
+     * @return
+     */
+    Option transform(ChatBuilderParams chatBuilderParams) throws Exception;
 
 }
