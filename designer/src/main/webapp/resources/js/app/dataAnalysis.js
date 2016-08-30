@@ -147,7 +147,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                 if(!treeNode.dbUrl) {
                     $('#side-menu li a:eq(0)').html("<i class='fa fa-sitemap fa-fw'></i>" + treeNode.dbName + "<span class='fa arrow'></span>");
                     var queryParam = {};
-                    queryParam.id = treeNode.id;
+                    queryParam.id = treeNode.getParentNode().id;
                     queryParam.sql = treeNode.sql;
                     queryParam.queryMaxRows = 1;
                     queryParam.paging = false;
