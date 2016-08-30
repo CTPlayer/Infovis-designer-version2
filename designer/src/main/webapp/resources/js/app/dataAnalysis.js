@@ -190,7 +190,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                         $('#side-menu ul.nav.nav-third-level li').draggable({
                             cursor: "move",
                             opacity: 0.7,
-                            cursorAt: { top: -12, left: -12 },
+                            cursorAt: { top: -5, left: -5 },
                             helper: function(event) {
                                 var dragText = $(this).find("a").find("span").html();
                                 return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
@@ -205,12 +205,12 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                 var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
 
                                 var targetText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color:#f6eedb;" >'+
-                                    '<i class="fa fa-times" style="display: inline;"></i>'+
-                                    '<span class="dragName" style="display: inline;">'+targetNode+'</span>'+
+                                    '<a><i class="fa fa-times glyphicon-text-color" style="display: inline;"></i>'+
+                                    '<span class="dragName" style="display: inline;">'+targetNode+'</span></a>'+
                                     '</div>';
                                 var targetNumberText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color: #d2ddf0;border:1px solid #b1caf4" >'+
-                                    '<span class="dragName">'+targetNode+'</span>'+
-                                    '<span></span>'+
+                                    '<a><i class="fa fa-times fa-sort-numeric-asc" style="display: inline;"></i>'+
+                                    '<span class="dragName"  style="display: inline;">'+targetNode+'</span></a>'+
                                     '</div>';
                                 var target = $(this);
 
@@ -220,21 +220,43 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                 if(textTag){
                                     target.append(targetText);
                                 }
+
+                                 /**
+                                 * 行、列、标签拖动
+                                 */
+                                $('.trigger-column-tag').draggable({
+                                    cursor: "move",
+                                    opacity: 0.7,
+                                    appendTo:'body',
+                                    cursorAt: { top: 0, left: 0 },
+                                    helper: function(event) {
+                                        var dragText = $(this).find("span").html();
+                                        return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
+                                    }
+                                });
+
+                                /**
+                                 * 标记删除可拖动标签
+                                 */
+                                $('.trigger-column-tag .fa-times').click(function(){
+                                    var target = $(this).parent().parent();
+                                    target.draggable('destroy');
+                                    target.remove();
+                                });
+
+                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("background-color","white");
+
+                            },
+                            over: function (event, ui) {
+                                $(this).css("border","1px dashed #22a7f0");
+                                $(this).css("background-color","#cfe9f7");
+                            },
+                            out:function (event,ui) {
+                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("background-color","white");
                             }
                         });
-
-                         /*
-                         $('.trigger-column-tag').draggable({
-                             cursor: "move",
-                             opacity: 0.7,
-                             appendTo:'body',
-                             cursorAt: { top: -12, left: -12 },
-                             helper: function(event) {
-                             var dragText = "textxxxxx"
-                             return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
-                         }
-                         });
-                         */
 
                         $("form.make-model-region .mark-down-column .mark-item-color").droppable({
                             drop: function(event,ui){
