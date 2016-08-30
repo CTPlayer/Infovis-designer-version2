@@ -77,7 +77,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
         target.html('');
-        var targetText = '<span style="width:70px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span>';
+        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span>';
         target.append(targetText);
         if(textTag){
             target.css("background-color",'#f6eedb');
@@ -199,8 +199,8 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                 var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
 
                                 var targetText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color:#f6eedb;" >'+
-                                    '<span class="dragName">'+targetNode+'</span>'+
-                                    '<span></span>'+
+                                    '<i class="fa fa-times" style="display: inline;"></i>'+
+                                    '<span class="dragName" style="display: inline;">'+targetNode+'</span>'+
                                     '</div>';
                                 var targetNumberText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color: #d2ddf0;border:1px solid #b1caf4" >'+
                                     '<span class="dragName">'+targetNode+'</span>'+
@@ -214,6 +214,20 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                 if(textTag){
                                     target.append(targetText);
                                 }
+
+                                /*
+                                $('.trigger-column-tag').draggable({
+                                    cursor: "move",
+                                    opacity: 0.7,
+                                    appendTo:'body',
+                                    cursorAt: { top: -12, left: -12 },
+                                    helper: function(event) {
+                                        var dragText = "textxxxxx"
+                                        return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
+                                    }
+                                });
+                                */
+
                             }
                         });
 
@@ -224,10 +238,10 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             }
                         });
 
-                        $("form.make-model-region .mark-down-column .mark-item-size").droppable({
+                        $("form.make-model-region .mark-down-column .mark-item-corner").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
-                                tagDropFunction(event,ui,'glyphicon glyphicon-zoom-in',target)
+                                tagDropFunction(event,ui,'fa fa-clock-o',target)
                             }
                         });
 
@@ -238,12 +252,6 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             }
                         });
 
-                        $("form.make-model-region .mark-down-column .mark-item-desc").droppable({
-                            drop: function(event,ui){
-                                var target = $(this);
-                                tagDropFunction(event,ui,'fa fa-file-text-o',target)
-                            }
-                        });
                     });
                 }
             }
