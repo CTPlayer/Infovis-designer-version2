@@ -57,7 +57,7 @@ public class Pie implements ChartOption {
                 return "NULL";
             }
         }, new HashSet<String>());
-        option.legend().data(legendData);
+        option.legend().data().addAll(legendData);
         // series
         Series series = new com.github.abel533.echarts.series.Pie();
         Collection<Object> seriesData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Object>() {
@@ -71,7 +71,7 @@ public class Pie implements ChartOption {
                 return transformData;
             }
         });
-        series.data(seriesData);
+        series.data().addAll(seriesData);
         option.series(series);
 
         return option;
