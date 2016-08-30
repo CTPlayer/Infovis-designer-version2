@@ -34,6 +34,7 @@ require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
                 var editChart = engine.chart.init(document.getElementById("editArea"));
                 editChart.setOption(JSON.parse(data["jsCode"])[order]);
                 window.currentOption = JSON.parse(data["jsCode"])[order];
+                window.editChart = editChart;
             },
             error: function(){
                 alert("图表配置加载失败，请重试");
@@ -72,7 +73,7 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 });
 
 //数据集操作模块
-require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree){
+require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
     function tagDropFunction(event, ui,iclass,target) {
         var targetNode = $(ui.draggable).find("a").find("span").html();
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
@@ -263,6 +264,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             }
                         });
 
+                        var engine = infovis.init(baseOptions.makeAllOptions() || {});
                         /**
                          * 颜色tag
                          */
@@ -285,7 +287,9 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                         }
                                     }),
                                     success: function(data){
-                                        console.log(data);
+                                        console.log(JSON.stringify(data));
+                                        var editChart = engine.chart.init(document.getElementById("editArea"));
+                                        editChart.setOption(data);
                                     }
                                 });
                             },
@@ -306,6 +310,27 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             drop: function(event,ui){
                                 var target = $(this);
                                 tagDropFunction(event,ui,'fa fa-clock-o',target)
+
+                                $.ajax({
+                                    type: 'POST',
+                                    contentType: "application/json; charset=utf-8",
+                                    url: '../render',
+                                    data: JSON.stringify({
+                                        'chartType': chartType,
+                                        'dataRecordId': sqlRecordingId,
+                                        'exportId': window.location.href.split("=")[1].replace("&order",""),
+                                        'builderModel': {
+                                            'mark': {
+                                                'angle': ui.draggable[0].textContent
+                                            }
+                                        }
+                                    }),
+                                    success: function(data){
+                                        console.log(JSON.stringify(data));
+                                        var editChart = engine.chart.init(document.getElementById("editArea"));
+                                        editChart.setOption(data);
+                                    }
+                                });
                             },
                             over: function (event, ui) {
                                 $(this).css("border","1px dashed #22a7f0");
@@ -314,6 +339,8 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             out:function (event,ui) {
                                 $(this).css("border","");
                                 $(this).css("background-color","white");
+
+
                             }
                         });
 
@@ -324,6 +351,27 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             drop: function(event,ui){
                                 var target = $(this);
                                 tagDropFunction(event,ui,'fa fa-tags',target)
+
+                                $.ajax({
+                                    type: 'POST',
+                                    contentType: "application/json; charset=utf-8",
+                                    url: '../render',
+                                    data: JSON.stringify({
+                                        'chartType': chartType,
+                                        'dataRecordId': sqlRecordingId,
+                                        'exportId': window.location.href.split("=")[1].replace("&order",""),
+                                        'builderModel': {
+                                            'mark': {
+                                                'tag': ui.draggable[0].textContent
+                                            }
+                                        }
+                                    }),
+                                    success: function(data){
+                                        console.log(JSON.stringify(data));
+                                        var editChart = engine.chart.init(document.getElementById("editArea"));
+                                        editChart.setOption(data);
+                                    }
+                                });
                             },
                             over: function (event, ui) {
                                 $(this).css("border","1px dashed #22a7f0");
