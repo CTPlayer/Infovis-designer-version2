@@ -188,6 +188,9 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             saveCookieInfo(result);
                         })
 
+                        /**
+                         * 左侧维度、度量拖拽
+                         */
                         $('#side-menu ul.nav.nav-third-level li').draggable({
                             cursor: "move",
                             opacity: 0.7,
