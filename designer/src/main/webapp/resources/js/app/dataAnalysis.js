@@ -190,6 +190,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                         $('#side-menu ul.nav.nav-third-level li').draggable({
                             cursor: "move",
                             opacity: 0.7,
+                            appendTo :'body',
                             cursorAt: { top: -5, left: -5 },
                             helper: function(event) {
                                 var dragText = $(this).find("a").find("span").html();
@@ -258,6 +259,9 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             }
                         });
 
+                        /**
+                         * 颜色tag
+                         */
                         $("form.make-model-region .mark-down-column .mark-item-color").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
@@ -265,6 +269,9 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             }
                         });
 
+                        /**
+                         * 角度tag
+                         */
                         $("form.make-model-region .mark-down-column .mark-item-corner").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
@@ -272,6 +279,9 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             }
                         });
 
+                        /**
+                         * 标签tag
+                         */
                         $("form.make-model-region .mark-down-column .mark-item-tag").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
