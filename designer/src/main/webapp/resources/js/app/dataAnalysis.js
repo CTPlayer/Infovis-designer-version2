@@ -214,22 +214,21 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                 if(textTag){
                                     target.append(targetText);
                                 }
-
-                                /*
-                                $('.trigger-column-tag').draggable({
-                                    cursor: "move",
-                                    opacity: 0.7,
-                                    appendTo:'body',
-                                    cursorAt: { top: -12, left: -12 },
-                                    helper: function(event) {
-                                        var dragText = "textxxxxx"
-                                        return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
-                                    }
-                                });
-                                */
-
                             }
                         });
+
+                         /*
+                         $('.trigger-column-tag').draggable({
+                             cursor: "move",
+                             opacity: 0.7,
+                             appendTo:'body',
+                             cursorAt: { top: -12, left: -12 },
+                             helper: function(event) {
+                             var dragText = "textxxxxx"
+                             return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
+                         }
+                         });
+                         */
 
                         $("form.make-model-region .mark-down-column .mark-item-color").droppable({
                             drop: function(event,ui){
