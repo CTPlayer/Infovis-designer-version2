@@ -28,7 +28,9 @@
       <list>
         <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
         <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-          <property name="objectMapper" ref="jacksonObjectMapper" />
+          <property name="objectMapper">
+            <bean class="core.plugin.spring.jackson.ObjectMappingExt"/>
+          </property>
           <property name="supportedMediaTypes">
             <list>
               <value>text/plain;charset=utf-8</value>
@@ -43,17 +45,6 @@
     <property name="customArgumentResolvers">
       <list>
       </list>
-    </property>
-  </bean>
-  <!-- JSON Mapper设置 -->
-  <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
-    <property name="serializationInclusion">
-      <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
-    </property>
-    <property name="dateFormat">
-      <bean class="java.text.SimpleDateFormat">
-        <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
-      </bean>
     </property>
   </bean>
   <!-- 视图设置 -->

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -104,7 +105,7 @@ public class DefaultController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("/render")
+    @RequestMapping(value = "/render", method = RequestMethod.POST)
     @ResponseBody
     public Object render(@RequestBody ChatBuilderParams chatBuilderParams, HttpServletRequest request) throws Exception {
 
