@@ -55,5 +55,14 @@
         IMG CLOB DEFAULT NULL COMMENT '图片保存路径',
         EXPORT_ID VARCHAR(36) DEFAULT NULL COMMENT '外部标识UUID'
       );
+
+      <!--设计面板，图表，结果集关联关系表-->
+      CREATE TABLE IF NOT EXISTS T_MY_CHARTS(
+        id BIGINT AUTO_INCREMENT NOT NULL COMMENT '主键',
+        CHART_ID VARCHAR(2) NOT NULL COMMENT '图表标识',
+        EXPORT_ID VARCHAR(36) DEFAULT NULL COMMENT '外部标识UUID',
+        SQLRECORDING_ID BIGINT NOT NULL COMMENT '连接ID',
+        BUILD_MODEL CLOB NOT NULL COMMENT '数据模型'
+      );
     </update>
 </mapper>

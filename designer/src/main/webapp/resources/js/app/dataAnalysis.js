@@ -34,6 +34,7 @@ require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
                 var editChart = engine.chart.init(document.getElementById("editArea"));
                 editChart.setOption(JSON.parse(data["jsCode"])[order]);
                 window.currentOption = JSON.parse(data["jsCode"])[order];
+                window.editChart = editChart;
             },
             error: function(){
                 alert("图表配置加载失败，请重试");
@@ -281,7 +282,9 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                         }
                                     }),
                                     success: function(data){
-                                        console.log(data);
+                                        console.log(JSON.stringify(data));
+                                        var editChart = engine.chart.init(document.getElementById("editArea"));
+                                        window.editChart.setOption(data);
                                     }
                                 });
                             },
@@ -302,6 +305,27 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             drop: function(event,ui){
                                 var target = $(this);
                                 tagDropFunction(event,ui,'fa fa-clock-o',target)
+
+                                $.ajax({
+                                    type: 'POST',
+                                    contentType: "application/json; charset=utf-8",
+                                    url: '../render',
+                                    data: JSON.stringify({
+                                        'chartType': chartType,
+                                        'dataRecordId': sqlRecordingId,
+                                        'exportId': window.location.href.split("=")[1].replace("&order",""),
+                                        'builderModel': {
+                                            'mark': {
+                                                'color': ui.draggable[0].textContent
+                                            }
+                                        }
+                                    }),
+                                    success: function(data){
+                                        console.log(JSON.stringify(data));
+                                        var editChart = engine.chart.init(document.getElementById("editArea"));
+                                        window.editChart.setOption(data);
+                                    }
+                                });
                             },
                             over: function (event, ui) {
                                 $(this).css("border","1px dashed #22a7f0");
@@ -310,6 +334,8 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             out:function (event,ui) {
                                 $(this).css("border","1px dashed #ccc");
                                 $(this).css("background-color","white");
+
+
                             }
                         });
 
@@ -320,6 +346,27 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             drop: function(event,ui){
                                 var target = $(this);
                                 tagDropFunction(event,ui,'fa fa-tags',target)
+
+                                $.ajax({
+                                    type: 'POST',
+                                    contentType: "application/json; charset=utf-8",
+                                    url: '../render',
+                                    data: JSON.stringify({
+                                        'chartType': chartType,
+                                        'dataRecordId': sqlRecordingId,
+                                        'exportId': window.location.href.split("=")[1].replace("&order",""),
+                                        'builderModel': {
+                                            'mark': {
+                                                'color': ui.draggable[0].textContent
+                                            }
+                                        }
+                                    }),
+                                    success: function(data){
+                                        console.log(JSON.stringify(data));
+                                        var editChart = engine.chart.init(document.getElementById("editArea"));
+                                        window.editChart.setOption(data);
+                                    }
+                                });
                             },
                             over: function (event, ui) {
                                 $(this).css("border","1px dashed #22a7f0");
