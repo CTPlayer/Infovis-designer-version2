@@ -78,7 +78,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
         target.html('');
-        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span>';
+        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span><button type="button" class="close">&times;</button>';
         target.append(targetText);
         if(textTag){
             target.css("background-color",'#f6eedb');
@@ -88,6 +88,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
             target.css("background-color",'#d2ddf0');
             target.css("border",'1px #b1caf4 solid');
         }
+        target.css("cursor","move");
     };
 
     var setting_datalist = {
@@ -197,7 +198,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             cursorAt: { top: 10, left: 34 },
                             helper: function(event) {
                                 var dragText = $(this).find("a").find("span").html();
-                                return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
+                                return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;background-color: #def0fa; padding:4px;z-index: 999999999'>"+dragText+"</div>" );
                             }
                         });
 
@@ -208,13 +209,13 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                 var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
                                 var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
 
-                                var targetText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color:#f6eedb;" >'+
-                                    '<a><i class="fa fa-times glyphicon-text-color" style="display: inline;"></i>'+
-                                    '<span class="dragName" style="display: inline;">'+targetNode+'</span></a>'+
+                                var targetText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color:#f6eedb;cursor: move;" >'+
+                                    '<a><i class="glyphicon glyphicon-text-color" style="display: none;"></i>'+
+                                    '<span class="dragName" style="width:80px;height: 20px; display: inline-block; overflow: hidden;">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
                                     '</div>';
-                                var targetNumberText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color: #d2ddf0;border:1px solid #b1caf4" >'+
-                                    '<a><i class="fa fa-times fa-sort-numeric-asc" style="display: inline;"></i>'+
-                                    '<span class="dragName"  style="display: inline;">'+targetNode+'</span></a>'+
+                                var targetNumberText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color: #d2ddf0;border:1px solid #b1caf4;cursor: move;" >'+
+                                    '<a><i class="fa fa-sort-numeric-asc" style="display: none;"></i>'+
+                                    '<span class="dragName"  style="width:80px;height: 20px; display: inline-block; overflow: hidden;">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
                                     '</div>';
                                 var target = $(this);
 
@@ -242,7 +243,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                 /**
                                  * 标记删除可拖动标签
                                  */
-                                $('.trigger-column-tag .fa-times').click(function(){
+                                $('.trigger-column-tag .trigger-column-tag-close').click(function(){
                                     var target = $(this).parent().parent();
                                     target.draggable('destroy');
                                     target.remove();
@@ -293,7 +294,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                 $(this).css("background-color","#cfe9f7");
                             },
                             out:function (event,ui) {
-                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("border","");
                                 $(this).css("background-color","white");
                             }
                         });
@@ -311,7 +312,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                 $(this).css("background-color","#cfe9f7");
                             },
                             out:function (event,ui) {
-                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("border","");
                                 $(this).css("background-color","white");
                             }
                         });
@@ -329,7 +330,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                 $(this).css("background-color","#cfe9f7");
                             },
                             out:function (event,ui) {
-                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("border","");
                                 $(this).css("background-color","white");
                             }
                         });
@@ -396,8 +397,6 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                 target.css("height","auto");
             }
             target.css("cursor","pointer");
-        }else if(e.type == 'mouseleave'){
-            target.css("height","28px");
         }
     });
 
