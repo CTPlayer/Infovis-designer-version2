@@ -33,6 +33,7 @@ require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
             success: function(data){
                 var editChart = engine.chart.init(document.getElementById("editArea"));
                 editChart.setOption(JSON.parse(data["jsCode"])[order]);
+                window.currentOption = JSON.parse(data["jsCode"])[order];
             },
             error: function(){
                 alert("图表配置加载失败，请重试");
@@ -139,6 +140,10 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                 setting_datalist.updateNode(treeNode);
             },
             onClick: function(event, treeId, treeNode){
+                var tree = $.fn.zTree.getZTreeObj("dataListTree");
+                var sqlRecordingId = tree.getSelectedNodes()[0].id;       //数据集id
+                var chartType = window.currentOption.series[0].type;      //图表类型
+
                 if(!treeNode.dbUrl) {
                     $('#side-menu li a:eq(0)').html("<i class='fa fa-sitemap fa-fw'></i>" + treeNode.dbName + "<span class='fa arrow'></span>");
                     var queryParam = {};
@@ -192,6 +197,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             }
                         });
 
+                        //在droppable事件中发送option组装请求
                         $("form.make-model-region .trigger-column").droppable({
                             drop: function (event, ui) {
                                 var targetNode = $(ui.draggable).find("a").find("span").html();
