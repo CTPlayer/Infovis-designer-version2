@@ -73,7 +73,7 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 });
 
 //数据集操作模块
-require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree){
+require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
     function tagDropFunction(event, ui,iclass,target) {
         var targetNode = $(ui.draggable).find("a").find("span").html();
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
@@ -263,6 +263,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             }
                         });
 
+                        var engine = infovis.init(baseOptions.makeAllOptions() || {});
                         /**
                          * 颜色tag
                          */
@@ -287,7 +288,7 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                     success: function(data){
                                         console.log(JSON.stringify(data));
                                         var editChart = engine.chart.init(document.getElementById("editArea"));
-                                        window.editChart.setOption(data);
+                                        editChart.setOption(data);
                                     }
                                 });
                             },
@@ -319,14 +320,14 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                         'exportId': window.location.href.split("=")[1].replace("&order",""),
                                         'builderModel': {
                                             'mark': {
-                                                'color': ui.draggable[0].textContent
+                                                'angle': ui.draggable[0].textContent
                                             }
                                         }
                                     }),
                                     success: function(data){
                                         console.log(JSON.stringify(data));
                                         var editChart = engine.chart.init(document.getElementById("editArea"));
-                                        window.editChart.setOption(data);
+                                        editChart.setOption(data);
                                     }
                                 });
                             },
@@ -360,14 +361,14 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                                         'exportId': window.location.href.split("=")[1].replace("&order",""),
                                         'builderModel': {
                                             'mark': {
-                                                'color': ui.draggable[0].textContent
+                                                'tag': ui.draggable[0].textContent
                                             }
                                         }
                                     }),
                                     success: function(data){
                                         console.log(JSON.stringify(data));
                                         var editChart = engine.chart.init(document.getElementById("editArea"));
-                                        window.editChart.setOption(data);
+                                        editChart.setOption(data);
                                     }
                                 });
                             },
