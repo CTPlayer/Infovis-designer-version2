@@ -177,6 +177,16 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
         var isRenderChart = false;
+        if(tagType == 'xAxis'){
+            textTag = true;
+        }else{
+            textTag = false;
+        }
+        if(tagType == 'yAxis'){
+            numberTag = true;
+        }else{
+            numberTag = false;
+        }
         if(chartType == 'pie' || chartType == 'line' || chartType == 'bar'){
             var iclass = getTagIclassType(tagType);
             if((tagType == 'color' || tagType == 'corner') && chartType == 'pie'){//颜色、角度
@@ -204,12 +214,10 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                     '<span class="dragName">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
                     '</div>';
                 if(numberTag){
-                    //target.append(targetNumberText);
                     target.html(targetNumberText);
                     isRenderChart = true;
                 }
                 if(textTag){
-                    //target.append(targetText);
                     target.html(targetText);
                     isRenderChart = true;
                 }
@@ -600,21 +608,41 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
         }
     });
 
+    var getDraggableText = function (draggableInnerContent) {
+        var draggableText = '' +
+            '<li class="ui-draggable">' +
+            '    <a href="javascript:void(0)">' +
+            '        <i class="glyphicon glyphicon-text-color leftBarLiIcon"></i>' +
+            '        <span style="display:inline-block;max-width: 150px;overflow: hidden;">' + draggableInnerContent + '</span>' +
+            '        <i class="glyphicon glyphicon-download leftBarLiIcon pull-right"></i>' +
+            '    </a>' +
+            '</li>';
+        return draggableText;
+    }
+
     binddefferd.done(function (result) {
        var buildModel = JSON.parse(result.buildModel);
-       if(buildModel.mark){
-           var ui = {};
+        var chartType = window.currentOption.series[0].type;//图表类型
+        var ui = {};
+       if(buildModel.mark){//pie
+
            if(buildModel.mark.color) {
-               ui.draggable = $('' +
-                   '<li class="ui-draggable">' +
-                   '    <a href="javascript:void(0)">' +
-                   '        <i class="glyphicon glyphicon-text-color leftBarLiIcon"></i>' +
-                   '        <span style="display:inline-block;max-width: 150px;overflow: hidden;">' + buildModel.mark.color + '</span>' +
-                   '        <i class="glyphicon glyphicon-download leftBarLiIcon pull-right"></i>' +
-                   '    </a>' +
-                   '</li>');
-               tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-color",'pie'));
+               ui.draggable = $(getDraggableText(buildModel.mark.color));
+               tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-color"),chartType);
+           }
+           if(buildModel.mark.angle){
+               ui.draggable = $(getDraggableText(buildModel.mark.angle));
+               tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-corner"),chartType);
            }
        }
+       if(buildModel.xAxis){
+           ui.draggable = $(getDraggableText(buildModel.xAxis));
+           tagDropRender(undefined,ui,'xAxis',$("form.make-model-region .xAxis"),chartType);
+       }
+
+        if(buildModel.yAxis){
+            ui.draggable = $(getDraggableText(buildModel.yAxis));
+            tagDropRender(undefined,ui,'yAxis',$("form.make-model-region .yAxis"),chartType);
+        }
     })
 });
