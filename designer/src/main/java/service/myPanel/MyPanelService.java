@@ -1,5 +1,6 @@
 package service.myPanel;
 
+import model.myPanel.MyCharts;
 import model.myPanel.MyPanel;
 
 import java.util.List;
