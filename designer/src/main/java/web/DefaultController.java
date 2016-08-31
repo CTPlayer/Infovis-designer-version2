@@ -117,8 +117,7 @@ public class DefaultController {
     @RequestMapping("/updateChartInfo")
     @ResponseBody
     public Object updateChartInfo(MyCharts myCharts) throws Exception {
-        myChartsService.delete(myCharts);
-        return myChartsService.insert(myCharts);
+        return myChartsService.update(myCharts);
     }
 
     /**

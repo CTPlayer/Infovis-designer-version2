@@ -42,7 +42,7 @@ require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
             }
         });
 
-        $(".btn-info").click(function(){
+        $(".saveChartInfo").click(function(){
             var option = engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption();
             var optionArray = JSON.parse(window.data["jsCode"]);
             optionArray[order] = option;
@@ -250,7 +250,6 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                             'builderModel': builderModel
                         }),
                         success: function(data){
-                            console.log(JSON.stringify(data));
                             var editChart = engine.chart.init(document.getElementById("editArea"));
                             editChart.setOption(data);
                         }
