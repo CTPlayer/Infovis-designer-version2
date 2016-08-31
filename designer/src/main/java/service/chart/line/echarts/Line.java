@@ -49,28 +49,29 @@ public class Line implements ChartOption {
         option.title("标题", "副标题");
         // tooltip
         option.tooltip().trigger(Trigger.axis);
-        // legend
-        Collection<Axis> xAxisData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Axis>() {
+        // xAxis
+        final Axis axis = new CategoryAxis();
+        Collection<Map<String, Object>> xAxisData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Map<String, Object>>() {
             @Override
-            public Axis transform(Map<String, Object> input) {
-                Object obj = input.get(chatBuilderParams.getBuilderModel().getXAxis());
-                Axis axis = new CategoryAxis();
-                Set<String> category = new LinkedHashSet<String>();
+            public Map<String, Object> transform(Map<String, Object> input) {
+                Object obj = input.get(chatBuilderParams.getBuilderModel().getxAxis().get(0));
+                Map<String, Object> category = new HashMap<>();
                 if (obj != null && StringUtils.isNoneEmpty(obj.toString())) {
-                    category.add(String.valueOf(obj));
+                    category.put("value", String.valueOf(obj));
                 }
-                axis.data().addAll(category);
-                return axis;
+
+                return category;
             }
-        }, new ArrayList<Axis>());
-        option.xAxis().addAll(xAxisData);
+        }, new ArrayList<Map<String, Object>>());
+        axis.data().addAll(xAxisData);
+        option.xAxis().add(axis);
         option.yAxis().add(new ValueAxis());
         // series
         Series series = new com.github.abel533.echarts.series.Line();
         Collection<Object> seriesData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Object>() {
             @Override
             public Object transform(Map<String, Object> input) {
-                Object v = input.get(chatBuilderParams.getBuilderModel().getYAxis());
+                Object v = input.get(chatBuilderParams.getBuilderModel().getyAxis().get(0));
                 return v;
             }
         });
