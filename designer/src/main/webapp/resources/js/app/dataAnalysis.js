@@ -56,11 +56,10 @@ require(['jquery', 'options', 'infovis','mCustomScrollbar'], function($, baseOpt
                     'jsCode': JSON.stringify(optionArray)
                 },
                 success: function(){
-                    //top.window.location = "../showPanel.page?exportId=" + exportId;
+                    top.window.location = "../showPanel.page?exportId=" + exportId;
                 }
             });
 
-            console.log(window.bmodel);
            $.ajax({
               type: 'POST',
               url: '../updateChartInfo',
