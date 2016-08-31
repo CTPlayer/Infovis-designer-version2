@@ -10,18 +10,20 @@ require.config({
         "options": "lib/charts/options",
         "infovis": "lib/infovis.min",
         "jqueryCookie": "lib/jquery.cookie",
-        "jqueryMd5": "lib/jquery.md5"
+        "jqueryMd5": "lib/jquery.md5",
+        "mCustomScrollbar":"lib/mCustomScrollbar/jquery.mCustomScrollbar.concat.min"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
         "jquery-ui" : { "deps" :['jquery'] },
+        "mCustomScrollbar" : { "deps" :['jquery'] },
         "jqueryMd5" : { "deps" :['jquery'] },
         "metisMenu" : { "deps" :['jquery'] },
         "ztree" : { "deps" :['jquery'] }
     }
 });
 
-require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
+require(['jquery', 'options', 'infovis','mCustomScrollbar'], function($, baseOptions, infovis){
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
         var exportId = window.location.href.split("=")[1].replace("&order","");
@@ -73,7 +75,7 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 });
 
 //数据集操作模块
-require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree){
+require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree){
     function tagDropFunction(event, ui,iclass,target) {
         var targetNode = $(ui.draggable).find("a").find("span").html();
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
@@ -140,6 +142,13 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                 treeNode.dbName = treeNode.oldDbName +"(无法连接)"
                 setting_datalist.updateNode(treeNode);
             },
+            onAsyncSuccess :function () {
+                $("div.panel-body").mCustomScrollbar({
+                    autoHideScrollbar:true,
+                    axis:"yx",
+                    theme:"dark"
+                });
+            },
             onClick: function(event, treeId, treeNode){
                 var tree = $.fn.zTree.getZTreeObj("dataListTree");
                 var sqlRecordingId = tree.getSelectedNodes()[0].id;       //数据集id
@@ -170,8 +179,6 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             $('#side-menu ul.nav.nav-third-level:eq(1)')
                                 .append("<li><a href='javascript:void(0)'><i class='fa fa-sort-numeric-asc leftBarLiIcon'></i><span style='display:inline-block;max-width: 10px;max-width: 150px;overflow: hidden;'>" + element + "</span><i class='glyphicon glyphicon-upload leftBarLiIcon pull-right'></i></a></li>");
                         });
-
-
                         //切换维度度量事件绑定
                         $('#side-menu ul.nav.nav-third-level li i.leftBarLiIcon').on("click",function () {
                             var li = $($(this).parent().parent());
@@ -188,6 +195,11 @@ require(['jquery','ztree','jqueryCookie','jqueryMd5','bootstrap'], function($,zt
                             saveCookieInfo(result);
                         })
 
+                        //滚动条插件
+                        $(".scrollable").mCustomScrollbar({
+                            autoHideScrollbar:true,
+                            theme:"dark"
+                        });
                         /**
                          * 左侧维度、度量拖拽
                          */
