@@ -16,14 +16,13 @@ require.config({
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
         "jquery-ui" : { "deps" :['jquery'] },
-        "mCustomScrollbar" : { "deps" :['jquery'] },
         "jqueryMd5" : { "deps" :['jquery'] },
         "metisMenu" : { "deps" :['jquery'] },
         "ztree" : { "deps" :['jquery'] }
     }
 });
 
-require(['jquery', 'options', 'infovis','mCustomScrollbar'], function($, baseOptions, infovis){
+require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
         var exportId = window.location.href.split("=")[1].replace("&order","");
@@ -58,7 +57,18 @@ require(['jquery', 'options', 'infovis','mCustomScrollbar'], function($, baseOpt
                 success: function(){
                     top.window.location = "../showPanel.page?exportId=" + exportId;
                 }
-            })
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '../updateChartInfo',
+                data: {
+                    'exportId': exportId,
+                    'chartId': order.toString(),
+                    'sqlRecordingId': window.sid.toString(),
+                    'buildModel': JSON.stringify(window.bmodel).toString()
+                }
+            });
         })
     })
 });
@@ -93,8 +103,7 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 });
 
 //数据集操作模块
-require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
-
+require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie','jqueryMd5','bootstrap'], function($,mCustomScrollbar,ztree,infovis,baseOptions){
     /*恢复样式*/
     function restoreTagStyle(target){
         target.css("background-color",'#ffffff');
@@ -103,8 +112,8 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
     }
 
     /*
-    标记tag被drop后样式渲染以及标记删除
-    * */
+     标记tag被drop后样式渲染以及标记删除
+     * */
     function appendCellRender(ui,target){
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
@@ -184,7 +193,6 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
             target.css("background-color","#ffeeee");
         }
     }
-
     var setting_datalist = {
         async: {
             enable: true,
@@ -246,6 +254,8 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                 var sqlRecordingId = tree.getSelectedNodes()[0].id;       //数据集id
                 var chartType = window.currentOption.series[0].type;      //图表类型
 
+                window.sid = sqlRecordingId;     //用于插入图表关联信息
+
                 var engine = infovis.init(baseOptions.makeAllOptions() || {});
                 function renderChart(){
                     var color = $(".mark-item-color").find("span").text().trim();
@@ -271,6 +281,9 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                             'yAxis':  yAxis
                         }
                     }
+
+                    window.bmodel = builderModel;         //用于插入图表关联信息
+
                     $.ajax({
                         type: 'POST',
                         contentType: "application/json; charset=utf-8",
@@ -450,8 +463,6 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                             out:function (event,ui) {
                                 $(this).css("border","");
                                 $(this).css("background-color","white");
-
-
                             }
                         });
 
@@ -540,4 +551,7 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
         }
     });
 
+    //页面数据绑定
+    var treeObj = $.fn.zTree.getZTreeObj("dataListTree");
+    var node = treeObj.getNodeByParam("id", 1, null);
 });
