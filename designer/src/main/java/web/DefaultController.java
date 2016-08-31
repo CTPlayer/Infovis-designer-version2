@@ -2,7 +2,7 @@ package web;
 
 import common.util.TemplateUtil;
 import common.util.WebUtil;
-import model.chart.ChatBuilderParams;
+import model.chart.ChartBuilderParams;
 import model.myPanel.MyCharts;
 import model.myPanel.MyPanel;
 import org.springframework.stereotype.Controller;
@@ -130,28 +130,28 @@ public class DefaultController {
     /**
      * 动态渲染图形
      *
-     * @param chatBuilderParams
+     * @param chartBuilderParams
      * @param request
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/render", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
     @ResponseBody
-    public Object render(@RequestBody ChatBuilderParams chatBuilderParams, HttpServletRequest request) throws Exception {
+    public Object render(@RequestBody ChartBuilderParams chartBuilderParams, HttpServletRequest request) throws Exception {
 
         WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
 
         ChartOption chartOption = null;
 
-        if (chatBuilderParams.getChartType() == ChatBuilderParams.ChartType.pie) {
+        if (chartBuilderParams.getChartType() == ChartBuilderParams.ChartType.pie) {
             chartOption = context.getBean(Pie.class);
-        } else if (chatBuilderParams.getChartType() == ChatBuilderParams.ChartType.line) {
+        } else if (chartBuilderParams.getChartType() == ChartBuilderParams.ChartType.line) {
             chartOption = context.getBean(Line.class);
-        } else if (chatBuilderParams.getChartType() == ChatBuilderParams.ChartType.bar) {
+        } else if (chartBuilderParams.getChartType() == ChartBuilderParams.ChartType.bar) {
             chartOption = context.getBean(Bar.class);
         }
 
-        return TemplateUtil.genJsonStr4Obj(chartOption.transform(chatBuilderParams), true);
+        return TemplateUtil.genJsonStr4Obj(chartOption.transform(chartBuilderParams), true);
     }
 
 }

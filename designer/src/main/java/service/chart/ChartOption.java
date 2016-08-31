@@ -11,7 +11,7 @@
 package service.chart;
 
 import com.github.abel533.echarts.Option;
-import model.chart.ChatBuilderParams;
+import model.chart.ChartBuilderParams;
 
 /**
  * 图表构建接口
@@ -23,9 +23,9 @@ public interface ChartOption {
     /**
      * 转换图表配置参数
      *
-     * @param chatBuilderParams
+     * @param chartBuilderParams
      * @return
      */
-    Option transform(ChatBuilderParams chatBuilderParams) throws Exception;
+    Option transform(ChartBuilderParams chartBuilderParams) throws Exception;
 
 }
