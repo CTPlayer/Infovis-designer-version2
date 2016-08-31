@@ -625,7 +625,6 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
         var chartType = window.currentOption.series[0].type;//图表类型
         var ui = {};
        if(buildModel.mark){//pie
-
            if(buildModel.mark.color) {
                ui.draggable = $(getDraggableText(buildModel.mark.color));
                tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-color"),chartType);
@@ -644,5 +643,5 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
             ui.draggable = $(getDraggableText(buildModel.yAxis));
             tagDropRender(undefined,ui,'yAxis',$("form.make-model-region .yAxis"),chartType);
         }
-    })
+    });
 });
