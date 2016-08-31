@@ -13,7 +13,7 @@
  ************************************************************************/
 package service.system.helper;
 
-import model.chart.ChatBuilderParams;
+import model.chart.ChartBuilderParams;
 import model.connectionManage.ConnectionManage;
 import model.connectionManage.SqlRecordingManage;
 import model.database.JdbcProps;
@@ -46,10 +46,10 @@ public final class DataSetProvider {
     @Resource
     private DataBaseMetadataHelper dataBaseMetadataHelper;
 
-    public List<Map<String, Object>> prepareDataSet(ChatBuilderParams chatBuilderParams) throws Exception {
+    public List<Map<String, Object>> prepareDataSet(ChartBuilderParams chartBuilderParams) throws Exception {
 
         SqlRecordingManage sqlRecordingManage = new SqlRecordingManage();
-        sqlRecordingManage.setId(chatBuilderParams.getDataRecordId());
+        sqlRecordingManage.setId(chartBuilderParams.getDataRecordId());
         sqlRecordingManage = sqlRecordingManageService.queryAsObject(sqlRecordingManage);
 
         ConnectionManage connectionManage = new ConnectionManage();

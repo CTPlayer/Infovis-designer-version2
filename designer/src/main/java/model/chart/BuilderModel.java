@@ -21,13 +21,10 @@ public class BuilderModel {
 
     // 列模型
     private List<String> xAxis;
-
     // 行模型
     private List<String> yAxis;
-
     // 标记模型
     private Mark mark;
-
     // 过滤模型
     private List<String> filter;
 

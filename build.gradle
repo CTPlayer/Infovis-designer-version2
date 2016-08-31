@@ -116,6 +116,9 @@ project(":designer") {
         host = "0.0.0.0"
         fileLogEnabled = false
     }
+    product {
+        webapp project
+    }
 
     dependencies {
         compile project(":util")
