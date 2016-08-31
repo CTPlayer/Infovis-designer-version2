@@ -103,7 +103,7 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 });
 
 //数据集操作模块
-require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie','jqueryMd5','bootstrap'], function($,mCustomScrollbar,ztree,infovis,baseOptions){
+require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
     /*恢复样式*/
     function restoreTagStyle(target){
         target.css("background-color",'#ffffff');
@@ -341,11 +341,11 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                 setting_datalist.updateNode(treeNode);
             },
             onAsyncSuccess :function () {
-                $("div.panel-body").mCustomScrollbar({
-                    autoHideScrollbar:true,
-                    axis:"yx",
-                    theme:"dark"
-                });
+                // $("div.panel-body").mCustomScrollbar({
+                //     autoHideScrollbar:true,
+                //     axis:"yx",
+                //     theme:"dark"
+                // });
             },
             onClick: function(event, treeId, treeNode){
                 var tree = $.fn.zTree.getZTreeObj("dataListTree");
@@ -440,11 +440,11 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                             saveCookieInfo(result);
                         })
 
-                        //滚动条插件
-                        $(".scrollable").mCustomScrollbar({
-                            autoHideScrollbar:true,
-                            theme:"dark"
-                        });
+                        // //滚动条插件
+                        // $(".scrollable").mCustomScrollbar({
+                        //     autoHideScrollbar:true,
+                        //     theme:"dark"
+                        // });
                         /**
                          * 左侧维度、度量拖拽
                          */
