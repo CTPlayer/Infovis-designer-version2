@@ -587,7 +587,7 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                    '        <i class="glyphicon glyphicon-download leftBarLiIcon pull-right"></i>' +
                    '    </a>' +
                    '</li>');
-               tagDropFunction(undefined,ui,'fa fa-tachometer',$("form.make-model-region .mark-down-column .mark-item-color"));
+               tagDropRender(undefined,ui,'fa fa-tachometer',$("form.make-model-region .mark-down-column .mark-item-color"),'pie');
            }
        }
     })
