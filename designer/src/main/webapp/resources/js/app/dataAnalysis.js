@@ -101,6 +101,7 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
             var isColorMark = target.parent().hasClass("mark-item-color");
             var isCornerMark = target.parent().hasClass("mark-item-corner");
             var isTagMark = target.parent().hasClass("mark-item-tag");
+            
             if(isColorMark){//颜色tag删除
                 target.parent().css("background-color",'#ffffff');
                 target.parent().css("border",'none');
