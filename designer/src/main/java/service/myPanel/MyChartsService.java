@@ -20,4 +20,9 @@ public interface MyChartsService {
      * 删除一个图表的所有相关信息
      */
     int delete(MyCharts myCharts) throws  Exception;
+
+    /**
+     * 查询一个图表的相关信息
+     */
+    MyCharts selectOneChartInfo(MyCharts myCharts) throws Exception;
 }

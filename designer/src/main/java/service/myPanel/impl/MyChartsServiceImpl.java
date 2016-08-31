@@ -34,4 +34,10 @@ public class MyChartsServiceImpl implements MyChartsService{
         myCharts.setStatmentId(NAMESPACE + ".delete");
         return baseMapper.delete(myCharts);
     }
+
+    @Override
+    public MyCharts selectOneChartInfo(MyCharts myCharts) throws Exception {
+        myCharts.setStatmentId(NAMESPACE + ".selectOneChartInfo");
+        return baseMapper.selectOne(myCharts);
+    }
 }
