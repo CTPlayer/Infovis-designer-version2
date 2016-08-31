@@ -16,14 +16,13 @@ require.config({
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
         "jquery-ui" : { "deps" :['jquery'] },
-        "mCustomScrollbar" : { "deps" :['jquery'] },
         "jqueryMd5" : { "deps" :['jquery'] },
         "metisMenu" : { "deps" :['jquery'] },
         "ztree" : { "deps" :['jquery'] }
     }
 });
 
-require(['jquery', 'options', 'infovis','mCustomScrollbar'], function($, baseOptions, infovis){
+require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
         var exportId = window.location.href.split("=")[1].replace("&order","");
@@ -104,7 +103,7 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 });
 
 //数据集操作模块
-require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
+require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie','jqueryMd5','bootstrap'], function($,mCustomScrollbar,ztree,infovis,baseOptions){
     function tagDropFunction(event, ui,iclass,target) {
         var targetNode = $(ui.draggable).find("a").find("span").html();
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
@@ -508,5 +507,10 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
             target.css("cursor","pointer");
         }
     });
+
+    //页面数据绑定
+    var treeObj = $.fn.zTree.getZTreeObj("dataListTree");
+    var node = treeObj.getNodeByParam("id", 1, null);
+    console.log(node);
 
 });
