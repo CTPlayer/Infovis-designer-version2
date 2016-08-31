@@ -48,6 +48,8 @@ public class Line implements ChartOption {
 
         // 拆分数据, 结构化
         Option option = new Option();
+        // backgroundColor
+        option.backgroundColor("white");
         // title
         option.title("标题", "副标题");
         // tooltip
