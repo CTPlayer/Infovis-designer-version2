@@ -79,7 +79,7 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
         target.html('');
-        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span><button type="button" class="close">&times;</button>';
+        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span><button type="button" class="close mark-item-close">&times;</button>';
         target.append(targetText);
         if(textTag){
             target.css("background-color",'#f6eedb');
@@ -90,6 +90,31 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
             target.css("border",'1px #b1caf4 solid');
         }
         target.css("cursor","move");
+
+        /**
+         * 绑定删除事件
+         */
+        $('form.make-model-region .mark-item-close').click(function(){
+            var target = $(this);
+            var isColorMark = target.parent().hasClass("mark-item-color");
+            var isCornerMark = target.parent().hasClass("mark-item-corner");
+            var isTagMark = target.parent().hasClass("mark-item-tag");
+            if(isColorMark){//颜色tag删除
+                target.parent().css("background-color",'#ffffff');
+                target.parent().css("border",'none');
+                target.parent().css("border-right",'1px dashed #ccc');
+                target.parent().html('<i class="fa fa-tachometer"></i> 颜色');
+            }else if(isCornerMark){//角度tag删除
+                target.parent().css("background-color",'#ffffff');
+                target.parent().css("border",'none');
+                target.parent().css("border-right",'1px dashed #ccc');
+                target.parent().html('<i class="fa fa-clock-o"></i> 角度');
+            }else if(isTagMark){//标签tag删除
+                target.parent().css("background-color",'#ffffff');
+                target.parent().css("border",'none');
+                target.parent().html('<i class="fa fa-tags"></i> 标签');
+            }
+        });
     };
 
     var setting_datalist = {
@@ -199,7 +224,7 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
                             cursorAt: { top: 10, left: 34 },
                             helper: function(event) {
                                 var dragText = $(this).find("a").find("span").html();
-                                return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;background-color: #def0fa; padding:4px;z-index: 999999999'>"+dragText+"</div>" );
+                                return $( "<div class='drag-helper'>"+dragText+"</div>" );
                             }
                         });
 
@@ -237,7 +262,7 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
                                     cursorAt: { top: 10, left: 34 },
                                     helper: function(event) {
                                         var dragText = $(this).find("span").html();
-                                        return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
+                                        return $( "<div class='drag-helper'>"+dragText+"</div>" );
                                     }
                                 });
 
