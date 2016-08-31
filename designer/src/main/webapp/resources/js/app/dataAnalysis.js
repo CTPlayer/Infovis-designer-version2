@@ -150,27 +150,88 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
         });
     }
 
+    function getTagIclassType(tagType) {
+        var iclass = '';
+        switch(tagType)
+        {
+            case 'color':
+                iclass = 'fa-tachometer';
+                break;
+            case 'corner':
+                iclass = 'fa-clock-o';
+                break;
+            case 'tag':
+                iclass = 'fa-tags';
+                break;
+            default:
+                iclass = '';
+        }
+        return iclass;
+    }
+
     /**
      * 标记drop渲染
      */
-    function tagDropRender(event, ui,iclass,target,chartType) {
+    function tagDropRender(event, ui,tagType,target,chartType) {
         var targetNode = $(ui.draggable).find("a").find("span").html();
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
-        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="fa '+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span><button type="button" class="close mark-item-close">&times;</button>';
         var isRenderChart = false;
-        if(chartType == 'pie'){
-            if(iclass == 'fa-tachometer' || iclass == 'fa-clock-o'){//颜色、角度
-                if((iclass == 'fa-tachometer' && textTag) || (iclass == 'fa-clock-o' && numberTag)){
+        if(chartType == 'pie' || chartType == 'line' || chartType == 'bar'){
+            var iclass = getTagIclassType(tagType);
+            if((tagType == 'color' || tagType == 'corner') && chartType == 'pie'){//颜色、角度
+                if((tagType == 'color' && textTag) || (tagType == 'corner' && numberTag)){
+                    var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="fa '+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span><button type="button" class="close mark-item-close">&times;</button>';
                     target.html('');
                     target.append(targetText);
                     appendCellRender(ui,target);
                     isRenderChart = true;
-                }else if((iclass == 'fa-tachometer' && numberTag) || (iclass == 'fa-clock-o' && textTag)){
+                }else if((tagType == 'color' && numberTag) || (tagType == 'corner' && textTag)){
                     restoreTagStyle(target);
                 }
-            }else if(iclass == 'fa-tags'){
+            }else if(tagType == 'tag' && chartType == 'pie'){
                 restoreTagStyle(target);
+            }else if(((chartType == 'line' && tagType == 'xAxis' && textTag)
+                || (chartType == 'bar' && tagType == 'xAxis' && textTag)
+                || (chartType == 'line' && tagType == 'yAxis' && numberTag)
+                || (chartType == 'bar' && tagType == 'yAxis' && numberTag))){
+                var targetText = '<div class="trigger-column-tag trigger-column-tag-text">'+
+                    '<a><i class="glyphicon glyphicon-text-color" style="display: none;"></i>'+
+                    '<span class="dragName">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
+                    '</div>';
+                var targetNumberText = '<div class="trigger-column-tag trigger-column-tag-number">'+
+                    '<a><i class="fa fa-sort-numeric-asc" style="display: none;"></i>'+
+                    '<span class="dragName">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
+                    '</div>';
+                if(numberTag){
+                    target.append(targetNumberText);
+                    isRenderChart = true;
+                }
+                if(textTag){
+                    target.append(targetText);
+                    isRenderChart = true;
+                }
+                /**
+                 * 行、列、标签拖动
+                 */
+                $('.trigger-column-tag').draggable({
+                    cursor: "move",
+                    opacity: 0.7,
+                    appendTo:'body',
+                    cursorAt: { top: 10, left: 34 },
+                    helper: function(event) {
+                        var dragText = $(this).find("span").html();
+                        return $( "<div class='drag-helper'>"+dragText+"</div>" );
+                    }
+                });
+                /**
+                 * 标记删除可拖动标签
+                 */
+                $('.trigger-column-tag .trigger-column-tag-close').click(function(){
+                    var target = $(this).parent().parent();
+                    target.draggable('destroy');
+                    target.remove();
+                });
             }
         }
         return isRenderChart;
@@ -182,17 +243,42 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
     function tagDropOverRender(ui,chartType,tagType,target) {
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
-        if((numberTag && chartType == 'pie' && tagType == 'color') || (textTag && chartType == 'pie' && tagType == 'corner')){
+        if((numberTag && chartType == 'pie' && tagType == 'color') || (textTag && chartType == 'pie' && tagType == 'corner')
+            || (chartType == 'pie' && (tagType == 'tag' || tagType == 'xAxis' || tagType == 'yAxis' || tagType == 'filter'))
+            || (chartType == 'line' && tagType == 'yAxis' && textTag)
+            || (chartType == 'bar' && tagType == 'yAxis' && textTag)
+            || (chartType == 'line' && tagType == 'xAxis' && numberTag)
+            || (chartType == 'bar' && tagType == 'xAxis' && numberTag)
+            || tagType == 'filter'
+            ||((chartType == 'bar' || chartType == 'line')&&((tagType == 'color') || (tagType == 'corner') || (tagType == 'tag')))){
             target.css("border","1px dashed #ff2828");
             target.css("background-color","#ffeeee");
-        }else if((textTag && chartType == 'pie' && tagType == 'color') || (numberTag && chartType == 'pie' && tagType == 'corner')){
+        }else if((textTag && chartType == 'pie' && tagType == 'color') || (numberTag && chartType == 'pie' && tagType == 'corner')
+            || (chartType == 'line' && tagType == 'xAxis' && textTag)
+            || (chartType == 'bar' && tagType == 'xAxis' && textTag)
+            || (chartType == 'line' && tagType == 'yAxis' && numberTag)
+            || (chartType == 'bar' && tagType == 'yAxis' && numberTag)){
             target.css("border","1px dashed #22a7f0");
             target.css("background-color","#cfe9f7");
-        }else if(chartType == 'pie' && (tagType == 'tag' || tagType == 'xAxis' || tagType == 'yAxis' || tagType == 'filter')){
-            target.css("border","1px dashed #ff2828");
-            target.css("background-color","#ffeeee");
         }
+    };
+
+    /*返回行、列、筛选标识*/
+    function axisTagType(target){
+        var isxAxis = target.hasClass("xAxis");
+        var isyAxis = target.hasClass("yAxis");
+        var isFilter = target.hasClass("column-filter");
+        var tagType;
+        if(isxAxis){
+            tagType = 'xAxis';
+        }else if(isyAxis){
+            tagType = 'yAxis';
+        }else if(isFilter){
+            tagType = 'filter';
+        }
+        return tagType;
     }
+
     var setting_datalist = {
         async: {
             enable: true,
@@ -364,69 +450,16 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                         //在droppable事件中发送option组装请求
                         $("form.make-model-region .trigger-column").droppable({
                             drop: function (event, ui) {
-                                var targetNode = $(ui.draggable).find("a").find("span").html();
-                                var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
-                                var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
-
-                                var targetText = '<div class="trigger-column-tag trigger-column-tag-text">'+
-                                    '<a><i class="glyphicon glyphicon-text-color" style="display: none;"></i>'+
-                                    '<span class="dragName">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
-                                    '</div>';
-                                var targetNumberText = '<div class="trigger-column-tag trigger-column-tag-number">'+
-                                    '<a><i class="fa fa-sort-numeric-asc" style="display: none;"></i>'+
-                                    '<span class="dragName">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
-                                    '</div>';
-                                var target = $(this);
-
-                                if(chartType != 'pie'){
-                                    if(numberTag){
-                                        target.append(targetNumberText);
-                                        renderChart();
-                                    }
-                                    if(textTag){
-                                        target.append(targetText);
-                                        renderChart();
-                                    }
-
-                                    /**
-                                     * 行、列、标签拖动
-                                     */
-                                    $('.trigger-column-tag').draggable({
-                                        cursor: "move",
-                                        opacity: 0.7,
-                                        appendTo:'body',
-                                        cursorAt: { top: 10, left: 34 },
-                                        helper: function(event) {
-                                            var dragText = $(this).find("span").html();
-                                            return $( "<div class='drag-helper'>"+dragText+"</div>" );
-                                        }
-                                    });
-
-                                    /**
-                                     * 标记删除可拖动标签
-                                     */
-                                    $('.trigger-column-tag .trigger-column-tag-close').click(function(){
-                                        var target = $(this).parent().parent();
-                                        target.draggable('destroy');
-                                        target.remove();
-                                    });
+                                var tagType = axisTagType($(this));
+                                var isRenderChart = tagDropRender(event,ui,tagType,$(this),chartType);
+                                if(isRenderChart){
+                                    renderChart();
                                 }
                                 $(this).css("border","1px dashed #ccc");
                                 $(this).css("background-color","white");
                             },
                             over: function (event, ui) {
-                                var isxAxis = $(this).hasClass("xAxis");
-                                var isyAxis = $(this).hasClass("yAxis");
-                                var isFilter = $(this).hasClass("column-filter");
-                                var tagType;
-                                if(isxAxis){
-                                    tagType = 'xAxis';
-                                }else if(isyAxis){
-                                    tagType = 'yAxis';
-                                }else if(isFilter){
-                                    tagType = 'filter';
-                                }
-                                tagDropOverRender(ui,chartType,tagType,$(this));
+                                tagDropOverRender(ui,chartType,axisTagType($(this)),$(this));
                             },
                             out:function (event,ui) {
                                 $(this).css("border","1px dashed #ccc");
@@ -441,7 +474,7 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                         $("form.make-model-region .mark-down-column .mark-item-color").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
-                                var isRenderChart = tagDropRender(event,ui,'fa-tachometer',target,chartType);
+                                var isRenderChart = tagDropRender(event,ui,'color',target,chartType);
                                 if(isRenderChart){
                                     renderChart();
                                 }
@@ -461,7 +494,7 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                         $("form.make-model-region .mark-down-column .mark-item-corner").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
-                                var isRenderChart = tagDropRender(event,ui,'fa-clock-o',target,chartType);
+                                var isRenderChart = tagDropRender(event,ui,'corner',target,chartType);
                                 if(isRenderChart){
                                     renderChart();
                                 }
@@ -481,7 +514,7 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                         $("form.make-model-region .mark-down-column .mark-item-tag").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
-                                var isRenderChart = tagDropRender(event,ui,'fa-tags',target,chartType);
+                                var isRenderChart = tagDropRender(event,ui,'tags',target,chartType);
                                 if(isRenderChart){
                                     renderChart();
                                 }
