@@ -94,13 +94,20 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 
 //数据集操作模块
 require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
-    function tagDropFunction(event, ui,iclass,target) {
-        var targetNode = $(ui.draggable).find("a").find("span").html();
+
+    /*恢复样式*/
+    function restoreTagStyle(target){
+        target.css("background-color",'#ffffff');
+        target.css("border",'none');
+        target.css("border-right",'1px dashed #ccc');
+    }
+
+    /*
+    标记tag被drop后样式渲染以及标记删除
+    * */
+    function appendCellRender(ui,target){
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
-        target.html('');
-        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span><button type="button" class="close mark-item-close">&times;</button>';
-        target.append(targetText);
         if(textTag){
             target.css("background-color",'#f6eedb');
             target.css("border",'1px #f9e7bb solid');
@@ -121,14 +128,10 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
             var isTagMark = target.parent().hasClass("mark-item-tag");
 
             if(isColorMark){//颜色tag删除
-                target.parent().css("background-color",'#ffffff');
-                target.parent().css("border",'none');
-                target.parent().css("border-right",'1px dashed #ccc');
+                restoreTagStyle(target.parent());
                 target.parent().html('<i class="fa fa-tachometer"></i> 颜色');
             }else if(isCornerMark){//角度tag删除
-                target.parent().css("background-color",'#ffffff');
-                target.parent().css("border",'none');
-                target.parent().css("border-right",'1px dashed #ccc');
+                restoreTagStyle(target.parent());
                 target.parent().html('<i class="fa fa-clock-o"></i> 角度');
             }else if(isTagMark){//标签tag删除
                 target.parent().css("background-color",'#ffffff');
@@ -136,7 +139,51 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                 target.parent().html('<i class="fa fa-tags"></i> 标签');
             }
         });
+    }
+
+    /**
+     * 标记drop渲染
+     */
+    function tagDropRender(event, ui,iclass,target,chartType) {
+        var targetNode = $(ui.draggable).find("a").find("span").html();
+        var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
+        var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
+        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="fa '+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span><button type="button" class="close mark-item-close">&times;</button>';
+        var isRenderChart = false;
+        if(chartType == 'pie'){
+            if(iclass == 'fa-tachometer' || iclass == 'fa-clock-o'){//颜色、角度
+                if((iclass == 'fa-tachometer' && textTag) || (iclass == 'fa-clock-o' && numberTag)){
+                    target.html('');
+                    target.append(targetText);
+                    appendCellRender(ui,target);
+                    isRenderChart = true;
+                }else if((iclass == 'fa-tachometer' && numberTag) || (iclass == 'fa-clock-o' && textTag)){
+                    restoreTagStyle(target);
+                }
+            }else if(iclass == 'fa-tags'){
+                restoreTagStyle(target);
+            }
+        }
+        return isRenderChart;
     };
+
+    /**
+     * 标记拖拽OVER样式
+     */
+    function tagDropOverRender(ui,chartType,tagType,target) {
+        var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
+        var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
+        if((numberTag && chartType == 'pie' && tagType == 'color') || (textTag && chartType == 'pie' && tagType == 'corner')){
+            target.css("border","1px dashed #ff2828");
+            target.css("background-color","#ffeeee");
+        }else if((textTag && chartType == 'pie' && tagType == 'color') || (numberTag && chartType == 'pie' && tagType == 'corner')){
+            target.css("border","1px dashed #22a7f0");
+            target.css("background-color","#cfe9f7");
+        }else if(chartType == 'pie' && tagType == 'tag'){
+            target.css("border","1px dashed #ff2828");
+            target.css("background-color","#ffeeee");
+        }
+    }
 
     var setting_datalist = {
         async: {
@@ -372,13 +419,13 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                         $("form.make-model-region .mark-down-column .mark-item-color").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
-                                tagDropFunction(event,ui,'fa fa-tachometer',target);
-
-                                renderChart();
+                                var isRenderChart = tagDropRender(event,ui,'fa-tachometer',target,chartType);
+                                if(isRenderChart){
+                                    renderChart();
+                                }
                             },
                             over: function (event, ui) {
-                                $(this).css("border","1px dashed #22a7f0");
-                                $(this).css("background-color","#cfe9f7");
+                                tagDropOverRender(ui,chartType,'color',$(this));
                             },
                             out:function (event,ui) {
                                 $(this).css("border","");
@@ -392,13 +439,13 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                         $("form.make-model-region .mark-down-column .mark-item-corner").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
-                                tagDropFunction(event,ui,'fa fa-clock-o',target)
-
-                                renderChart();
+                                var isRenderChart = tagDropRender(event,ui,'fa-clock-o',target,chartType);
+                                if(isRenderChart){
+                                    renderChart();
+                                }
                             },
                             over: function (event, ui) {
-                                $(this).css("border","1px dashed #22a7f0");
-                                $(this).css("background-color","#cfe9f7");
+                                tagDropOverRender(ui,chartType,'corner',$(this));
                             },
                             out:function (event,ui) {
                                 $(this).css("border","");
@@ -414,13 +461,13 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                         $("form.make-model-region .mark-down-column .mark-item-tag").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
-                                tagDropFunction(event,ui,'fa fa-tags',target)
-
-                                renderChart();
+                                var isRenderChart = tagDropRender(event,ui,'fa-tags',target,chartType);
+                                if(isRenderChart){
+                                    renderChart();
+                                }
                             },
                             over: function (event, ui) {
-                                $(this).css("border","1px dashed #22a7f0");
-                                $(this).css("background-color","#cfe9f7");
+                                tagDropOverRender(ui,chartType,'tag',$(this));
                             },
                             out:function (event,ui) {
                                 $(this).css("border","");
