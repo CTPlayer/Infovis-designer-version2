@@ -8,7 +8,7 @@
  * Unless otherwise explicitly stated, this software is provided
  * by JiuDaoTech "AS IS".
  *************************************************************************/
-package service.chart.line.echarts;
+package service.chart.bar.echarts;
 
 import com.github.abel533.echarts.Option;
 import com.github.abel533.echarts.axis.Axis;
@@ -31,12 +31,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 标准折线图实现
+ * 标准柱状图实现
  *
  * @author CSJ
  */
 @Service
-public class Line implements ChartOption {
+public class Bar implements ChartOption {
 
     @Resource
     private DataSetProvider dataSetProvider;
@@ -69,7 +69,7 @@ public class Line implements ChartOption {
         option.xAxis().add(axis);
         option.yAxis().add(new ValueAxis());
         // series
-        Series series = new com.github.abel533.echarts.series.Line();
+        Series series = new com.github.abel533.echarts.series.Bar();
         Collection<Object> seriesData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Object>() {
             @Override
             public Object transform(Map<String, Object> input) {
