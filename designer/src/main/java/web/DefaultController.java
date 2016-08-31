@@ -1,5 +1,6 @@
 package web;
 
+import common.util.TemplateUtil;
 import common.util.WebUtil;
 import model.chart.ChatBuilderParams;
 import model.myPanel.MyPanel;
@@ -7,10 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import service.chart.ChartOption;
+import service.chart.line.echarts.Line;
 import service.chart.pie.echarts.Pie;
 import service.myPanel.MyPanelService;
 
@@ -104,7 +107,7 @@ public class DefaultController {
      * @return
      * @throws Exception
      */
-    @RequestMapping("/render")
+    @RequestMapping(value = "/render", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
     @ResponseBody
     public Object render(@RequestBody ChatBuilderParams chatBuilderParams, HttpServletRequest request) throws Exception {
 
@@ -114,9 +117,11 @@ public class DefaultController {
 
         if (chatBuilderParams.getChartType() == ChatBuilderParams.ChartType.pie) {
             chartOption = context.getBean(Pie.class);
+        } else if (chatBuilderParams.getChartType() == ChatBuilderParams.ChartType.line) {
+            chartOption = context.getBean(Line.class);
         }
 
-        return chartOption.transform(chatBuilderParams);
+        return TemplateUtil.genJsonStr4Obj(chartOption.transform(chatBuilderParams), true);
     }
 
 }

@@ -8,9 +8,12 @@
  * Unless otherwise explicitly stated, this software is provided
  * by JiuDaoTech "AS IS".
  *************************************************************************/
-package service.chart.pie.echarts;
+package service.chart.bar.echarts;
 
 import com.github.abel533.echarts.Option;
+import com.github.abel533.echarts.axis.Axis;
+import com.github.abel533.echarts.axis.CategoryAxis;
+import com.github.abel533.echarts.axis.ValueAxis;
 import com.github.abel533.echarts.code.Trigger;
 import com.github.abel533.echarts.series.Series;
 import model.chart.ChatBuilderParams;
@@ -22,15 +25,18 @@ import service.chart.ChartOption;
 import service.system.helper.DataSetProvider;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * 标准饼图实现
+ * 标准柱状图实现
  *
  * @author CSJ
  */
 @Service
-public class Pie implements ChartOption {
+public class Bar implements ChartOption {
 
     @Resource
     private DataSetProvider dataSetProvider;
@@ -45,30 +51,30 @@ public class Pie implements ChartOption {
         // title
         option.title("标题", "副标题");
         // tooltip
-        option.tooltip().trigger(Trigger.item).formatter("{b}: {c} <br/>占比: {d}%");
-        // legend
-        Collection<String> legendData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, String>() {
+        option.tooltip().trigger(Trigger.axis);
+        // xAxis
+        final Axis axis = new CategoryAxis();
+        Collection<Map<String, Object>> xAxisData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Map<String, Object>>() {
             @Override
-            public String transform(Map<String, Object> input) {
-                Object obj = input.get(chatBuilderParams.getBuilderModel().getMark().getColor());
+            public Map<String, Object> transform(Map<String, Object> input) {
+                Object obj = input.get(chatBuilderParams.getBuilderModel().getxAxis().get(0));
+                Map<String, Object> category = new HashMap<>();
                 if (obj != null && StringUtils.isNoneEmpty(obj.toString())) {
-                    return String.valueOf(obj);
+                    category.put("value", String.valueOf(obj));
                 }
-                return "NULL";
+                return category;
             }
-        }, new HashSet<String>());
-        option.legend().data().addAll(legendData);
+        });
+        axis.data().addAll(xAxisData);
+        option.xAxis().add(axis);
+        option.yAxis().add(new ValueAxis());
         // series
-        Series series = new com.github.abel533.echarts.series.Pie();
+        Series series = new com.github.abel533.echarts.series.Bar();
         Collection<Object> seriesData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Object>() {
             @Override
             public Object transform(Map<String, Object> input) {
-                Object v = input.get(chatBuilderParams.getBuilderModel().getMark().getAngle());
-                Object k = input.get(chatBuilderParams.getBuilderModel().getMark().getColor());
-                Map<String, Object> transformData = new HashMap<>();
-                transformData.put("name", k);
-                transformData.put("value", v);
-                return transformData;
+                Object v = input.get(chatBuilderParams.getBuilderModel().getyAxis().get(0));
+                return v;
             }
         });
         series.data().addAll(seriesData);

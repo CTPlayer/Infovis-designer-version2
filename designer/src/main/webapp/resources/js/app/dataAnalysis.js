@@ -75,13 +75,13 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 });
 
 //数据集操作模块
-require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree){
+require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
     function tagDropFunction(event, ui,iclass,target) {
         var targetNode = $(ui.draggable).find("a").find("span").html();
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
         target.html('');
-        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span>';
+        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span><button type="button" class="close mark-item-close">&times;</button>';
         target.append(targetText);
         if(textTag){
             target.css("background-color",'#f6eedb');
@@ -91,6 +91,32 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
             target.css("background-color",'#d2ddf0');
             target.css("border",'1px #b1caf4 solid');
         }
+        target.css("cursor","move");
+
+        /**
+         * 绑定删除事件
+         */
+        $('form.make-model-region .mark-item-close').click(function(){
+            var target = $(this);
+            var isColorMark = target.parent().hasClass("mark-item-color");
+            var isCornerMark = target.parent().hasClass("mark-item-corner");
+            var isTagMark = target.parent().hasClass("mark-item-tag");
+            if(isColorMark){//颜色tag删除
+                target.parent().css("background-color",'#ffffff');
+                target.parent().css("border",'none');
+                target.parent().css("border-right",'1px dashed #ccc');
+                target.parent().html('<i class="fa fa-tachometer"></i> 颜色');
+            }else if(isCornerMark){//角度tag删除
+                target.parent().css("background-color",'#ffffff');
+                target.parent().css("border",'none');
+                target.parent().css("border-right",'1px dashed #ccc');
+                target.parent().html('<i class="fa fa-clock-o"></i> 角度');
+            }else if(isTagMark){//标签tag删除
+                target.parent().css("background-color",'#ffffff');
+                target.parent().css("border",'none');
+                target.parent().html('<i class="fa fa-tags"></i> 标签');
+            }
+        });
     };
 
     var setting_datalist = {
@@ -210,7 +236,7 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
                             cursorAt: { top: 10, left: 34 },
                             helper: function(event) {
                                 var dragText = $(this).find("a").find("span").html();
-                                return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
+                                return $( "<div class='drag-helper'>"+dragText+"</div>" );
                             }
                         });
 
@@ -221,13 +247,13 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
                                 var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
                                 var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
 
-                                var targetText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color:#f6eedb;" >'+
-                                    '<a><i class="fa fa-times glyphicon-text-color" style="display: inline;"></i>'+
-                                    '<span class="dragName" style="display: inline;">'+targetNode+'</span></a>'+
+                                var targetText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color:#f6eedb;cursor: move;" >'+
+                                    '<a><i class="glyphicon glyphicon-text-color" style="display: none;"></i>'+
+                                    '<span class="dragName" style="width:80px;height: 20px; display: inline-block; overflow: hidden;">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
                                     '</div>';
-                                var targetNumberText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color: #d2ddf0;border:1px solid #b1caf4" >'+
-                                    '<a><i class="fa fa-times fa-sort-numeric-asc" style="display: inline;"></i>'+
-                                    '<span class="dragName"  style="display: inline;">'+targetNode+'</span></a>'+
+                                var targetNumberText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color: #d2ddf0;border:1px solid #b1caf4;cursor: move;" >'+
+                                    '<a><i class="fa fa-sort-numeric-asc" style="display: none;"></i>'+
+                                    '<span class="dragName"  style="width:80px;height: 20px; display: inline-block; overflow: hidden;">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
                                     '</div>';
                                 var target = $(this);
 
@@ -248,14 +274,14 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
                                     cursorAt: { top: 10, left: 34 },
                                     helper: function(event) {
                                         var dragText = $(this).find("span").html();
-                                        return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
+                                        return $( "<div class='drag-helper'>"+dragText+"</div>" );
                                     }
                                 });
 
                                 /**
                                  * 标记删除可拖动标签
                                  */
-                                $('.trigger-column-tag .fa-times').click(function(){
+                                $('.trigger-column-tag .trigger-column-tag-close').click(function(){
                                     var target = $(this).parent().parent();
                                     target.draggable('destroy');
                                     target.remove();
@@ -275,6 +301,7 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
                             }
                         });
 
+                        var engine = infovis.init(baseOptions.makeAllOptions() || {});
                         /**
                          * 颜色tag
                          */
@@ -299,7 +326,7 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
                                     success: function(data){
                                         console.log(JSON.stringify(data));
                                         var editChart = engine.chart.init(document.getElementById("editArea"));
-                                        window.editChart.setOption(data);
+                                        editChart.setOption(data);
                                     }
                                 });
                             },
@@ -308,7 +335,7 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
                                 $(this).css("background-color","#cfe9f7");
                             },
                             out:function (event,ui) {
-                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("border","");
                                 $(this).css("background-color","white");
                             }
                         });
@@ -331,14 +358,14 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
                                         'exportId': window.location.href.split("=")[1].replace("&order",""),
                                         'builderModel': {
                                             'mark': {
-                                                'color': ui.draggable[0].textContent
+                                                'angle': ui.draggable[0].textContent
                                             }
                                         }
                                     }),
                                     success: function(data){
                                         console.log(JSON.stringify(data));
                                         var editChart = engine.chart.init(document.getElementById("editArea"));
-                                        window.editChart.setOption(data);
+                                        editChart.setOption(data);
                                     }
                                 });
                             },
@@ -347,7 +374,7 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
                                 $(this).css("background-color","#cfe9f7");
                             },
                             out:function (event,ui) {
-                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("border","");
                                 $(this).css("background-color","white");
 
 
@@ -372,14 +399,14 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
                                         'exportId': window.location.href.split("=")[1].replace("&order",""),
                                         'builderModel': {
                                             'mark': {
-                                                'color': ui.draggable[0].textContent
+                                                'tag': ui.draggable[0].textContent
                                             }
                                         }
                                     }),
                                     success: function(data){
                                         console.log(JSON.stringify(data));
                                         var editChart = engine.chart.init(document.getElementById("editArea"));
-                                        window.editChart.setOption(data);
+                                        editChart.setOption(data);
                                     }
                                 });
                             },
@@ -388,7 +415,7 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
                                 $(this).css("background-color","#cfe9f7");
                             },
                             out:function (event,ui) {
-                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("border","");
                                 $(this).css("background-color","white");
                             }
                         });
@@ -455,8 +482,6 @@ require(['jquery','ztree','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstr
                 target.css("height","auto");
             }
             target.css("cursor","pointer");
-        }else if(e.type == 'mouseleave'){
-            target.css("height","28px");
         }
     });
 

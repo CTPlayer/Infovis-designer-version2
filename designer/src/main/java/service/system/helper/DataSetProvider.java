@@ -62,6 +62,8 @@ public final class DataSetProvider {
         jdbcProps.setUsername(connectionManage.getUserName());
         jdbcProps.setPassword(connectionManage.getPassword());
 
+        L.info("执行查询语句: {}", jdbcProps.getSql());
+
         return dataBaseMetadataHelper.prepareDataSet(jdbcProps);
 
     }

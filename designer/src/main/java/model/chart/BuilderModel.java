@@ -31,19 +31,19 @@ public class BuilderModel {
     // 过滤模型
     private List<String> filter;
 
-    public List<String> getXAxis() {
+    public List<String> getxAxis() {
         return xAxis;
     }
 
-    public void setXAxis(List<String> xAxis) {
+    public void setxAxis(List<String> xAxis) {
         this.xAxis = xAxis;
     }
 
-    public List<String> getYAxis() {
+    public List<String> getyAxis() {
         return yAxis;
     }
 
-    public void setYAxis(List<String> yAxis) {
+    public void setyAxis(List<String> yAxis) {
         this.yAxis = yAxis;
     }
 
