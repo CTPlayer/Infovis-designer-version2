@@ -179,13 +179,11 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
         var isRenderChart = false;
         if(tagType == 'xAxis'){
             textTag = true;
-        }else{
-            textTag = false;
+            numberTag = false;
         }
         if(tagType == 'yAxis'){
+            textTag = false;
             numberTag = true;
-        }else{
-            numberTag = false;
         }
         if(chartType == 'pie' || chartType == 'line' || chartType == 'bar' || chartType == 'linebar'){
             var iclass = getTagIclassType(tagType);
