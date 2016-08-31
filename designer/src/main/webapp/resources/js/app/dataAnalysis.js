@@ -188,7 +188,7 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
         }else if((textTag && chartType == 'pie' && tagType == 'color') || (numberTag && chartType == 'pie' && tagType == 'corner')){
             target.css("border","1px dashed #22a7f0");
             target.css("background-color","#cfe9f7");
-        }else if(chartType == 'pie' && tagType == 'tag'){
+        }else if(chartType == 'pie' && (tagType == 'tag' || tagType == 'xAxis' || tagType == 'yAxis' || tagType == 'filter')){
             target.css("border","1px dashed #ff2828");
             target.css("background-color","#ffeeee");
         }
@@ -378,45 +378,55 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                                     '</div>';
                                 var target = $(this);
 
-                                if(numberTag){
-                                    target.append(targetNumberText);
-                                    renderChart();
-                                }
-                                if(textTag){
-                                    target.append(targetText);
-                                    renderChart();
-                                }
-
-                                /**
-                                 * 行、列、标签拖动
-                                 */
-                                $('.trigger-column-tag').draggable({
-                                    cursor: "move",
-                                    opacity: 0.7,
-                                    appendTo:'body',
-                                    cursorAt: { top: 10, left: 34 },
-                                    helper: function(event) {
-                                        var dragText = $(this).find("span").html();
-                                        return $( "<div class='drag-helper'>"+dragText+"</div>" );
+                                if(chartType != 'pie'){
+                                    if(numberTag){
+                                        target.append(targetNumberText);
+                                        renderChart();
                                     }
-                                });
+                                    if(textTag){
+                                        target.append(targetText);
+                                        renderChart();
+                                    }
 
-                                /**
-                                 * 标记删除可拖动标签
-                                 */
-                                $('.trigger-column-tag .trigger-column-tag-close').click(function(){
-                                    var target = $(this).parent().parent();
-                                    target.draggable('destroy');
-                                    target.remove();
-                                });
+                                    /**
+                                     * 行、列、标签拖动
+                                     */
+                                    $('.trigger-column-tag').draggable({
+                                        cursor: "move",
+                                        opacity: 0.7,
+                                        appendTo:'body',
+                                        cursorAt: { top: 10, left: 34 },
+                                        helper: function(event) {
+                                            var dragText = $(this).find("span").html();
+                                            return $( "<div class='drag-helper'>"+dragText+"</div>" );
+                                        }
+                                    });
 
+                                    /**
+                                     * 标记删除可拖动标签
+                                     */
+                                    $('.trigger-column-tag .trigger-column-tag-close').click(function(){
+                                        var target = $(this).parent().parent();
+                                        target.draggable('destroy');
+                                        target.remove();
+                                    });
+                                }
                                 $(this).css("border","1px dashed #ccc");
                                 $(this).css("background-color","white");
-
                             },
                             over: function (event, ui) {
-                                $(this).css("border","1px dashed #22a7f0");
-                                $(this).css("background-color","#cfe9f7");
+                                var isxAxis = $(this).hasClass("xAxis");
+                                var isyAxis = $(this).hasClass("yAxis");
+                                var isFilter = $(this).hasClass("column-filter");
+                                var tagType;
+                                if(isxAxis){
+                                    tagType = 'xAxis';
+                                }else if(isyAxis){
+                                    tagType = 'yAxis';
+                                }else if(isFilter){
+                                    tagType = 'filter';
+                                }
+                                tagDropOverRender(ui,chartType,tagType,$(this));
                             },
                             out:function (event,ui) {
                                 $(this).css("border","1px dashed #ccc");
