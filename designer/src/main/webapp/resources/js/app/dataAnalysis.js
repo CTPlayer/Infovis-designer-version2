@@ -235,13 +235,13 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
                                 var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
                                 var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
 
-                                var targetText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color:#f6eedb;cursor: move;" >'+
+                                var targetText = '<div class="trigger-column-tag trigger-column-tag-text">'+
                                     '<a><i class="glyphicon glyphicon-text-color" style="display: none;"></i>'+
-                                    '<span class="dragName" style="width:80px;height: 20px; display: inline-block; overflow: hidden;">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
+                                    '<span class="dragName">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
                                     '</div>';
-                                var targetNumberText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color: #d2ddf0;border:1px solid #b1caf4;cursor: move;" >'+
+                                var targetNumberText = '<div class="trigger-column-tag trigger-column-tag-number">'+
                                     '<a><i class="fa fa-sort-numeric-asc" style="display: none;"></i>'+
-                                    '<span class="dragName"  style="width:80px;height: 20px; display: inline-block; overflow: hidden;">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
+                                    '<span class="dragName">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
                                     '</div>';
                                 var target = $(this);
 
