@@ -25,8 +25,8 @@ public class MyChartsServiceImpl implements MyChartsService{
 
     @Override
     public int update(MyCharts myCharts) throws Exception {
-        myCharts.setStatmentId(NAMESPACE + ".update");
-        return baseMapper.update(myCharts);
+        delete(myCharts);
+        return insert(myCharts);
     }
 
     @Override
