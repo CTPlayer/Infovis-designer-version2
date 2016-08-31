@@ -15,7 +15,7 @@ package model.chart;
  *
  * @author CSJ
  */
-public class ChatBuilderParams {
+public class ChartBuilderParams {
 
     // 图表panel导出访问ID
     private String exportId;

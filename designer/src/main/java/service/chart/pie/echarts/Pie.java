@@ -13,7 +13,7 @@ package service.chart.pie.echarts;
 import com.github.abel533.echarts.Option;
 import com.github.abel533.echarts.code.Trigger;
 import com.github.abel533.echarts.series.Series;
-import model.chart.ChatBuilderParams;
+import model.chart.ChartBuilderParams;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
@@ -36,9 +36,9 @@ public class Pie implements ChartOption {
     private DataSetProvider dataSetProvider;
 
     @Override
-    public Option transform(final ChatBuilderParams chatBuilderParams) throws Exception {
+    public Option transform(final ChartBuilderParams chartBuilderParams) throws Exception {
 
-        List<Map<String, Object>> dataSet = dataSetProvider.prepareDataSet(chatBuilderParams);
+        List<Map<String, Object>> dataSet = dataSetProvider.prepareDataSet(chartBuilderParams);
 
         // 拆分数据, 结构化
         Option option = new Option();
@@ -52,7 +52,7 @@ public class Pie implements ChartOption {
         Collection<String> legendData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, String>() {
             @Override
             public String transform(Map<String, Object> input) {
-                Object obj = input.get(chatBuilderParams.getBuilderModel().getMark().getColor());
+                Object obj = input.get(chartBuilderParams.getBuilderModel().getMark().getColor());
                 if (obj != null && StringUtils.isNoneEmpty(obj.toString())) {
                     return String.valueOf(obj);
                 }
@@ -65,8 +65,8 @@ public class Pie implements ChartOption {
         Collection<Object> seriesData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Object>() {
             @Override
             public Object transform(Map<String, Object> input) {
-                Object v = input.get(chatBuilderParams.getBuilderModel().getMark().getAngle());
-                Object k = input.get(chatBuilderParams.getBuilderModel().getMark().getColor());
+                Object v = input.get(chartBuilderParams.getBuilderModel().getMark().getAngle());
+                Object k = input.get(chartBuilderParams.getBuilderModel().getMark().getColor());
                 Map<String, Object> transformData = new HashMap<>();
                 transformData.put("name", k);
                 transformData.put("value", v);

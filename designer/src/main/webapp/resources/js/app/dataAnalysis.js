@@ -261,8 +261,8 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
             || (chartType == 'line' && tagType == 'xAxis' && numberTag)
             || (chartType == 'bar' && tagType == 'xAxis' && numberTag)
             || tagType == 'filter'
-            //||((chartType == 'bar' || chartType == 'line')&&((tagType == 'color') || (tagType == 'corner') || (tagType == 'tag')))
-             ){
+        //||((chartType == 'bar' || chartType == 'line')&&((tagType == 'color') || (tagType == 'corner') || (tagType == 'tag')))
+        ){
             target.css("border","1px dashed #ff2828");
             target.css("background-color","#ffeeee");
         }else if((textTag && chartType == 'pie' && tagType == 'color') || (numberTag && chartType == 'pie' && tagType == 'corner')
@@ -622,22 +622,22 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
     }
 
     binddefferd.done(function (result) {
-       var buildModel = JSON.parse(result.buildModel);
+        var buildModel = JSON.parse(result.buildModel);
         var ui = {};
-       if(buildModel.mark){//pie
-           if(buildModel.mark.color) {
-               ui.draggable = $(getDraggableText(buildModel.mark.color));
-               tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-color"),'pie');
-           }
-           if(buildModel.mark.angle){
-               ui.draggable = $(getDraggableText(buildModel.mark.angle));
-               tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-corner"),'pie');
-           }
-       }
-       if(buildModel.xAxis){
-           ui.draggable = $(getDraggableText(buildModel.xAxis));
-           tagDropRender(undefined,ui,'xAxis',$("form.make-model-region .xAxis"),'linebar');
-       }
+        if(buildModel.mark){//pie
+            if(buildModel.mark.color) {
+                ui.draggable = $(getDraggableText(buildModel.mark.color));
+                tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-color"),'pie');
+            }
+            if(buildModel.mark.angle){
+                ui.draggable = $(getDraggableText(buildModel.mark.angle));
+                tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-corner"),'pie');
+            }
+        }
+        if(buildModel.xAxis){
+            ui.draggable = $(getDraggableText(buildModel.xAxis));
+            tagDropRender(undefined,ui,'xAxis',$("form.make-model-region .xAxis"),'linebar');
+        }
 
         if(buildModel.yAxis){
             ui.draggable = $(getDraggableText(buildModel.yAxis));

@@ -16,7 +16,7 @@ import com.github.abel533.echarts.axis.CategoryAxis;
 import com.github.abel533.echarts.axis.ValueAxis;
 import com.github.abel533.echarts.code.Trigger;
 import com.github.abel533.echarts.series.Series;
-import model.chart.ChatBuilderParams;
+import model.chart.ChartBuilderParams;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
@@ -42,9 +42,9 @@ public class Bar implements ChartOption {
     private DataSetProvider dataSetProvider;
 
     @Override
-    public Option transform(final ChatBuilderParams chatBuilderParams) throws Exception {
+    public Option transform(final ChartBuilderParams chartBuilderParams) throws Exception {
 
-        List<Map<String, Object>> dataSet = dataSetProvider.prepareDataSet(chatBuilderParams);
+        List<Map<String, Object>> dataSet = dataSetProvider.prepareDataSet(chartBuilderParams);
 
         // 拆分数据, 结构化
         Option option = new Option();
@@ -59,7 +59,7 @@ public class Bar implements ChartOption {
         Collection<Map<String, Object>> xAxisData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Map<String, Object>>() {
             @Override
             public Map<String, Object> transform(Map<String, Object> input) {
-                Object obj = input.get(chatBuilderParams.getBuilderModel().getxAxis().get(0));
+                Object obj = input.get(chartBuilderParams.getBuilderModel().getxAxis().get(0));
                 Map<String, Object> category = new HashMap<>();
                 if (obj != null && StringUtils.isNoneEmpty(obj.toString())) {
                     category.put("value", String.valueOf(obj));
@@ -75,7 +75,7 @@ public class Bar implements ChartOption {
         Collection<Object> seriesData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Object>() {
             @Override
             public Object transform(Map<String, Object> input) {
-                Object v = input.get(chatBuilderParams.getBuilderModel().getyAxis().get(0));
+                Object v = input.get(chartBuilderParams.getBuilderModel().getyAxis().get(0));
                 return v;
             }
         });
