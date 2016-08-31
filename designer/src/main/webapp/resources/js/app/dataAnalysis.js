@@ -10,20 +10,18 @@ require.config({
         "options": "lib/charts/options",
         "infovis": "lib/infovis.min",
         "jqueryCookie": "lib/jquery.cookie",
-        "jqueryMd5": "lib/jquery.md5",
-        "mCustomScrollbar":"lib/mCustomScrollbar/jquery.mCustomScrollbar.concat.min"
+        "jqueryMd5": "lib/jquery.md5"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
         "jquery-ui" : { "deps" :['jquery'] },
-        "mCustomScrollbar" : { "deps" :['jquery'] },
         "jqueryMd5" : { "deps" :['jquery'] },
         "metisMenu" : { "deps" :['jquery'] },
         "ztree" : { "deps" :['jquery'] }
     }
 });
 
-require(['jquery', 'options', 'infovis','mCustomScrollbar'], function($, baseOptions, infovis){
+require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
         var exportId = window.location.href.split("=")[1].replace("&order","");
@@ -75,13 +73,13 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 });
 
 //数据集操作模块
-require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
+require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
     function tagDropFunction(event, ui,iclass,target) {
         var targetNode = $(ui.draggable).find("a").find("span").html();
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
         target.html('');
-        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span><button type="button" class="close mark-item-close">&times;</button>';
+        var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="'+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span><button type="button" class="close">&times;</button>';
         target.append(targetText);
         if(textTag){
             target.css("background-color",'#f6eedb');
@@ -101,7 +99,7 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
             var isColorMark = target.parent().hasClass("mark-item-color");
             var isCornerMark = target.parent().hasClass("mark-item-corner");
             var isTagMark = target.parent().hasClass("mark-item-tag");
-            
+
             if(isColorMark){//颜色tag删除
                 target.parent().css("background-color",'#ffffff');
                 target.parent().css("border",'none');
@@ -169,13 +167,6 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                 treeNode.dbName = treeNode.oldDbName +"(无法连接)"
                 setting_datalist.updateNode(treeNode);
             },
-            onAsyncSuccess :function () {
-                $("div.panel-body").mCustomScrollbar({
-                    autoHideScrollbar:true,
-                    axis:"yx",
-                    theme:"dark"
-                });
-            },
             onClick: function(event, treeId, treeNode){
                 var tree = $.fn.zTree.getZTreeObj("dataListTree");
                 var sqlRecordingId = tree.getSelectedNodes()[0].id;       //数据集id
@@ -206,6 +197,8 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                             $('#side-menu ul.nav.nav-third-level:eq(1)')
                                 .append("<li><a href='javascript:void(0)'><i class='fa fa-sort-numeric-asc leftBarLiIcon'></i><span style='display:inline-block;max-width: 10px;max-width: 150px;overflow: hidden;'>" + element + "</span><i class='glyphicon glyphicon-upload leftBarLiIcon pull-right'></i></a></li>");
                         });
+
+
                         //切换维度度量事件绑定
                         $('#side-menu ul.nav.nav-third-level li i.leftBarLiIcon').on("click",function () {
                             var li = $($(this).parent().parent());
@@ -222,11 +215,6 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                             saveCookieInfo(result);
                         })
 
-                        //滚动条插件
-                        $(".scrollable").mCustomScrollbar({
-                            autoHideScrollbar:true,
-                            theme:"dark"
-                        });
                         /**
                          * 左侧维度、度量拖拽
                          */
@@ -237,7 +225,7 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                             cursorAt: { top: 10, left: 34 },
                             helper: function(event) {
                                 var dragText = $(this).find("a").find("span").html();
-                                return $( "<div class='drag-helper'>"+dragText+"</div>" );
+                                return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;background-color: #def0fa; padding:4px;z-index: 999999999'>"+dragText+"</div>" );
                             }
                         });
 
@@ -248,13 +236,13 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                                 var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
                                 var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
 
-                                var targetText = '<div class="trigger-column-tag trigger-column-tag-text">'+
+                                var targetText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color:#f6eedb;cursor: move;" >'+
                                     '<a><i class="glyphicon glyphicon-text-color" style="display: none;"></i>'+
-                                    '<span class="dragName">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
+                                    '<span class="dragName" style="width:80px;height: 20px; display: inline-block; overflow: hidden;">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
                                     '</div>';
-                                var targetNumberText = '<div class="trigger-column-tag trigger-column-tag-number">'+
+                                var targetNumberText = '<div class="trigger-column-tag" style="overflow:hidden;text-overflow:ellipsis;background-color: #d2ddf0;border:1px solid #b1caf4;cursor: move;" >'+
                                     '<a><i class="fa fa-sort-numeric-asc" style="display: none;"></i>'+
-                                    '<span class="dragName">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
+                                    '<span class="dragName"  style="width:80px;height: 20px; display: inline-block; overflow: hidden;">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
                                     '</div>';
                                 var target = $(this);
 
@@ -265,7 +253,7 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                                     target.append(targetText);
                                 }
 
-                                 /**
+                                /**
                                  * 行、列、标签拖动
                                  */
                                 $('.trigger-column-tag').draggable({
@@ -275,7 +263,7 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                                     cursorAt: { top: 10, left: 34 },
                                     helper: function(event) {
                                         var dragText = $(this).find("span").html();
-                                        return $( "<div class='drag-helper'>"+dragText+"</div>" );
+                                        return $( "<div style='white-space:nowrap;border:1px #22a7f0 solid;padding:4px;'>"+dragText+"</div>" );
                                     }
                                 });
 

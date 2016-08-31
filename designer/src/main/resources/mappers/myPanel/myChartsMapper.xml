@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="model.myPanel.MyCharts">
+    <insert id="insert" parameterType="MyCharts" databaseId="h2">
+        insert into T_MY_CHARTS(CHART_ID,EXPORT_ID,SQLRECORDING_ID,BUILD_MODEL)
+        values (#{chartId},#{exportId},#{sqlRecordingId},#{buildModel});
+    </insert>
+
+    <update id="update" parameterType="MyCharts" databaseId="h2">
+        update T_MY_CHARTS
+        <set>
+            <if test="sqlRecordingId != null">SQLRECORDING_ID = #{sqlRecordingId},</if>
+            <if test="buildModel != null">BUILD_MODEL = #{buildModel},</if>
+        </set>
+        <where>
+            where exportId = #{exportId} and chartId = #{chartId}
+        </where>
+    </update>
+
+    <delete id="delete" parameterType="MyCharts" databaseId="h2">
+        delete from T_MY_CHARTS where EXPORT_ID = #{exportId} and CHART_ID = #{chartId}
+    </delete>
+</mapper>

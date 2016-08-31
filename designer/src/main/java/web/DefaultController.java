@@ -3,6 +3,7 @@ package web;
 import common.util.TemplateUtil;
 import common.util.WebUtil;
 import model.chart.ChatBuilderParams;
+import model.myPanel.MyCharts;
 import model.myPanel.MyPanel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,6 +16,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import service.chart.ChartOption;
 import service.chart.line.echarts.Line;
 import service.chart.pie.echarts.Pie;
+import service.myPanel.MyChartsService;
 import service.myPanel.MyPanelService;
 
 import javax.annotation.Resource;
@@ -30,6 +32,9 @@ public class DefaultController {
 
     @Resource
     private MyPanelService myPanelService;
+
+    @Resource
+    private MyChartsService myChartsService;
 
     @RequestMapping("/addPanel")
     @ResponseBody
@@ -97,6 +102,27 @@ public class DefaultController {
     @ResponseBody
     public Object getOptions(String exportId) throws Exception {
         return myPanelService.queryAsObject(exportId);
+    }
+
+    /*
+     *更新options
+     */
+    @RequestMapping("/updateOptions")
+    @ResponseBody
+    public Object updateOptions(MyPanel myPanel) throws Exception {
+        return myPanelService.update(myPanel);
+    }
+
+    @RequestMapping("/insertChartInfo")
+    @ResponseBody
+    public Object insertChartInfo(MyCharts myCharts) throws  Exception {
+        return myChartsService.insert(myCharts);
+    }
+
+    @RequestMapping("/deleteChartInfo")
+    @ResponseBody
+    public Object deleteChartInfo(MyCharts myCharts) throws Exception{
+        return myChartsService.delete(myCharts);
     }
 
     /**

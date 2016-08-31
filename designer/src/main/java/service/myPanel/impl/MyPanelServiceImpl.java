@@ -11,6 +11,7 @@
 package service.myPanel.impl;
 
 import dao.BaseMapper;
+import model.myPanel.MyCharts;
 import model.myPanel.MyPanel;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
@@ -74,5 +75,4 @@ public class MyPanelServiceImpl implements MyPanelService {
         myPanel.setStatmentId(NAMESPACE + ".delete");
         return baseMapper.delete(myPanel);
     }
-
 }
