@@ -121,6 +121,13 @@ public class DefaultController {
         return myChartsService.insert(myCharts);
     }
 
+    @RequestMapping("/selectOneChartInfo")
+    @ResponseBody
+    public Object selectOneChartInfo(MyCharts myCharts) throws Exception {
+        myCharts =  myChartsService.selectOneChartInfo(myCharts);
+        return myCharts;
+    }
+
     /**
      * 动态渲染图形
      *

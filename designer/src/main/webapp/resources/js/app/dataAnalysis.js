@@ -509,8 +509,34 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
     });
 
     //页面数据绑定
-    var treeObj = $.fn.zTree.getZTreeObj("dataListTree");
-    var node = treeObj.getNodeByParam("id", 1, null);
-    console.log(node);
+    var exportId = window.location.href.split("=")[1].replace("&order","");
+    var order = window.location.href.split("=")[2].replace("#","");
 
+    var binddefferd = $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '../selectOneChartInfo',
+        data: {
+            'exportId': exportId,
+            'chartId': order
+        }
+    });
+
+    binddefferd.done(function (result) {
+       var buildModel = JSON.parse(result.buildModel);
+       if(buildModel.mark){
+           var ui = {};
+           if(buildModel.mark.color) {
+               ui.draggable = $('' +
+                   '<li class="ui-draggable">' +
+                   '    <a href="javascript:void(0)">' +
+                   '        <i class="glyphicon glyphicon-text-color leftBarLiIcon"></i>' +
+                   '        <span style="display:inline-block;max-width: 150px;overflow: hidden;">' + buildModel.mark.color + '</span>' +
+                   '        <i class="glyphicon glyphicon-download leftBarLiIcon pull-right"></i>' +
+                   '    </a>' +
+                   '</li>');
+               tagDropFunction(undefined,ui,'fa fa-tachometer',$("form.make-model-region .mark-down-column .mark-item-color"));
+           }
+       }
+    })
 });

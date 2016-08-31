@@ -13,4 +13,8 @@
     <delete id="delete" parameterType="MyCharts" databaseId="h2">
         delete from T_MY_CHARTS where EXPORT_ID = #{exportId} and CHART_ID = #{chartId}
     </delete>
+    
+    <select id="selectOneChartInfo" parameterType="MyCharts" resultType="MyCharts" databaseId="h2">
+        select * from T_MY_CHARTS where EXPORT_ID = #{exportId} and CHART_ID = #{chartId}
+    </select>
 </mapper>
