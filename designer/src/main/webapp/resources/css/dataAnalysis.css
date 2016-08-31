@@ -67,6 +67,7 @@ form.make-model-region > div .col-lg-6 label {
 form.make-model-region > div .col-sm-11 {
     padding: 0px;
     min-height: 32px;
+    height: auto;
 }
 
 form.make-model-region .labelDiv {

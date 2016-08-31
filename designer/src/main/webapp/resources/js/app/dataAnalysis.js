@@ -204,11 +204,13 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                     '<span class="dragName">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
                     '</div>';
                 if(numberTag){
-                    target.append(targetNumberText);
+                    //target.append(targetNumberText);
+                    target.html(targetNumberText);
                     isRenderChart = true;
                 }
                 if(textTag){
-                    target.append(targetText);
+                    //target.append(targetText);
+                    target.html(targetText);
                     isRenderChart = true;
                 }
                 /**
@@ -250,7 +252,8 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
             || (chartType == 'line' && tagType == 'xAxis' && numberTag)
             || (chartType == 'bar' && tagType == 'xAxis' && numberTag)
             || tagType == 'filter'
-            ||((chartType == 'bar' || chartType == 'line')&&((tagType == 'color') || (tagType == 'corner') || (tagType == 'tag')))){
+            //||((chartType == 'bar' || chartType == 'line')&&((tagType == 'color') || (tagType == 'corner') || (tagType == 'tag')))
+             ){
             target.css("border","1px dashed #ff2828");
             target.css("background-color","#ffeeee");
         }else if((textTag && chartType == 'pie' && tagType == 'color') || (numberTag && chartType == 'pie' && tagType == 'corner')
@@ -583,16 +586,6 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
         $.cookie($.md5(result),JSON.stringify(columnModle),{ expires: 10 });
     }
 
-    $("form.make-model-region .trigger-column").on('mouseenter mouseleave',function(e){
-        var target = $(this);
-        if(e.type == 'mouseenter'){
-            if(target.html()!=''){
-                target.css("height","auto");
-            }
-            target.css("cursor","pointer");
-        }
-    });
-
     //页面数据绑定
     var exportId = window.location.href.split("=")[1].replace("&order","");
     var order = window.location.href.split("=")[2].replace("#","");
@@ -620,7 +613,7 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
                    '        <i class="glyphicon glyphicon-download leftBarLiIcon pull-right"></i>' +
                    '    </a>' +
                    '</li>');
-               tagDropFunction(undefined,ui,'fa fa-tachometer',$("form.make-model-region .mark-down-column .mark-item-color"));
+               tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-color",'pie'));
            }
        }
     })
