@@ -36,12 +36,30 @@ require(['jquery', 'options', 'infovis','mCustomScrollbar'], function($, baseOpt
                 var editChart = engine.chart.init(document.getElementById("editArea"));
                 editChart.setOption(JSON.parse(data["jsCode"])[order]);
                 window.currentOption = JSON.parse(data["jsCode"])[order];
-                window.editChart = editChart;
+                window.data = data;
             },
             error: function(){
                 alert("图表配置加载失败，请重试");
             }
         });
+
+        $(".btn-info").click(function(){
+            var option = engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption();
+            var optionArray = JSON.parse(window.data["jsCode"]);
+            optionArray[order] = option;
+
+            $.ajax({
+                type: 'POST',
+                url: '../updateOptions',
+                data: {
+                    'exportId': exportId,
+                    'jsCode': JSON.stringify(optionArray)
+                },
+                success: function(){
+                    top.window.location = "../showPanel.page?exportId=" + exportId;
+                }
+            })
+        })
     })
 });
 
@@ -181,6 +199,49 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                 var sqlRecordingId = tree.getSelectedNodes()[0].id;       //数据集id
                 var chartType = window.currentOption.series[0].type;      //图表类型
 
+                var engine = infovis.init(baseOptions.makeAllOptions() || {});
+                function renderChart(){
+                    var color = $(".mark-item-color").find("span").text().trim();
+                    var angle = $(".mark-item-corner").find("span").text().trim();
+                    var tag = $(".mark-item-tag").find("span").text().trim();
+                    var xAxis = [];
+                    var yAxis = [];
+
+                    xAxis.push($(".xAxis").find("span").text().trim());
+                    yAxis.push($(".yAxis").find("span").text().trim());
+
+                    if(chartType == 'pie'){
+                        var builderModel = {
+                            'mark': {
+                                'color': color,
+                                'angle': angle,
+                                'tag': tag
+                            }
+                        }
+                    }else if(chartType == 'line' || chartType == 'bar'){
+                        var builderModel = {
+                            'xAxis':  xAxis,
+                            'yAxis':  yAxis
+                        }
+                    }
+                    $.ajax({
+                        type: 'POST',
+                        contentType: "application/json; charset=utf-8",
+                        url: '../render',
+                        data: JSON.stringify({
+                            'chartType': chartType,
+                            'dataRecordId': sqlRecordingId,
+                            'exportId': window.location.href.split("=")[1].replace("&order",""),
+                            'builderModel': builderModel
+                        }),
+                        success: function(data){
+                            console.log(JSON.stringify(data));
+                            var editChart = engine.chart.init(document.getElementById("editArea"));
+                            editChart.setOption(data);
+                        }
+                    });
+                }
+
                 if(!treeNode.dbUrl) {
                     $('#side-menu li a:eq(0)').html("<i class='fa fa-sitemap fa-fw'></i>" + treeNode.dbName + "<span class='fa arrow'></span>");
                     var queryParam = {};
@@ -260,9 +321,11 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
 
                                 if(numberTag){
                                     target.append(targetNumberText);
+                                    renderChart();
                                 }
                                 if(textTag){
                                     target.append(targetText);
+                                    renderChart();
                                 }
 
                                 /**
@@ -310,26 +373,8 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                             drop: function(event,ui){
                                 var target = $(this);
                                 tagDropFunction(event,ui,'fa fa-tachometer',target);
-                                $.ajax({
-                                    type: 'POST',
-                                    contentType: "application/json; charset=utf-8",
-                                    url: '../render',
-                                    data: JSON.stringify({
-                                        'chartType': chartType,
-                                        'dataRecordId': sqlRecordingId,
-                                        'exportId': window.location.href.split("=")[1].replace("&order",""),
-                                        'builderModel': {
-                                            'mark': {
-                                                'color': ui.draggable[0].textContent
-                                            }
-                                        }
-                                    }),
-                                    success: function(data){
-                                        console.log(JSON.stringify(data));
-                                        var editChart = engine.chart.init(document.getElementById("editArea"));
-                                        editChart.setOption(data);
-                                    }
-                                });
+
+                                renderChart();
                             },
                             over: function (event, ui) {
                                 $(this).css("border","1px dashed #22a7f0");
@@ -349,26 +394,7 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                                 var target = $(this);
                                 tagDropFunction(event,ui,'fa fa-clock-o',target)
 
-                                $.ajax({
-                                    type: 'POST',
-                                    contentType: "application/json; charset=utf-8",
-                                    url: '../render',
-                                    data: JSON.stringify({
-                                        'chartType': chartType,
-                                        'dataRecordId': sqlRecordingId,
-                                        'exportId': window.location.href.split("=")[1].replace("&order",""),
-                                        'builderModel': {
-                                            'mark': {
-                                                'angle': ui.draggable[0].textContent
-                                            }
-                                        }
-                                    }),
-                                    success: function(data){
-                                        console.log(JSON.stringify(data));
-                                        var editChart = engine.chart.init(document.getElementById("editArea"));
-                                        editChart.setOption(data);
-                                    }
-                                });
+                                renderChart();
                             },
                             over: function (event, ui) {
                                 $(this).css("border","1px dashed #22a7f0");
@@ -390,26 +416,7 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                                 var target = $(this);
                                 tagDropFunction(event,ui,'fa fa-tags',target)
 
-                                $.ajax({
-                                    type: 'POST',
-                                    contentType: "application/json; charset=utf-8",
-                                    url: '../render',
-                                    data: JSON.stringify({
-                                        'chartType': chartType,
-                                        'dataRecordId': sqlRecordingId,
-                                        'exportId': window.location.href.split("=")[1].replace("&order",""),
-                                        'builderModel': {
-                                            'mark': {
-                                                'tag': ui.draggable[0].textContent
-                                            }
-                                        }
-                                    }),
-                                    success: function(data){
-                                        console.log(JSON.stringify(data));
-                                        var editChart = engine.chart.init(document.getElementById("editArea"));
-                                        editChart.setOption(data);
-                                    }
-                                });
+                                renderChart();
                             },
                             over: function (event, ui) {
                                 $(this).css("border","1px dashed #22a7f0");
