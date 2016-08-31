@@ -55,11 +55,11 @@ public class Line implements ChartOption {
             public Axis transform(Map<String, Object> input) {
                 Object obj = input.get(chatBuilderParams.getBuilderModel().getXAxis());
                 Axis axis = new CategoryAxis();
-                axis.data();
                 Set<String> category = new LinkedHashSet<String>();
                 if (obj != null && StringUtils.isNoneEmpty(obj.toString())) {
                     category.add(String.valueOf(obj));
                 }
+                axis.data().addAll(category);
                 return axis;
             }
         }, new ArrayList<Axis>());
