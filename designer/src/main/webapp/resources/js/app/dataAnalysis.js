@@ -187,7 +187,7 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
         }else{
             numberTag = false;
         }
-        if(chartType == 'pie' || chartType == 'line' || chartType == 'bar'){
+        if(chartType == 'pie' || chartType == 'line' || chartType == 'bar' || chartType == 'linebar'){
             var iclass = getTagIclassType(tagType);
             if((tagType == 'color' || tagType == 'corner') && chartType == 'pie'){//颜色、角度
                 if((tagType == 'color' && textTag) || (tagType == 'corner' && numberTag)){
@@ -204,7 +204,8 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
             }else if(((chartType == 'line' && tagType == 'xAxis' && textTag)
                 || (chartType == 'bar' && tagType == 'xAxis' && textTag)
                 || (chartType == 'line' && tagType == 'yAxis' && numberTag)
-                || (chartType == 'bar' && tagType == 'yAxis' && numberTag))){
+                || (chartType == 'bar' && tagType == 'yAxis' && numberTag)
+                || chartType == 'linebar')){
                 var targetText = '<div class="trigger-column-tag trigger-column-tag-text">'+
                     '<a><i class="glyphicon glyphicon-text-color" style="display: none;"></i>'+
                     '<span class="dragName">'+targetNode+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
@@ -622,26 +623,25 @@ require(['jquery','mCustomScrollbar','ztree','infovis','options','jqueryCookie',
 
     binddefferd.done(function (result) {
        var buildModel = JSON.parse(result.buildModel);
-        var chartType = window.currentOption.series[0].type;//图表类型
         var ui = {};
        if(buildModel.mark){//pie
            if(buildModel.mark.color) {
                ui.draggable = $(getDraggableText(buildModel.mark.color));
-               tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-color"),chartType);
+               tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-color"),'pie');
            }
            if(buildModel.mark.angle){
                ui.draggable = $(getDraggableText(buildModel.mark.angle));
-               tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-corner"),chartType);
+               tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-corner"),'pie');
            }
        }
        if(buildModel.xAxis){
            ui.draggable = $(getDraggableText(buildModel.xAxis));
-           tagDropRender(undefined,ui,'xAxis',$("form.make-model-region .xAxis"),chartType);
+           tagDropRender(undefined,ui,'xAxis',$("form.make-model-region .xAxis"),'linebar');
        }
 
         if(buildModel.yAxis){
             ui.draggable = $(getDraggableText(buildModel.yAxis));
-            tagDropRender(undefined,ui,'yAxis',$("form.make-model-region .yAxis"),chartType);
+            tagDropRender(undefined,ui,'yAxis',$("form.make-model-region .yAxis"),'linebar');
         }
     });
 });
