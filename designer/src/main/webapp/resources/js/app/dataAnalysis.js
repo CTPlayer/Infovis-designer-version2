@@ -56,9 +56,21 @@ require(['jquery', 'options', 'infovis','mCustomScrollbar'], function($, baseOpt
                     'jsCode': JSON.stringify(optionArray)
                 },
                 success: function(){
-                    top.window.location = "../showPanel.page?exportId=" + exportId;
+                    //top.window.location = "../showPanel.page?exportId=" + exportId;
                 }
-            })
+            });
+
+            console.log(window.bmodel);
+           $.ajax({
+              type: 'POST',
+              url: '../updateChartInfo',
+              data: {
+                  'exportId': exportId,
+                  'chartId': order.toString(),
+                  'sqlRecordingId': window.sid.toString(),
+                  'buildModel': JSON.stringify(window.bmodel).toString()
+              }
+           });
         })
     })
 });
@@ -199,6 +211,8 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                 var sqlRecordingId = tree.getSelectedNodes()[0].id;       //数据集id
                 var chartType = window.currentOption.series[0].type;      //图表类型
 
+                window.sid = sqlRecordingId;     //用于插入图表关联信息
+
                 var engine = infovis.init(baseOptions.makeAllOptions() || {});
                 function renderChart(){
                     var color = $(".mark-item-color").find("span").text().trim();
@@ -224,6 +238,9 @@ require(['jquery','ztree','infovis','options','mCustomScrollbar','jqueryCookie',
                             'yAxis':  yAxis
                         }
                     }
+
+                    window.bmodel = builderModel;         //用于插入图表关联信息
+
                     $.ajax({
                         type: 'POST',
                         contentType: "application/json; charset=utf-8",
