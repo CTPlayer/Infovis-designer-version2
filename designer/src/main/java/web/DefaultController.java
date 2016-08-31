@@ -114,16 +114,11 @@ public class DefaultController {
         return myPanelService.update(myPanel);
     }
 
-    @RequestMapping("/insertChartInfo")
+    @RequestMapping("/updateChartInfo")
     @ResponseBody
-    public Object insertChartInfo(MyCharts myCharts) throws  Exception {
+    public Object updateChartInfo(MyCharts myCharts) throws Exception {
+        myChartsService.delete(myCharts);
         return myChartsService.insert(myCharts);
-    }
-
-    @RequestMapping("/deleteChartInfo")
-    @ResponseBody
-    public Object deleteChartInfo(MyCharts myCharts) throws Exception{
-        return myChartsService.delete(myCharts);
     }
 
     /**

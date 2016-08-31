@@ -7,14 +7,7 @@
     </insert>
 
     <update id="update" parameterType="MyCharts" databaseId="h2">
-        update T_MY_CHARTS
-        <set>
-            <if test="sqlRecordingId != null">SQLRECORDING_ID = #{sqlRecordingId},</if>
-            <if test="buildModel != null">BUILD_MODEL = #{buildModel},</if>
-        </set>
-        <where>
-            where exportId = #{exportId} and chartId = #{chartId}
-        </where>
+
     </update>
 
     <delete id="delete" parameterType="MyCharts" databaseId="h2">
