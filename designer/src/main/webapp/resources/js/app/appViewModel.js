@@ -201,9 +201,9 @@ define(['knockout', 'infovis'],function(ko, infovis){
         self.legendTop = ko.observable(legend.top);
         self.legendLeft = ko.observable(legend.left);
         self.legendOrient = ko.observableArray(["横向","纵向"]);
-        if(legend.orient = "horizontal"){
+        if(legend.orient == "horizontal"){
             self.selectedLegendOrient = ko.observable("横向");
-        }else if(legend.orient = "vertical"){
+        }else if(legend.orient == "vertical"){
             self.selectedLegendOrient = ko.observable("纵向");
         }
         self.legendItemGap = ko.observable(legend.itemGap);
