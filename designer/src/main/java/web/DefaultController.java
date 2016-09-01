@@ -37,12 +37,25 @@ public class DefaultController {
     @Resource
     private MyChartsService myChartsService;
 
+    /**
+     * 添加设计面板
+     *
+     * @param myPanel
+     * @throws Exception
+     */
     @RequestMapping("/addPanel")
     @ResponseBody
     public Object addPanel(MyPanel myPanel) throws Exception {
         return myPanelService.insert(myPanel);
     }
 
+    /**
+     * 显示设计面板
+     *
+     * @param exportId
+     * @param map
+     * @throws Exception
+     */
     @RequestMapping("/showPanel.page")
     public Object showPanel(String exportId, ModelMap map) throws Exception {
         MyPanel myPanel = myPanelService.queryAsObject(exportId);
@@ -52,6 +65,12 @@ public class DefaultController {
         return "panel/designPanel";
     }
 
+    /**
+     * 保存当前设计面板并截取非实时预览图保存
+     *
+     * @param myPanel
+     * @throws Exception
+     */
     @RequestMapping("/export")
     @ResponseBody
     public Object export(MyPanel myPanel) throws Exception {
@@ -63,6 +82,13 @@ public class DefaultController {
         return myPanelService.update(panel);
     }
 
+    /**
+     * 预览
+     *
+     * @param exportId
+     * @param map
+     * @throws Exception
+     */
     @RequestMapping("/share.page")
     public Object share(String exportId, ModelMap map) throws Exception {
         MyPanel myPanel = myPanelService.queryAsObject(exportId);
@@ -71,13 +97,21 @@ public class DefaultController {
         return "export/exportTemplate";
     }
 
+    /**
+     * 跳转至主页面
+     *
+     * @throws Exception
+     */
     @RequestMapping("/query.page")
     public Object query() throws Exception {
         return "panel/myPanel";
     }
 
-    /*
-     *分页查询panel
+    /**
+     * 分页查询panel
+     *
+     * @param myPanel
+     * @throws Exception
      */
     @RequestMapping("/selectList")
     @ResponseBody
@@ -90,14 +124,23 @@ public class DefaultController {
         return respMap;
     }
 
+    /**
+     * 删除一块设计面板
+     *
+     * @param exportId
+     * @throws Exception
+     */
     @RequestMapping("/deleteOne")
     @ResponseBody
     public Object deleteOne(String exportId) throws Exception {
         return myPanelService.delete(exportId);
     }
 
-    /*
-     *根据exportId返回对应的图表options
+    /**
+     * 根据exportId查询对应设计面板中所有的图表option
+     *
+     * @param exportId
+     * @throws Exception
      */
     @RequestMapping("/getOptions")
     @ResponseBody
@@ -105,8 +148,11 @@ public class DefaultController {
         return myPanelService.queryAsObject(exportId);
     }
 
-    /*
-     *更新options
+    /**
+     * 更新设计面板中的options
+     *
+     * @param myPanel
+     * @throws Exception
      */
     @RequestMapping("/updateOptions")
     @ResponseBody
@@ -114,6 +160,12 @@ public class DefaultController {
         return myPanelService.update(myPanel);
     }
 
+    /**
+     * 更新图表关联信息（并未使用update语句，而是先删除再插入）
+     *
+     * @param myCharts
+     * @throws Exception
+     */
     @RequestMapping("/updateChartInfo")
     @ResponseBody
     public Object updateChartInfo(MyCharts myCharts) throws Exception {
