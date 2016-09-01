@@ -241,6 +241,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     $(".app-container").addClass("loader");
                     $(".loader-container").css("display","block");
 
+                    var index = $(this).parent().parent().parent().attr("order");
                     var arr = window.location.href.split("/");
                     var exportId = $("#exportId").val();
                     var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
@@ -259,14 +260,14 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                                 $("body").removeClass("loader");
                                 $(".loader-container").css("display", "none");
-                                top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+order;
+                                top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+index;
                             },
                             error: function () {
                                 alert("保存失败，请重试！");
                             }
                         });
                     }else{
-                        top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+order;
+                        top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+index;
                     }
                 });
 
