@@ -113,6 +113,11 @@ public class DefaultController {
         return "panel/dataAnalysis";
     }
 
+    @RequestMapping("/sqlClient.page")
+    public Object sqlClient() throws Exception {
+        return "panel/sqlClient";
+    }
+
     /**
      * 分页查询panel
      *

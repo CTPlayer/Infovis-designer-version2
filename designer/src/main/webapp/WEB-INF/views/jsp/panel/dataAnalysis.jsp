@@ -29,6 +29,8 @@
     <link href="resources/js/lib/mCustomScrollbar/jquery.mCustomScrollbar.min.css" rel="stylesheet">
     <!--custome CSS-->
     <link href="resources/css/dataAnalysis.css" rel="stylesheet">
+
+    <link href="resources/css/customZtreeStyle.css" rel="stylesheet">
     <![endif]-->
 </head>
 
@@ -45,7 +47,7 @@
                         <a href="../query.page" role="button"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;我的作品</a>
                     </li>
                     <li class="dropdown">
-                        <a href="sqlClient.html"  role="button"><i class="icon fa fa-database"></i>&nbsp;&nbsp;数据源</a>
+                        <a href="sqlClient.page"  role="button"><i class="icon fa fa-database"></i>&nbsp;&nbsp;数据源</a>
                     </li>
                     <li class="dropdown profile">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">试用人员1<span class="caret"></span></a>

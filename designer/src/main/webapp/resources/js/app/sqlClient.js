@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: 'js',
+    baseUrl: 'resources/js',
     paths: {
         "jquery": "lib/bootstrap/js/jquery-2.1.4.min",
         "jquery-ui": "lib/jquery-ui.min",
@@ -126,7 +126,7 @@ require([
         var setting = {
             async: {
                 enable: true,
-                url:"../connectionManage/queryTree",
+                url:"connectionManage/queryTree",
                 autoParam:["queryParam", "level=lv"],
                 dataType: "JSON",
                 dataFilter: function(treeId, parentNode, responseData) {
@@ -193,7 +193,7 @@ require([
         var setting_datalist = {
             async: {
                 enable: true,
-                url:"../sqlRecordingManage/queryTree",
+                url:"sqlRecordingManage/queryTree",
                 autoParam:["queryParam", "level=lv"],
                 dataType: "JSON",
                 dataFilter: function(treeId, parentNode, responseData) {
@@ -275,7 +275,7 @@ require([
             var deferred = $.ajax({
                 type: 'POST',
                 dataType: 'json',
-                url: '../connectionManage/delete',
+                url: 'connectionManage/delete',
                 data : 'id=' + nodes[0].id
             });
             $("#isDeleteModal").modal('toggle');
@@ -353,7 +353,7 @@ require([
                 var deferred = $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: '../connectionManage/add',
+                    url: 'connectionManage/add',
                     data : $(form).serialize()
                 });
                 deferred.done(function(){
@@ -403,7 +403,7 @@ require([
                 var deferred = $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: '../connectionManage/executeQuerySql',
+                    url: 'connectionManage/executeQuerySql',
                     data : queryParam
                 });
                 deferred.done(function(result){
@@ -425,7 +425,7 @@ require([
                         var pageDeferred = $.ajax({
                             type: 'POST',
                             dataType: 'json',
-                            url: '../connectionManage/executeQuerySql',
+                            url: 'connectionManage/executeQuerySql',
                             data : queryParam
                         });
                         pageDeferred.done(function(result){
@@ -501,7 +501,7 @@ require([
                 var formatSelectSqlDeferred = $.ajax({
                     type: 'POST',
                     dataType: 'text',
-                    url: '../connectionManage/formatSql',
+                    url: 'connectionManage/formatSql',
                     data: queryParam
                 });
 
@@ -578,7 +578,7 @@ require([
                 var deferred = $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: '../sqlRecordingManage/crud',
+                    url: 'sqlRecordingManage/crud',
                     data : data,
                     headers :{
                         oper : queryParam.oper
@@ -606,7 +606,7 @@ require([
                 var deferred = $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: '../sqlRecordingManage/crud',
+                    url: 'sqlRecordingManage/crud',
                     data : {
                         id:$('#sqlResultId').html()
                     },
