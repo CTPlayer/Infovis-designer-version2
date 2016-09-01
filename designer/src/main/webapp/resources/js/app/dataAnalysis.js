@@ -230,47 +230,28 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     /**
      * 标记drop渲染
      */
-    var tagDropRender = function(targetNode,tagType,target,chartType) {
+    var tagDropRender = function(targetNodeText,tagType,target) {
         var textTag = axisTagMap[tagType].textTag;
         var numberTag = axisTagMap[tagType].numberTag;
         var isRenderChart = false;
-        if(chartType == 'pie' || chartType == 'line' || chartType == 'bar'){
-            var iclass = getTagIclassType(tagType);
-            if((tagType == 'color' || tagType == 'corner') && chartType == 'pie'){//颜色、角度
-                if((tagType == 'color' && textTag) || (tagType == 'corner' && numberTag)){
-                    var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="fa '+iclass+'" style="display: inline;"></i>&nbsp;'+targetNode+'</span><button type="button" class="close mark-item-close">&times;</button>';
-                    appendMarkCellRender(tagType,target,targetText);
-                    isRenderChart = true;
-                }else if((tagType == 'color' && numberTag) || (tagType == 'corner' && textTag)){
-                    restoreTagStyle(target);
-                }
-            }else if(tagType == 'tag' && chartType == 'pie'){
-                restoreTagStyle(target);
-            }else if(((chartType == 'line' && tagType == 'xAxis' && textTag)
-                || (chartType == 'bar' && tagType == 'xAxis' && textTag)
-                || (chartType == 'line' && tagType == 'yAxis' && numberTag)
-                || (chartType == 'bar' && tagType == 'yAxis' && numberTag))){
-                appendRowColCellRender(tagType,target,targetNode);
-                isRenderChart = true;
-            }
+        var iclass = getTagIclassType(tagType);
+        if((tagType == 'color' && textTag) || (tagType == 'corner' && numberTag)){
+            var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;">' +
+                '<i class="fa '+iclass+'" style="display: inline;"></i>&nbsp;'+targetNodeText+'</span>' +
+                '<button type="button" class="close mark-item-close">&times;</button>';
+            appendMarkCellRender(tagType,target,targetText);
+            isRenderChart = true;
+        }else if((tagType == 'color' && numberTag) || (tagType == 'corner' && textTag)){
+            restoreTagStyle(target);
+        }else if(tagType == 'tag'){
+            restoreTagStyle(target);
+        }else if(((tagType == 'xAxis' && textTag) || (tagType == 'xAxis' && textTag) || (tagType == 'yAxis' && numberTag)
+            || (tagType == 'yAxis' && numberTag))){
+            appendRowColCellRender(tagType,target,targetNodeText);
+            isRenderChart = true;
         }
         return isRenderChart;
     };
-
-    /**
-     * 行、列、标记标签数据初始化
-     */
-    var tagDataInit = function (tagType,target,initData) {
-        var textTag = axisTagMap[tagType].textTag;
-        var numberTag = axisTagMap[tagType].numberTag;
-        var iclass = getTagIclassType(tagType);
-        if((tagType == 'color' && textTag) || (tagType == 'corner' && numberTag)) {
-            var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;"><i class="fa ' + iclass + '" style="display: inline;"></i>&nbsp;' + initData + '</span><button type="button" class="close mark-item-close">&times;</button>';
-            appendMarkCellRender(tagType, target,targetText);
-        }else if(tagType == 'xAxis' || tagType == 'yAxis'){
-            appendRowColCellRender(tagType,target,initData);
-        }
-    }
 
     /**
      * 标记拖拽OVER样式
@@ -486,8 +467,8 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                         $("form.make-model-region .trigger-column").droppable({
                             drop: function (event, ui) {
                                 var tagType = axisTagType($(this));
-                                var targetNode = $(ui.draggable).find("a").find("span").html();
-                                var isRenderChart = tagDropRender(targetNode,tagType,$(this),chartType);
+                                var targetNodeText = $(ui.draggable).find("a").find("span").html();
+                                var isRenderChart = tagDropRender(targetNodeText,tagType,$(this));
                                 if(isRenderChart){
                                     renderChart();
                                 }
@@ -509,8 +490,8 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                          */
                         $("form.make-model-region .mark-down-column .mark-item-color").droppable({
                             drop: function(event,ui){
-                                var targetNode = $(ui.draggable).find("a").find("span").html();
-                                var isRenderChart = tagDropRender(targetNode,'color',$(this),chartType);
+                                var targetNodeText = $(ui.draggable).find("a").find("span").html();
+                                var isRenderChart = tagDropRender(targetNodeText,'color',$(this));
                                 if(isRenderChart){
                                     renderChart();
                                 }
@@ -529,8 +510,8 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                          */
                         $("form.make-model-region .mark-down-column .mark-item-corner").droppable({
                             drop: function(event,ui){
-                                var targetNode = $(ui.draggable).find("a").find("span").html();
-                                var isRenderChart = tagDropRender(targetNode,'corner',$(this),chartType);
+                                var targetNodeText = $(ui.draggable).find("a").find("span").html();
+                                var isRenderChart = tagDropRender(targetNodeText,'corner',$(this));
                                 if(isRenderChart){
                                     renderChart();
                                 }
@@ -549,8 +530,8 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                          */
                         $("form.make-model-region .mark-down-column .mark-item-tag").droppable({
                             drop: function(event,ui){
-                                var targetNode = $(ui.draggable).find("a").find("span").html();
-                                var isRenderChart = tagDropRender(targetNode,'tags',$(this),chartType);
+                                var targetNodeText = $(ui.draggable).find("a").find("span").html();
+                                var isRenderChart = tagDropRender(targetNodeText,'tags',$(this));
                                 if(isRenderChart){
                                     renderChart();
                                 }
@@ -637,18 +618,18 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
         var buildModel = JSON.parse(result.buildModel);
         if(buildModel.mark){//pie
             if(buildModel.mark.color) {
-                tagDataInit('color',$("form.make-model-region .mark-down-column .mark-item-color"),buildModel.mark.color);
+                tagDropRender(buildModel.mark.color,'color',$("form.make-model-region .mark-down-column .mark-item-color"));
             }
             if(buildModel.mark.angle){
-                tagDataInit('corner',$("form.make-model-region .mark-down-column .mark-item-corner"),buildModel.mark.angle);
+                tagDropRender(buildModel.mark.angle,'corner',$("form.make-model-region .mark-down-column .mark-item-corner"));
             }
         }
         if(buildModel.xAxis){
-            tagDataInit('xAxis',$("form.make-model-region .xAxis"),buildModel.xAxis);
+            tagDropRender(buildModel.xAxis,'xAxis',$("form.make-model-region .xAxis"));
         }
 
         if(buildModel.yAxis){
-            tagDataInit('yAxis',$("form.make-model-region .yAxis"),buildModel.yAxis);
+            tagDropRender(buildModel.yAxis,'yAxis',$("form.make-model-region .yAxis"));
         }
     });
 });
