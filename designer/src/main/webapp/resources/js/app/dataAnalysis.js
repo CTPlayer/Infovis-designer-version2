@@ -172,7 +172,7 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
     /**
      * 标记drop渲染
      */
-    function tagDropRender(event, ui,tagType,target,chartType) {
+    function tagDropRender(ui,tagType,target,chartType) {
         var targetNode = $(ui.draggable).find("a").find("span").html();
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
@@ -461,7 +461,7 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
                         $("form.make-model-region .trigger-column").droppable({
                             drop: function (event, ui) {
                                 var tagType = axisTagType($(this));
-                                var isRenderChart = tagDropRender(event,ui,tagType,$(this),chartType);
+                                var isRenderChart = tagDropRender(ui,tagType,$(this),chartType);
                                 if(isRenderChart){
                                     renderChart();
                                 }
@@ -484,7 +484,7 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
                         $("form.make-model-region .mark-down-column .mark-item-color").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
-                                var isRenderChart = tagDropRender(event,ui,'color',target,chartType);
+                                var isRenderChart = tagDropRender(ui,'color',target,chartType);
                                 if(isRenderChart){
                                     renderChart();
                                 }
@@ -504,7 +504,7 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
                         $("form.make-model-region .mark-down-column .mark-item-corner").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
-                                var isRenderChart = tagDropRender(event,ui,'corner',target,chartType);
+                                var isRenderChart = tagDropRender(ui,'corner',target,chartType);
                                 if(isRenderChart){
                                     renderChart();
                                 }
@@ -524,7 +524,7 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
                         $("form.make-model-region .mark-down-column .mark-item-tag").droppable({
                             drop: function(event,ui){
                                 var target = $(this);
-                                var isRenderChart = tagDropRender(event,ui,'tags',target,chartType);
+                                var isRenderChart = tagDropRender(ui,'tags',target,chartType);
                                 if(isRenderChart){
                                     renderChart();
                                 }
@@ -625,21 +625,21 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
         if(buildModel.mark){//pie
             if(buildModel.mark.color) {
                 ui.draggable = $(getDraggableText(buildModel.mark.color));
-                tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-color"),'pie');
+                tagDropRender(ui,'color',$("form.make-model-region .mark-down-column .mark-item-color"),'pie');
             }
             if(buildModel.mark.angle){
                 ui.draggable = $(getDraggableText(buildModel.mark.angle));
-                tagDropRender(undefined,ui,'color',$("form.make-model-region .mark-down-column .mark-item-corner"),'pie');
+                tagDropRender(ui,'color',$("form.make-model-region .mark-down-column .mark-item-corner"),'pie');
             }
         }
         if(buildModel.xAxis){
             ui.draggable = $(getDraggableText(buildModel.xAxis));
-            tagDropRender(undefined,ui,'xAxis',$("form.make-model-region .xAxis"),'linebar');
+            tagDropRender(ui,'xAxis',$("form.make-model-region .xAxis"),'linebar');
         }
 
         if(buildModel.yAxis){
             ui.draggable = $(getDraggableText(buildModel.yAxis));
-            tagDropRender(undefined,ui,'yAxis',$("form.make-model-region .yAxis"),'linebar');
+            tagDropRender(ui,'yAxis',$("form.make-model-region .yAxis"),'linebar');
         }
     });
 });
