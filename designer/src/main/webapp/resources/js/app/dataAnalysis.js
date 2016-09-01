@@ -11,7 +11,9 @@ require.config({
         "infovis": "lib/infovis.min",
         "jqueryCookie": "lib/jquery.cookie",
         "jqueryMd5": "lib/jquery.md5",
-        "mCustomScrollbar":"lib/mCustomScrollbar/jquery.mCustomScrollbar.concat.min"
+        "mCustomScrollbar":"lib/mCustomScrollbar/jquery.mCustomScrollbar.concat.min",
+        "mousewheel": 'lib/mCustomScrollbar/jquery.mousewheel.min',
+        "scrollbar" : 'lib/mCustomScrollbar/jquery.mCustomScrollbar.min'
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -103,7 +105,7 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 });
 
 //数据集操作模块
-require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
+require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
     /*恢复样式*/
     function restoreTagStyle(target){
         target.css("background-color",'#ffffff');
@@ -339,11 +341,11 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
                 setting_datalist.updateNode(treeNode);
             },
             onAsyncSuccess :function () {
-                // $("div.panel-body").mCustomScrollbar({
-                //     autoHideScrollbar:true,
-                //     axis:"yx",
-                //     theme:"dark"
-                // });
+                $("div.panel-body").mCustomScrollbar({
+                    autoHideScrollbar:true,
+                    axis:"yx",
+                    theme:"dark"
+                });
             },
             onClick: function(event, treeId, treeNode){
                 var tree = $.fn.zTree.getZTreeObj("dataListTree");
@@ -438,11 +440,11 @@ require(['jquery','ztree','infovis','options','jqueryCookie','jqueryMd5','bootst
                             saveCookieInfo(result);
                         })
 
-                        // //滚动条插件
-                        // $(".scrollable").mCustomScrollbar({
-                        //     autoHideScrollbar:true,
-                        //     theme:"dark"
-                        // });
+                        //滚动条插件
+                        $(".scrollable").mCustomScrollbar({
+                            autoHideScrollbar:true,
+                            theme:"dark"
+                        });
                         /**
                          * 左侧维度、度量拖拽
                          */
