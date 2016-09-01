@@ -107,23 +107,43 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 //数据集操作模块
 require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
 
-    /**标记可接受数据类型(维度、度量)**/
+    /**标记可接受数据类型(维度、度量)以及图表类型**/
     var axisTagMap = {
         "xAxis":{
-            "textTag" : true,
-            "numberTag" : false
+            "dataType": "text",
+            "line":true,
+            "bar":true,
+            "pie":false
         },
         "yAxis":{
-            "textTag" : false,
-            "numberTag" : true
+            "dataType": "number",
+            "line":true,
+            "bar":true,
+            "pie":false
+        },
+        "filter":{
+            "dataType": "",
+            "line":false,
+            "bar":false,
+            "pie":false
         },
         "color" :{
-            "textTag" : true,
-            "numberTag" : false
+            "dataType": "text",
+            "line":false,
+            "bar":false,
+            "pie":true
         },
         "corner" :{
-            "textTag" : false,
-            "numberTag" : true
+            "dataType": "number",
+            "line":false,
+            "bar":false,
+            "pie":true
+        },
+        "tag" : {
+            "dataType": "",
+            "line":false,
+            "bar":false,
+            "pie":false
         }
     }
 
@@ -140,13 +160,12 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     var appendMarkCellRender = function(tagType,target,targetText){
         target.html('');
         target.append(targetText);
-        var textTag = axisTagMap[tagType].textTag;
-        var numberTag = axisTagMap[tagType].numberTag;
-        if(textTag){
+        var dataType = axisTagMap[tagType].dataType;
+        if(dataType == 'text'){
             target.css("background-color",'#f6eedb');
             target.css("border",'1px #f9e7bb solid');
         }
-        if(numberTag){
+        if(dataType == 'number'){
             target.css("background-color",'#d2ddf0');
             target.css("border",'1px #b1caf4 solid');
         }
@@ -179,8 +198,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
      * 行、列数据渲染以及注册删除事件
      */
     var appendRowColCellRender = function(tagType,target,targetText){
-        var textTag = axisTagMap[tagType].textTag;
-        var numberTag = axisTagMap[tagType].numberTag;
+        var dataType = axisTagMap[tagType].dataType;
         var textContent = '<div class="trigger-column-tag trigger-column-tag-text">'+
             '<a><i class="glyphicon glyphicon-text-color" style="display: none;"></i>'+
             '<span class="dragName">'+targetText+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
@@ -189,10 +207,10 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
             '<a><i class="fa fa-sort-numeric-asc" style="display: none;"></i>'+
             '<span class="dragName">'+targetText+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
             '</div>';
-        if(numberTag){
+        if(dataType == 'number'){
             target.html(numberContent);
         }
-        if(textTag){
+        if(dataType == 'text'){
             target.html(textContent);
         }
 
@@ -230,25 +248,26 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     /**
      * 标记drop渲染
      */
-    var tagDropRender = function(targetNodeText,tagType,target) {
-        var textTag = axisTagMap[tagType].textTag;
-        var numberTag = axisTagMap[tagType].numberTag;
+    var tagDropRender = function(targetNodeText,tagType,target,dragDataType,chartType) {
+        var acceptDataType = axisTagMap[tagType].dataType;
+        var isAcceptChartType = axisTagMap[tagType][chartType];
         var isRenderChart = false;
         var iclass = getTagIclassType(tagType);
-        if((tagType == 'color' && textTag) || (tagType == 'corner' && numberTag)){
-            var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;">' +
-                '<i class="fa '+iclass+'" style="display: inline;"></i>&nbsp;'+targetNodeText+'</span>' +
-                '<button type="button" class="close mark-item-close">&times;</button>';
-            appendMarkCellRender(tagType,target,targetText);
-            isRenderChart = true;
-        }else if((tagType == 'color' && numberTag) || (tagType == 'corner' && textTag)){
-            restoreTagStyle(target);
-        }else if(tagType == 'tag'){
-            restoreTagStyle(target);
-        }else if(((tagType == 'xAxis' && textTag) || (tagType == 'xAxis' && textTag) || (tagType == 'yAxis' && numberTag)
-            || (tagType == 'yAxis' && numberTag))){
-            appendRowColCellRender(tagType,target,targetNodeText);
-            isRenderChart = true;
+        if((tagType == 'color' || tagType == 'corner') || tagType == 'tag'){
+            if(acceptDataType == dragDataType && isAcceptChartType){
+                var targetText = '<span style="width:100px;display: inline-block; overflow: hidden;">' +
+                    '<i class="fa '+iclass+'" style="display: inline;"></i>&nbsp;'+targetNodeText+'</span>' +
+                    '<button type="button" class="close mark-item-close">&times;</button>';
+                appendMarkCellRender(tagType,target,targetText);
+                isRenderChart = true;
+            }else{
+                restoreTagStyle(target);
+            }
+        }else{
+            if(chartType == '' || ((acceptDataType == dragDataType)&&isAcceptChartType)){
+                appendRowColCellRender(tagType,target,targetNodeText);
+                isRenderChart = true;
+            }
         }
         return isRenderChart;
     };
@@ -256,24 +275,13 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     /**
      * 标记拖拽OVER样式
      */
-    var tagDropOverRender = function(ui,chartType,tagType,target) {
-        var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
-        var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
-        if((numberTag && chartType == 'pie' && tagType == 'color') || (textTag && chartType == 'pie' && tagType == 'corner')
-            || (chartType == 'pie' && (tagType == 'tag' || tagType == 'xAxis' || tagType == 'yAxis' || tagType == 'filter'))
-            || (chartType == 'line' && tagType == 'yAxis' && textTag)
-            || (chartType == 'bar' && tagType == 'yAxis' && textTag)
-            || (chartType == 'line' && tagType == 'xAxis' && numberTag)
-            || (chartType == 'bar' && tagType == 'xAxis' && numberTag)
-            || tagType == 'filter'
-        ){
+    var tagDropOverRender = function(chartType,tagType,target,dataType) {
+        var acceptdataType = axisTagMap[tagType].dataType;
+        var isAcceptChartType = axisTagMap[tagType][chartType];
+        if(!isAcceptChartType || acceptdataType!= dataType){
             target.css("border","1px dashed #ff2828");
             target.css("background-color","#ffeeee");
-        }else if((textTag && chartType == 'pie' && tagType == 'color') || (numberTag && chartType == 'pie' && tagType == 'corner')
-            || (chartType == 'line' && tagType == 'xAxis' && textTag)
-            || (chartType == 'bar' && tagType == 'xAxis' && textTag)
-            || (chartType == 'line' && tagType == 'yAxis' && numberTag)
-            || (chartType == 'bar' && tagType == 'yAxis' && numberTag)){
+        }else if(acceptdataType == dataType && isAcceptChartType){
             target.css("border","1px dashed #22a7f0");
             target.css("background-color","#cfe9f7");
         }
@@ -293,6 +301,19 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
             tagType = 'filter';
         }
         return tagType;
+    };
+
+    /*拖拽元素数据类型*/
+    var dragUIDataType = function (ui) {
+        var dragDataType;
+        var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
+        var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
+        if(textTag){
+            dragDataType = 'text';
+        }else if(numberTag){
+            dragDataType = 'number';
+        }
+        return dragDataType;
     }
 
     var setting_datalist = {
@@ -468,7 +489,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                             drop: function (event, ui) {
                                 var tagType = axisTagType($(this));
                                 var targetNodeText = $(ui.draggable).find("a").find("span").html();
-                                var isRenderChart = tagDropRender(targetNodeText,tagType,$(this));
+                                var isRenderChart = tagDropRender(targetNodeText,tagType,$(this),dragUIDataType(ui),chartType);
                                 if(isRenderChart){
                                     renderChart();
                                 }
@@ -476,7 +497,8 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                                 $(this).css("background-color","white");
                             },
                             over: function (event, ui) {
-                                tagDropOverRender(ui,chartType,axisTagType($(this)),$(this));
+                                var dragTextType = dragUIDataType(ui);
+                                tagDropOverRender(chartType,axisTagType($(this)),$(this),dragTextType);
                             },
                             out:function (event,ui) {
                                 $(this).css("border","1px dashed #ccc");
@@ -491,13 +513,14 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                         $("form.make-model-region .mark-down-column .mark-item-color").droppable({
                             drop: function(event,ui){
                                 var targetNodeText = $(ui.draggable).find("a").find("span").html();
-                                var isRenderChart = tagDropRender(targetNodeText,'color',$(this));
+                                var isRenderChart = tagDropRender(targetNodeText,'color',$(this),dragUIDataType(ui),chartType);
                                 if(isRenderChart){
                                     renderChart();
                                 }
                             },
                             over: function (event, ui) {
-                                tagDropOverRender(ui,chartType,'color',$(this));
+                                var dragTextType = dragUIDataType(ui);
+                                tagDropOverRender(chartType,'color',$(this),dragTextType);
                             },
                             out:function (event,ui) {
                                 $(this).css("border","");
@@ -511,13 +534,14 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                         $("form.make-model-region .mark-down-column .mark-item-corner").droppable({
                             drop: function(event,ui){
                                 var targetNodeText = $(ui.draggable).find("a").find("span").html();
-                                var isRenderChart = tagDropRender(targetNodeText,'corner',$(this));
+                                var isRenderChart = tagDropRender(targetNodeText,'corner',$(this),dragUIDataType(ui),chartType);
                                 if(isRenderChart){
                                     renderChart();
                                 }
                             },
                             over: function (event, ui) {
-                                tagDropOverRender(ui,chartType,'corner',$(this));
+                                var dragTextType = dragUIDataType(ui);
+                                tagDropOverRender(chartType,'corner',$(this),dragTextType);
                             },
                             out:function (event,ui) {
                                 $(this).css("border","");
@@ -531,13 +555,14 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                         $("form.make-model-region .mark-down-column .mark-item-tag").droppable({
                             drop: function(event,ui){
                                 var targetNodeText = $(ui.draggable).find("a").find("span").html();
-                                var isRenderChart = tagDropRender(targetNodeText,'tags',$(this));
+                                var isRenderChart = tagDropRender(targetNodeText,'tag',$(this),dragUIDataType(ui),chartType);
                                 if(isRenderChart){
                                     renderChart();
                                 }
                             },
                             over: function (event, ui) {
-                                tagDropOverRender(ui,chartType,'tag',$(this));
+                                var dragTextType = dragUIDataType(ui);
+                                tagDropOverRender(chartType,'tag',$(this),dragTextType);
                             },
                             out:function (event,ui) {
                                 $(this).css("border","");
@@ -618,18 +643,18 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
         var buildModel = JSON.parse(result.buildModel);
         if(buildModel.mark){//pie
             if(buildModel.mark.color) {
-                tagDropRender(buildModel.mark.color,'color',$("form.make-model-region .mark-down-column .mark-item-color"));
+                tagDropRender(buildModel.mark.color,'color',$("form.make-model-region .mark-down-column .mark-item-color"),'text','');
             }
             if(buildModel.mark.angle){
-                tagDropRender(buildModel.mark.angle,'corner',$("form.make-model-region .mark-down-column .mark-item-corner"));
+                tagDropRender(buildModel.mark.angle,'corner',$("form.make-model-region .mark-down-column .mark-item-corner"),'number','');
             }
         }
         if(buildModel.xAxis){
-            tagDropRender(buildModel.xAxis,'xAxis',$("form.make-model-region .xAxis"));
+            tagDropRender(buildModel.xAxis,'xAxis',$("form.make-model-region .xAxis"),'text','');
         }
 
         if(buildModel.yAxis){
-            tagDropRender(buildModel.yAxis,'yAxis',$("form.make-model-region .yAxis"));
+            tagDropRender(buildModel.yAxis,'yAxis',$("form.make-model-region .yAxis"),'number','');
         }
     });
 });
