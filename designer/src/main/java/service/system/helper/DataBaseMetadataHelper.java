@@ -287,7 +287,7 @@ public class DataBaseMetadataHelper {
                 if (jdbcProps.isPaging() && ("SQLSERVER".equalsIgnoreCase(dbType) || "ORACLE".equalsIgnoreCase(dbType)) && rsmd.getColumnCount() > 1) {
                     String[] columnNameDatas = new String[rsmd.getColumnCount() - 1];
                     for (int i = 1; i < rsmd.getColumnCount(); i++) {
-                        columnNameDatas[i - 1] = rsmd.getColumnName(i + 1);
+                        columnNameDatas[i - 1] = rsmd.getColumnLabel(i + 1);
                     }
                     datas.add(columnNameDatas);
                     while (cRs.next()) {
@@ -300,7 +300,7 @@ public class DataBaseMetadataHelper {
                 } else {
                     String[] columnNameDatas = new String[rsmd.getColumnCount()];
                     for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                        columnNameDatas[i - 1] = rsmd.getColumnName(i);
+                        columnNameDatas[i - 1] = rsmd.getColumnLabel(i);
                     }
                     datas.add(columnNameDatas);
                     while (cRs.next()) {
@@ -348,7 +348,7 @@ public class DataBaseMetadataHelper {
                     rsmd = cRs.getMetaData();
                     String[] columnNameDatas = new String[rsmd.getColumnCount()];
                     for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                        columnNameDatas[i - 1] = rsmd.getColumnName(i);
+                        columnNameDatas[i - 1] = rsmd.getColumnLabel(i);
                     }
                     while (cRs.next()) {
                         Map<String, Object> rawDataMap = new HashMap<>();
@@ -396,7 +396,7 @@ public class DataBaseMetadataHelper {
                 Map<String, String> columnNameDatas;
                 for (int i = 1; i <= rsmd.getColumnCount(); i++) {
                     columnNameDatas = new HashMap<>();
-                    columnNameDatas.put("name", rsmd.getColumnName(i));
+                    columnNameDatas.put("name", rsmd.getColumnLabel(i));
                     columnNameDatas.put("type", JDBC_TYPE_MAP.get(rsmd.getColumnType(i)));
                     datas.add(columnNameDatas);
                 }
