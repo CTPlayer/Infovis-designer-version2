@@ -107,7 +107,7 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 //数据集操作模块
 require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
     /*恢复样式*/
-    function restoreTagStyle(target){
+    var restoreTagStyle = function(target){
         target.css("background-color",'#ffffff');
         target.css("border",'none');
         target.css("border-right",'1px dashed #ccc');
@@ -116,7 +116,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     /*
      标记tag被drop后样式渲染以及标记删除
      * */
-    function appendCellRender(ui,target){
+    var appendCellRender = function(ui,target){
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
         if(textTag){
@@ -152,7 +152,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
         });
     }
 
-    function getTagIclassType(tagType) {
+    var getTagIclassType = function(tagType) {
         var iclass = '';
         switch(tagType)
         {
@@ -174,7 +174,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     /**
      * 标记drop渲染
      */
-    function tagDropRender(ui,tagType,target,chartType) {
+    var tagDropRender = function(ui,tagType,target,chartType) {
         var targetNode = $(ui.draggable).find("a").find("span").html();
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
@@ -251,7 +251,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     /**
      * 标记拖拽OVER样式
      */
-    function tagDropOverRender(ui,chartType,tagType,target) {
+    var tagDropOverRender = function(ui,chartType,tagType,target) {
         var numberTag = $(ui.draggable).find("a").find("i").hasClass("fa-sort-numeric-asc");
         var textTag = $(ui.draggable).find("a").find("i").hasClass("glyphicon-text-color");
         if((numberTag && chartType == 'pie' && tagType == 'color') || (textTag && chartType == 'pie' && tagType == 'corner')
@@ -261,7 +261,6 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
             || (chartType == 'line' && tagType == 'xAxis' && numberTag)
             || (chartType == 'bar' && tagType == 'xAxis' && numberTag)
             || tagType == 'filter'
-        //||((chartType == 'bar' || chartType == 'line')&&((tagType == 'color') || (tagType == 'corner') || (tagType == 'tag')))
         ){
             target.css("border","1px dashed #ff2828");
             target.css("background-color","#ffeeee");
@@ -276,7 +275,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     };
 
     /*返回行、列、筛选标识*/
-    function axisTagType(target){
+    var axisTagType = function(target){
         var isxAxis = target.hasClass("xAxis");
         var isyAxis = target.hasClass("yAxis");
         var isFilter = target.hasClass("column-filter");
