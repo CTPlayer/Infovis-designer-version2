@@ -107,6 +107,12 @@ public class DefaultController {
         return "panel/myPanel";
     }
 
+
+    @RequestMapping("/dataAnalysis.page")
+    public Object dataAnalysis() throws Exception {
+        return "panel/dataAnalysis";
+    }
+
     /**
      * 分页查询panel
      *

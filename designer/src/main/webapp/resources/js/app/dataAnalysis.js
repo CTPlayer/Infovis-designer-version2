@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: 'js',
+    baseUrl: 'resources/js',
     paths: {
         "jquery": "lib/bootstrap/js/jquery-2.1.4.min",
         "jquery-ui": "lib/jquery-ui.min",
@@ -31,7 +31,7 @@ require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
         var order = window.location.href.split("=")[2].replace("#","");
         $.ajax({
             type: 'POST',
-            url: '../getOptions',
+            url: 'getOptions',
             data: "exportId="+exportId,
             success: function(data){
                 var editChart = engine.chart.init(document.getElementById("editArea"));
@@ -51,19 +51,19 @@ require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
 
             $.ajax({
                 type: 'POST',
-                url: '../updateOptions',
+                url: 'updateOptions',
                 data: {
                     'exportId': exportId,
                     'jsCode': JSON.stringify(optionArray)
                 },
                 success: function(){
-                    top.window.location = "../showPanel.page?exportId=" + exportId;
+                    top.window.location = "showPanel.page?exportId=" + exportId;
                 }
             });
 
             $.ajax({
                 type: 'POST',
-                url: '../updateChartInfo',
+                url: 'updateChartInfo',
                 data: {
                     'exportId': exportId,
                     'chartId': order.toString(),
@@ -319,7 +319,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     var setting_datalist = {
         async: {
             enable: true,
-            url:"../sqlRecordingManage/queryTree",
+            url:"sqlRecordingManage/queryTree",
             autoParam:["queryParam", "level=lv"],
             dataType: "JSON",
             dataFilter: function(treeId, parentNode, responseData) {
@@ -410,7 +410,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                     $.ajax({
                         type: 'POST',
                         contentType: "application/json; charset=utf-8",
-                        url: '../render',
+                        url: 'render',
                         data: JSON.stringify({
                             'chartType': chartType,
                             'dataRecordId': sqlRecordingId,
@@ -434,7 +434,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                     var deferred = $.ajax({
                         type: 'POST',
                         dataType: 'json',
-                        url: '../connectionManage/getQuerySqlInfo',
+                        url: 'connectionManage/getQuerySqlInfo',
                         data : queryParam
                     });
                     deferred.done(function(result){
@@ -632,7 +632,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     var binddefferd = $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: '../selectOneChartInfo',
+        url: 'selectOneChartInfo',
         data: {
             'exportId': exportId,
             'chartId': order

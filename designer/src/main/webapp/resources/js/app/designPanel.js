@@ -258,14 +258,14 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                                 $("body").removeClass("loader");
                                 $(".loader-container").css("display", "none");
-                                top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+index;
+                                top.window.location = "dataAnalysis.page?exportId=" + exportId+"&order="+index;
                             },
                             error: function () {
                                 alert("保存失败，请重试！");
                             }
                         });
                     }else{
-                        top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+index;
+                        top.window.location = "dataAnalysis.page?exportId=" + exportId+"&order="+index;
                     }
                 });
 
@@ -432,14 +432,14 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                                 $("body").removeClass("loader");
                                 $(".loader-container").css("display", "none");
-                                top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+index;
+                                top.window.location = "dataAnalysis.page?exportId=" + exportId+"&order="+index;
                             },
                             error: function () {
                                 alert("保存失败，请重试！");
                             }
                         });
                     }else{
-                        top.window.location = "resources/dataAnalysis.html?exportId=" + exportId+"&order="+index;
+                        top.window.location = "dataAnalysis.page?exportId=" + exportId+"&order="+index;
                     }
                 });
             }
