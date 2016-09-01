@@ -214,8 +214,6 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     currentIndex = $(this).parent().parent().parent().attr("order");
                     var type = instance.getOption().series[0].type;
 
-                    console.log(type);
-                    console.log(instance.getOption());
                     $("#loading").css("display","block");
                     $("#optionContainer").empty();
                     $("#optionPanel").empty();
