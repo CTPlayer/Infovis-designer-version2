@@ -417,11 +417,11 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                         $('#side-menu ul.nav.nav-third-level').empty();
                         $.each(columnModle.dimensions,function (index,element) {
                             $('#side-menu ul.nav.nav-third-level:eq(0)')
-                                .append("<li><a href='javascript:void(0)'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i><span style='display:inline-block;max-width: 150px;overflow: hidden;'>" + element + "</span><i class='glyphicon glyphicon-download leftBarLiIcon pull-right'></i></a></li>");
+                                .append("<li><a href='javascript:void(0)'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i><span style='display:inline-block;max-width: 130px;overflow: hidden;'>" + element + "</span><i class='glyphicon glyphicon-download leftBarLiIcon pull-right'></i></a></li>");
                         });
                         $.each(columnModle.measure,function (index,element) {
                             $('#side-menu ul.nav.nav-third-level:eq(1)')
-                                .append("<li><a href='javascript:void(0)'><i class='fa fa-sort-numeric-asc leftBarLiIcon'></i><span style='display:inline-block;max-width: 10px;max-width: 150px;overflow: hidden;'>" + element + "</span><i class='glyphicon glyphicon-upload leftBarLiIcon pull-right'></i></a></li>");
+                                .append("<li><a href='javascript:void(0)'><i class='fa fa-sort-numeric-asc leftBarLiIcon'></i><span style='display:inline-block;max-width: 10px;max-width: 130px;overflow: hidden;'>" + element + "</span><i class='glyphicon glyphicon-upload leftBarLiIcon pull-right'></i></a></li>");
                         });
                         //切换维度度量事件绑定
                         $('#side-menu ul.nav.nav-third-level li i.leftBarLiIcon').on("click",function () {
