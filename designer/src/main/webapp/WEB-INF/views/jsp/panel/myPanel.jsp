@@ -68,7 +68,7 @@
         <nav class="navbar navbar-inverse navbar-static-top" style="margin-left:-60px;background-color: rgb(238,238,238)">
             <div class="container-fluid">
                 <ul class="nav navbar-nav navbar-left">
-                    <a class="navbar-brand" href="#" style="color: #ffffff">控制面板</a>
+                    <a class="navbar-brand" href="#" style="color: #ffffff">作品列表</a>
                 </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown danger">

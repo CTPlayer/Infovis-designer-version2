@@ -147,3 +147,16 @@ form.make-model-region .labelDiv .mark-item-right {
 .scrollable {
     overflow: auto;
 }
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover{
+    border-top:1px solid #ccc;
+}
+
+#chartType{
+    min-height: 450px;
+    border:1px solid #ccc;
+    border-top:none;
+    margin:0;
+    padding :0;
+    text-align: center;
+}

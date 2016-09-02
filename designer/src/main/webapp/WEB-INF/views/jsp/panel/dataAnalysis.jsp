@@ -44,7 +44,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="../query.page" role="button"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;我的作品</a>
+                        <a href="query.page" role="button"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;我的作品</a>
                     </li>
                     <li class="dropdown">
                         <a href="sqlClient.page"  role="button"><i class="icon fa fa-database"></i>&nbsp;&nbsp;数据源</a>
@@ -155,7 +155,30 @@
                 </div>
             </div>
             <p style="border-bottom: dashed 1px grey"></p>
-            <div id="editArea">
+            <div class="row content-container">
+                <div class="col-lg-12 container-fluid">
+                    <div class="col-lg-10">
+                        <div id="editArea">
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#chartType" aria-controls="home" role="tab" data-toggle="tab">图表类型</a>
+                            </li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="chartType">
+                                <div><button type="button" class="btn btn-success">柱状图</button></div>
+                                <div><button type="button" class="btn btn-info">饼&nbsp;&nbsp;&nbsp;&nbsp;图</button></div>
+                                <div><button type="button" class="btn btn-warning">折线图</button></div>
+                                <div><button type="button" class="btn btn-primary">二维表</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
