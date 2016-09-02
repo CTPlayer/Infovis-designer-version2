@@ -11,7 +11,6 @@ require.config({
         "infovis": "lib/infovis.min",
         "jqueryCookie": "lib/jquery.cookie",
         "jqueryMd5": "lib/jquery.md5",
-        "mCustomScrollbar":"lib/mCustomScrollbar/jquery.mCustomScrollbar.concat.min",
         "mousewheel": 'lib/mCustomScrollbar/jquery.mousewheel.min',
         "scrollbar" : 'lib/mCustomScrollbar/jquery.mCustomScrollbar.min'
     },
