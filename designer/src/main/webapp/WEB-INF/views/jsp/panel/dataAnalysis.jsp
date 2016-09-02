@@ -172,7 +172,7 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="chartType">
                                 <div><button type="button" class="btn btn-success">柱状图</button></div>
-                                <div><button type="button" class="btn btn-info">饼&nbsp;&nbsp;&nbsp;&nbsp;图</button></div>
+                                <div><button type="button" class="btn btn-info">饼图</button></div>
                                 <div><button type="button" class="btn btn-warning">折线图</button></div>
                                 <div><button type="button" class="btn btn-primary">二维表</button></div>
                             </div>

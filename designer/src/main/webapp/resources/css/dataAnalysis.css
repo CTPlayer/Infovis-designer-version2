@@ -160,3 +160,7 @@ form.make-model-region .labelDiv .mark-item-right {
     padding :0;
     text-align: center;
 }
+
+#chartType div button{
+    width:80px;
+}
