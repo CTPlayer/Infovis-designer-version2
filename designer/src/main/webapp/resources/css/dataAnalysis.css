@@ -148,19 +148,26 @@ form.make-model-region .labelDiv .mark-item-right {
     overflow: auto;
 }
 
-.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover{
-    border-top:1px solid #ccc;
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+    border-top: 1px solid #ccc;
 }
 
-#chartType{
-    min-height: 450px;
-    border:1px solid #ccc;
-    border-top:none;
-    margin:0;
-    padding :0;
+.chart-type span{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-color: #f5f5f5;
     text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    margin:4px 0px 4px 5px;
 }
 
-#chartType div button{
-    width:80px;
+.chart-type span img{
+    width: 30px;
+    height: 30px;
+}
+
+.chart-type-select-panel .drag-tips{
+    margin:4px;
 }

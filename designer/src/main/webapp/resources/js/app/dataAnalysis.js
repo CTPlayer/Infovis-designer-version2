@@ -101,6 +101,26 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
     $('#side-menu').metisMenu({
         toggle: false
     });
+
+    $('.chart-type span').click(function () {
+        var target = $(this);
+        target.css('background-color','#ccc');
+        target.siblings().css('background-color', '#f5f5f5');
+
+        var isLine = target.hasClass('line');
+        var isBar = target.hasClass('bar');
+        var isPie = target.hasClass('pie');
+        if(isLine){
+            $('.chart-type-select-panel .drag-tips .tips-line').show();
+            $('.chart-type-select-panel .drag-tips .tips-line').siblings().hide();
+        }else if(isBar){
+            $('.chart-type-select-panel .drag-tips .tips-bar').show();
+            $('.chart-type-select-panel .drag-tips .tips-bar').siblings().hide();
+        }else if(isPie){
+            $('.chart-type-select-panel .drag-tips .tips-pie').show();
+            $('.chart-type-select-panel .drag-tips .tips-pie').siblings().hide();
+        }
+    });
 });
 
 //数据集操作模块
@@ -365,7 +385,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                 setting_datalist.updateNode(treeNode);
             },
             onAsyncSuccess :function () {
-                $("div.panel-body").mCustomScrollbar({
+                $("div.leftScrollPanel").mCustomScrollbar({
                     autoHideScrollbar:true,
                     axis:"yx",
                     theme:"dark"
