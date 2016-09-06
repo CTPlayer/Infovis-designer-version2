@@ -30,6 +30,7 @@
     <!--custom ztree css-->
     <link href="resources/css/customZtreeStyle.css" rel="stylesheet">
     <style type="text/css">
+
         .scrollable {
             overflow: scroll;
         }
@@ -145,7 +146,7 @@
             overflow:	auto;
         }
         .ui-layout-pane-west{
-            border-top:	#FFF;
+            background-color: #f8f8f8;
         }
         .ui-layout-resizer {
             background:	#FFF;
@@ -160,10 +161,6 @@
         }
         .flat-blue .navbar .navbar-nav > li > a, .flat-blue .navbar.navbar-default .navbar-nav > li > a,.leftBarLiIcon{
             color: #0f77b1;
-        }
-
-        .flat-blue .navbar.navbar-inverse .navbar-nav > li.danger > a{
-            color: red;
         }
     </style>
 
@@ -233,7 +230,7 @@
                 </h4>
             </div>
             <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                <div class="panel-body" style="overflow-x:scroll ">
+                <div class="panel-body" style="overflow-x:scroll;background-color: #F8F8F8 ">
                     <ul id="dataSourceTree" class="ztree"></ul>
                 </div>
             </div>
@@ -247,7 +244,7 @@
                 </h4>
             </div>
             <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                <div class="panel-body scrollable">
+                <div class="panel-body scrollable" style="background-color: #F8F8F8">
                     <ul id="dataListTree" class="ztree"></ul>
                 </div>
             </div>

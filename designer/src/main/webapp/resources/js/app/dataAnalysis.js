@@ -116,6 +116,26 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
     $('#side-menu').metisMenu({
         toggle: false
     });
+
+    $('.chart-type span').click(function () {
+        var target = $(this);
+        target.css('background-color','#ccc');
+        target.siblings().css('background-color', '#f5f5f5');
+
+        var isLine = target.hasClass('line');
+        var isBar = target.hasClass('bar');
+        var isPie = target.hasClass('pie');
+        if(isLine){
+            $('.chart-type-select-panel .drag-tips .tips-line').show();
+            $('.chart-type-select-panel .drag-tips .tips-line').siblings().hide();
+        }else if(isBar){
+            $('.chart-type-select-panel .drag-tips .tips-bar').show();
+            $('.chart-type-select-panel .drag-tips .tips-bar').siblings().hide();
+        }else if(isPie){
+            $('.chart-type-select-panel .drag-tips .tips-pie').show();
+            $('.chart-type-select-panel .drag-tips .tips-pie').siblings().hide();
+        }
+    });
 });
 
 require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
@@ -391,7 +411,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                 setting_datalist.updateNode(treeNode);
             },
             onAsyncSuccess :function () {
-                $("div.panel-body").mCustomScrollbar({
+                $("div.leftScrollPanel").mCustomScrollbar({
                     autoHideScrollbar:true,
                     axis:"yx",
                     theme:"dark"
@@ -466,11 +486,11 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                         $('#side-menu ul.nav.nav-third-level').empty();
                         $.each(columnModle.dimensions,function (index,element) {
                             $('#side-menu ul.nav.nav-third-level:eq(0)')
-                                .append("<li><a href='javascript:void(0)'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i><span style='display:inline-block;max-width: 130px;overflow: hidden;'>" + element + "</span><i class='glyphicon glyphicon-download leftBarLiIcon pull-right'></i></a></li>");
+                                .append("<li><a href='javascript:void(0)'><i class='glyphicon glyphicon-text-color leftBarLiIcon'></i> <span style='display:inline-block;max-width: 120px;overflow: hidden;vertical-align:bottom'>" + element + "</span><i class='glyphicon glyphicon-download leftBarLiIcon pull-right' title='转换为度量'></i></a></li>");
                         });
                         $.each(columnModle.measure,function (index,element) {
                             $('#side-menu ul.nav.nav-third-level:eq(1)')
-                                .append("<li><a href='javascript:void(0)'><i class='fa fa-sort-numeric-asc leftBarLiIcon'></i><span style='display:inline-block;max-width: 10px;max-width: 130px;overflow: hidden;'>" + element + "</span><i class='glyphicon glyphicon-upload leftBarLiIcon pull-right'></i></a></li>");
+                                .append("<li><a href='javascript:void(0)'><i class='fa fa-sort-numeric-asc leftBarLiIcon'></i> <span style='display:inline-block;max-width: 120px;overflow: hidden;vertical-align:bottom'>" + element + "</span><i class='glyphicon glyphicon-upload leftBarLiIcon pull-right' title='转换为维度'></i></a></li>");
                         });
                         //切换维度度量事件绑定
                         $('#side-menu ul.nav.nav-third-level li i.leftBarLiIcon').on("click",function () {

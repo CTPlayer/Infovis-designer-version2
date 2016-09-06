@@ -71,19 +71,15 @@
             </div>
         </nav>
         <div class="navbar-default sidebar scrollable" role="navigation" style="height: 700px;">
-            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="heading">
-                        <h4 class="panel-title">
-                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse" aria-expanded="false" aria-controls="collapse">
-                                <span class="glyphicon glyphicon-indent-left" aria-hidden="true"></span> 数据集
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading">
-                        <div class="panel-body" style="overflow: auto;height: 120px;background-color: #f9f9f9">
-                            <div id="dataListTree" class="ztree"></div>
-                        </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading">
+                    <h4 class="panel-title">
+                            <span class="glyphicon glyphicon-indent-left" aria-hidden="true"></span> 数据集
+                    </h4>
+                </div>
+                <div id="collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading">
+                    <div class="panel-body leftScrollPanel" style="overflow: auto;height: 120px;background-color: #f9f9f9">
+                        <div id="dataListTree" class="ztree"></div>
                     </div>
                 </div>
             </div>
@@ -116,9 +112,6 @@
         <div id="page-wrapper">
             <div>
                 <div class="col-lg-11">
-                    <nav class="panel-body">
-                        <p><b>标准柱状图</b> 建议,<b>维度</b> 拖入列,<b>度量</b> 拖入行</p>
-                    </nav>
                 </div>
                 <div class="col-lg-1">
                     <a href="#" data-toggle="modal" data-target="#addChartModal"><button class="btn btn-info saveChartInfo" type="submit"><span class="glyphicon glyphicon-floppy-saved"></span> 保存</button></a>
@@ -155,26 +148,42 @@
                 </div>
             </div>
             <p style="border-bottom: dashed 1px grey"></p>
-            <div class="row content-container">
-                <div class="col-lg-12 container-fluid">
-                    <div class="col-lg-10">
+            <div class="row">
+                <div class="col-lg-12 col-xs-12 col-sm-12">
+                    <div class="col-lg-10 col-xs-10">
                         <div id="editArea">
                         </div>
                     </div>
-                    <div class="col-lg-2">
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active">
-                                <a href="#chartType" aria-controls="home" role="tab" data-toggle="tab">图表类型</a>
-                            </li>
-                        </ul>
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="chartType">
-                                <div><button type="button" class="btn btn-success bar">柱状图</button></div>
-                                <div><button type="button" class="btn btn-info pie">饼图</button></div>
-                                <div><button type="button" class="btn btn-warning line">折线图</button></div>
-                                <div><button type="button" class="btn btn-primary">二维表</button></div>
+                    <div class="col-lg-2 col-xs-2 col-sm-2">
+                        <div class="panel fresh-color panel-default chart-type-select-panel" style="width:100px;float: right">
+                            <div class="panel-heading">图表类型</div>
+                            <div class="chart-type">
+                                <span class="bar">
+                                    <img src="resources/img/bar_chart.png">
+                                </span>
+                                <span class="line">
+                                    <img src="resources/img/line_chart.png">
+                                </span>
+                                <span class="pie">
+                                    <img src="resources/img/pie_chart.png">
+                                </span>
+                            </div>
+                            <div class="drag-tips">
+                                <div class="tips-bar" style="display: none">
+                                    <p><b>标准柱状图</b></p>
+                                    <p><b>维度</b> 拖入列</p>
+                                    <p><b>度量</b> 拖入行</p>
+                                </div>
+                                <div class="tips-line" style="display: none">
+                                    <p><b>折线图</b></p>
+                                    <p><b>维度</b> 拖入列</p>
+                                    <p><b>度量</b> 拖入行</p>
+                                </div>
+                                <div class="tips-pie" style="display: none">
+                                    <p><b>饼图</b></p>
+                                    <p><b>维度</b> 拖入颜色</p>
+                                    <p><b>度量</b> 拖入角度</p>
+                                </div>
                             </div>
                         </div>
                     </div>
