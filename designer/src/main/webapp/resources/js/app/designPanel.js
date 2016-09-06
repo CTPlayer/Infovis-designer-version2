@@ -49,7 +49,11 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             $(".panel-default").click(function(){
                 $(".panel-default").removeClass("active");
                 $(this).addClass("active");
-            })
+            });
+
+            $(".side-menu-container").find("li").eq(1).click(function(){
+                $(".thumbnail").removeClass("selected");
+            });
         });
 
         $(function(){
@@ -63,27 +67,46 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
         });
 
         $(function(){
+            $.ajax({
+               type: 'POST',
+               url: 'selectChartInfo',
+               success: function(response){
+                   for(var i=0;i<response.data.length;i++){
+                       if(response.data[i].chartType == 'pie'){
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;margin-left: 10px;float: left"><img src="resources/img/pie_chart.png" alt="..."><p style="text-align: center">'+response.data[i].chartName+'</p></div>');
+                       }else if(response.data[i].chartType == 'line'){
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;margin-left: 10px;float: left"><img src="resources/img/line_chart.png" alt="..."><p style="text-align: center">'+response.data[i].chartName+'</p></div>');
+                       }else if(response.data[i].chartType == 'bar'){
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;margin-left: 10px;float: left"><img src="resources/img/bar_chart.png" alt="..."><p style="text-align: center">'+response.data[i].chartName+'</p></div>');
+                       }
+                   }
+                   $(".thumbnail").click(function(){
+                       if($(this).hasClass("selected")){
+                           $(this).removeClass("selected");
+                       }else{
+                           $(this).addClass("selected");
+                       }
+                   });
+               }
+            });
+        });
+
+        $(function(){
+            var allOptions = baseOptions.makeAllOptions();
+            var engine = infovis.init(allOptions || {});
+
             window.isSave = true;   //记录页面是否有改动
+
             var options = {
                 float: true,
                 vertical_margin: 10
             };
             $('.grid-stack').gridstack(options);
 
-            var order = 0;  //容器的顺序标记
-
-            //给order赋值，用来在已有面板中继续添加图标时能接着前面已有图表的order顺序
-            var containers = $(".grid-stack").children();
-            for(var i=0;i<containers.length;i++){
-                if($(containers[i]).children().first().attr("id")){
-                    order = $(containers[i]).children().first().attr("id");
-                }
-            }
-
             var grid = $('.grid-stack').data('gridstack');
 
-            var add_new_widget = function (pagex,pagey) {
-                order++;
+            var add_new_widget = function (pagex,pagey,cid) {
+                // order++;
                 var node = {
                     x: pagex,
                     y: pagey,
@@ -91,184 +114,119 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     height: 4
                 };
                 var nWidget = grid.add_widget($('<div>'+
-                    '<div class="grid-stack-item-content"'+'order="'+order+'" id="'+order+'">'+
+                    '<div class="grid-stack-item-content"' + 'id="'+cid+'">'+
                     '</div>'+
                     '</div>'),node.x, node.y, node.width, node.height);
             };
 
-            //撑开可拖拽页面
-            grid.add_widget($('<div style="display: none" id="fill">'+
-                '<div class="grid-stack-item-content">'+
-                '</div>'+
-                '</div>'),0, 99, 0, 0);
-
-            //为了防止再次进入以后设计面板时先前的图表不能自定义大小，这里获取先前图表的容器属性，重新添加容器并渲染图表
-            var containers = $(".grid-stack").children();
-            containers.remove();
-            //每个已存在容器的y坐标需要单独获取
-            var positionY = [];
-            for(var i=0;i<containers.length-2;i++) {
-                positionY.push($(containers[i]).attr("data-gs-y"));
-            }
-            for(var i=0;i<containers.length-2;i++) {
-                var x = $(containers[i]).attr("data-gs-x");
-                var y = positionY[i];
-                var width = $(containers[i]).attr("data-gs-width");
-                var height = $(containers[i]).attr("data-gs-height");
-                var od = $(containers[i]).children().attr("order");
-
-                grid.add_widget($('<div>'+
-                    '<div class="grid-stack-item-content"'+'order="'+od+'" id="'+od+'">'+
-                    '</div>'+
-                    '</div>'),x, y, width, height);
-            }
-
-            //若该设计面板中原先有图表，则再次打开时需要获取他们的图表option
-            if($("#exportOption").text().trim() != '' && $("#exportOption").text().trim() != null){
-                var optionsArray = JSON.parse($("#exportOption").text());
-            }else{
-                var optionsArray = {};
-            }
-
-            var allOptions = baseOptions.makeAllOptions();
-            var engine = infovis.init(allOptions || {});
-            var currentIndex;                                        //记录当前所修改的option下标
-
-            $(".side-menu").find("img").on("dragstart",function(ev){
-                ev.originalEvent.dataTransfer.setData("Text",$(ev.target).parent().attr("id"));
-            });
-
-            $(".grid-stack").on("dragover",function(ev){
-                ev.preventDefault();
-            });
-
-            $(".grid-stack").on("drop",function(ev){
-                $("title").html("*Infovis-Designer");                         //改动标记
-                window.isSave = false;
-                ev.preventDefault();
-                var data=ev.originalEvent.dataTransfer.getData("Text");
-                var pagex = (ev.originalEvent.clientX - 60) /  105;
-                var pagey = (ev.originalEvent.clientY - 60+$(document).scrollTop()) /  70;
-                add_new_widget(pagex,pagey);
-                var container = $("div[order = "+order+"]");
-                var index = container.attr("order");
-                if(engine){
-                    if(data=="bar01"){
-                        engine.render(order,"datasetOfBar","bar01");
-                    }else if(data=="bar02"){
-                        engine.render(order,"datasetOfBar","bar02");
-                    }else if(data=="bar03"){
-                        engine.render(order,"datasetOfBar","bar03");
-                    }else if(data=="line01"){
-                        engine.render(order,"datasetOfLine","line01");
-                    }else if(data=="line02"){
-                        engine.render(order,"datasetOfLine","line02");
-                    }else if(data=="line03"){
-                        engine.render(order,"datasetOfLine","line03");
-                    }else if(data=="pie01"){
-                        engine.render(order,"datasetOfPie","pie01");
-                    }else if(data=="pie02"){
-                        engine.render(order,"datasetOfPie","pie02");
-                    }
-                }
-
-                if(optionsArray[order] == null)
-                    optionsArray[order] = engine.chart.getInstanceByDom(document.getElementById(order)).getOption();
-
-                // 图表初始化完成后添加菜单
-                container.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
-                    '<span style="display:none;">'+
-                    '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
-                    '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
-                    '<a href="#"><i class="fa fa-cog" style="color: white"></i></a>'+
-                    '</span>'+
-                    '</div>');
-                container.on('mouseenter mouseleave',function(e){
-                    var target = $("#operate",$(this));
-                    if(e.type == 'mouseenter'){
-                        target.stop();
-                        target.children().css("display","block");
-                        target.animate({height:'40px'});
-                    }else if(e.type == 'mouseleave'){
-                        target.stop();
-                        target.children().css("display","none");
-                        if(target.css('height') != '0px') {
-                            target.animate({height: "0"});
-                        }
-                    }
-                });
-
-                //删除当前容器
-                container.find('a').eq(0).click(function(){
-                    var area = $(this).parent().parent().parent();
-                    var index = $(area).attr("order");
-
-                    delete optionsArray[index];
-                    $(area).parent().remove();
-                });
-
-                //将选中即将配置的图表渲染到配置面板
-                //双向绑定
-                container.find('a').eq(1).click(function(){
-                    var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
-                    currentIndex = $(this).parent().parent().parent().attr("order");
-                    var type = instance.getOption().series[0].type;
-
-                    $("#loading").css("display","block");
-                    $("#optionContainer").empty();
-                    $("#optionPanel").empty();
-
-                    $("#optionModal").on("shown.bs.modal",function(e) {
-                        $("#loading").css("display","none");
-                        if (type == "bar" || type == "line") {
-                            $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
-                            ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
-                        } else if (type == "pie") {
-                            $("#optionPanel").html(formatData.tableAndConfigOfPie());
-                            ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
-                        }
-                    });
-                });
-
-                container.find('a').eq(2).click(function(){
-                    $("title").html("Infovis-Designer");
-
-                    $(".grid-stack-placeholder").remove();
-                    $("#fill").remove();
-
-                    $(".app-container").addClass("loader");
-                    $(".loader-container").css("display","block");
-
-                    var index = $(this).parent().parent().parent().attr("order");
-                    var arr = window.location.href.split("/");
-                    var exportId = $("#exportId").val();
-                    var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
-                    if(window.isSave == false) {
+            $("#myChart").find(".btn-primary").click(function(){
+                $(".thumbnail").each(function(){
+                    if($(this).hasClass("selected")){
+                        var cid = $(this).attr("data-cid");
                         $.ajax({
                             type: 'POST',
-                            url: "export",
-                            data: {
-                                "htmlCode": $(".grid-stack").html().trim(),
-                                "jsCode": JSON.stringify(optionsArray),
-                                "exportId": exportId,
-                                "extraMsg": shareHref
-                            },
-                            success: function () {
-                                window.isSave = true;                     //点击导出后表明已保存
+                            url: 'selectOneChartInfo',
+                            data: "id=" + cid,
+                            success: function(data){
+                                $("title").html("*Infovis-Designer");                                     //改动标记
+                                window.isSave = false;
 
-                                $("body").removeClass("loader");
-                                $(".loader-container").css("display", "none");
-                                top.window.location = "dataAnalysis.page?exportId=" + exportId+"&order="+index;
-                            },
-                            error: function () {
-                                alert("保存失败，请重试！");
+                                add_new_widget(0,0,cid);
+                                engine.chart.init($("#"+cid)[0]).setOption(JSON.parse(data.jsCode));
+
+                                // 图表初始化完成后添加菜单
+                                $("#"+cid).append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
+                                    '<span style="display:none;">'+
+                                    '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
+                                    '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
+                                    '<a href="#"><i class="fa fa-cog" style="color: white"></i></a>'+
+                                    '</span>'+
+                                    '</div>');
+                                $("#"+cid).on('mouseenter mouseleave',function(e){
+                                    var target = $("#operate",$(this));
+                                    if(e.type == 'mouseenter'){
+                                        target.stop();
+                                        target.children().css("display","block");
+                                        target.animate({height:'40px'});
+                                    }else if(e.type == 'mouseleave'){
+                                        target.stop();
+                                        target.children().css("display","none");
+                                        if(target.css('height') != '0px') {
+                                            target.animate({height: "0"});
+                                        }
+                                    }
+                                });
+                                //删除当前容器
+                                $("#"+cid).find('a').eq(0).click(function(){
+                                    var area = $(this).parent().parent().parent();
+                                    $(area).parent().remove();
+                                });
+
+                                //将选中即将配置的图表渲染到配置面板
+                                //双向绑定
+                                $("#"+cid).find('a').eq(1).click(function(){
+                                    var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
+                                    var type = instance.getOption().series[0].type;
+
+                                    $("#loading").css("display","block");
+                                    $("#optionContainer").empty();
+                                    $("#optionPanel").empty();
+
+                                    $("#optionModal").on("shown.bs.modal",function(e) {
+                                        $("#loading").css("display","none");
+                                        if (type == "bar" || type == "line") {
+                                            $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
+                                            ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
+                                        } else if (type == "pie") {
+                                            $("#optionPanel").html(formatData.tableAndConfigOfPie());
+                                            ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
+                                        }
+                                    });
+                                });
+
+                                $("#"+cid).find('a').eq(2).click(function(){
+                                    $("title").html("Infovis-Designer");
+
+                                    $(".grid-stack-placeholder").remove();
+                                    $("#fill").parent().remove();
+
+                                    $(".app-container").addClass("loader");
+                                    $(".loader-container").css("display","block");
+
+                                    var index = $(this).parent().parent().parent().attr("id");
+                                    var arr = window.location.href.split("/");
+                                    var exportId = $("#exportId").val();
+                                    var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
+                                    if(window.isSave == false) {
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: "export",
+                                            data: {
+                                                "htmlCode": $(".grid-stack").html().trim(),
+                                                "exportId": exportId,
+                                                "extraMsg": shareHref
+                                            },
+                                            success: function () {
+                                                window.isSave = true;                     //点击导出后表明已保存
+
+                                                $("body").removeClass("loader");
+                                                $(".loader-container").css("display", "none");
+                                                top.window.location = "dataAnalysis.page?chartId=" + index;
+                                            },
+                                            error: function () {
+                                                alert("保存失败，请重试！");
+                                            }
+                                        });
+                                    }else{
+                                        top.window.location = "dataAnalysis.page?chartId=" + index;
+                                    }
+                                });
+
                             }
                         });
-                    }else{
-                        top.window.location = "dataAnalysis.page?exportId=" + exportId+"&order="+index;
                     }
                 });
-
+                $("#myChart").modal('toggle');
             });
 
             $(".grid-stack").on("resizestop",function(event,ui){
@@ -281,45 +239,32 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 });
             });
 
-            $(".grid-stack").on("dragstop",function(event,ui){
-                $("title").html("*Infovis-Designer");                                     //改动标记
-                window.isSave = false;
-            });
-
-            var domId;
-            $("#optionModal").on("show.bs.modal",function(e){
-                domId = e.relatedTarget.parentNode.parentNode.parentNode.getAttribute('order');
-            });
-
-            $(".modal-footer").eq(0).click(function(){
-                var instance = engine.chart.getInstanceByDom(document.getElementById("optionContainer"));
-                engine.chart.getInstanceByDom(document.getElementById(domId)).setOption(instance.getOption());
-                optionsArray[currentIndex] = instance.getOption();
-            });
-
+            /**
+             * 保存当前设计面板
+             */
             $("#exportHtml").click(function(){
                 $("title").html("Infovis-Designer");
-
+            
                 $(".grid-stack-placeholder").remove();
-                $("#fill").remove();
-                
+                $("#fill").parent().remove();
+            
                 $(".app-container").addClass("loader");
                 $(".loader-container").css("display","block");
-
+            
                 var arr = window.location.href.split("/");
                 var exportId = $("#exportId").val();
                 var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
+                // for(var i=0;i<$(".grid-stack").children().length;i++){
                 $.ajax({
                     type: 'POST',
                     url: "export",
                     data: {
                         "htmlCode": $(".grid-stack").html().trim(),
-                        "jsCode": JSON.stringify(optionsArray),
                         "exportId": exportId,
                         "extraMsg": shareHref
                     },
                     success : function(){
-                        window.isSave = true;                     //点击导出后表明已保存
+                        window.isSave = true;                           //点击导出后表明已保存
 
                         $("body").removeClass("loader");
                         $(".loader-container").css("display","none");
@@ -329,120 +274,161 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         alert("保存失败，请重试！");
                     }
                 });
+                // }
             });
 
-            /*********************************************************/
-            //重新打开设计面板后渲染之前的图表
-            var ids = [];
+            // 为了防止再次进入以后设计面板时先前的图表不能自定义大小，这里获取先前图表的容器属性，重新添加容器并渲染图表
             var containers = $(".grid-stack").children();
-            for(var i=0;i<containers.length;i++){
-                if($(containers[i]).children().first().attr("id")){
-                    ids.push($(containers[i]).children().first().attr("id"));
-                }
+
+            containers.remove();
+            var cids = [];
+            //每个已存在容器的y坐标需要单独获取
+            var positionY = [];
+            for(var i=0;i<containers.length-1;i++) {
+                positionY.push($(containers[i]).attr("data-gs-y"));
             }
 
-            for(var i=0;i<ids.length;i++){
-                var exportChart = engine.chart.init(document.getElementById(ids[i]));
-                exportChart.setOption( JSON.parse($("#exportOption").html())[ids[i]] )
+            // 解决上下容器间距问题而添加的一个div
+            grid.add_widget($('<div style="display: none">'+
+                '<div class="grid-stack-item-content"' + 'id="fill">'+
+                '</div>'+
+                '</div>'),0, 0, 12, 0);
+
+            for(var i=0;i<containers.length-1;i++) {
+                var x = $(containers[i]).attr("data-gs-x");
+                var y = positionY[i];
+                var width = $(containers[i]).attr("data-gs-width");
+                var height = $(containers[i]).attr("data-gs-height");
+                var cid = $(containers[i]).children().attr("id");
+                cids.push(cid);
+
+                grid.add_widget($('<div>'+
+                    '<div class="grid-stack-item-content"' + 'id="'+cid+'">'+
+                    '</div>'+
+                    '</div>'),x, y, width, height);
             }
 
-            var container = $("div[order]");
-            for(var i=0;i<container.length;i++){
-                $(container[i]).append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
-                    '<span style="display:none;">'+
-                    '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
-                    '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
-                    '<a href="#"><i class="fa fa-cog" style="color: white"></i></a>'+
-                    '</span>'+
-                    '</div>');
-                $(container[i]).on('mouseenter mouseleave',function(e){
-                    var target = $("#operate",$(this));
-                    if(e.type == 'mouseenter'){
-                        target.stop();
-                        target.children().css("display","block");
-                        target.animate({height:'40px'});
-                    }else if(e.type == 'mouseleave'){
-                        target.stop();
-                        target.children().css("display","none");
-                        if(target.css('height') != '0px') {
-                            target.animate({height: "0"});
-                        }
-                    }
-                });
+            $.ajax({
+                type: 'POST',
+                url: 'getShareOptions',
+                data: 'cids='+cids,
+                success: function(data){
+                    for(var i=0;i<cids.length;i++){
+                        var exportChart = engine.chart.init($("#"+cids[i])[0]);
+                        exportChart.setOption(JSON.parse(data[i].jsCode));
 
-                //删除当前容器
-                $(container[i]).find('a').eq(0).click(function(){
-                    var area = $(this).parent().parent().parent();
-                    var index = $(area).attr("order");
-
-                    delete optionsArray[index];
-                    $(area).parent().remove();
-                });
-
-                //将选中即将配置的图表渲染到配置面板
-                //双向绑定
-                $(container[i]).find('a').eq(1).click(function(){
-                    var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
-                    currentIndex = $(this).parent().parent().parent().attr("order");
-                    var type = instance.getOption().series[0].type;
-
-                    $("#loading").css("display","block");
-                    $("#optionContainer").empty();
-                    $("#optionPanel").empty();
-
-                    $("#optionModal").on("shown.bs.modal",function(e) {
-                        $("#loading").css("display","none");
-                        if (type == "bar" || type == "line") {
-                            $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
-                            ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
-                        } else if (type == "pie") {
-                            $("#optionPanel").html(formatData.tableAndConfigOfPie());
-                            ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
-                        }
-                    });
-                });
-
-                $(container[i]).find('a').eq(2).click(function(){
-                    $("title").html("Infovis-Designer");
-
-                    var area = $(this).parent().parent().parent();
-                    var index = $(area).attr("order");
-
-                    $(".grid-stack-placeholder").remove();
-                    $("#fill").remove();
-
-                    $(".app-container").addClass("loader");
-                    $(".loader-container").css("display","block");
-
-                    var arr = window.location.href.split("/");
-                    var exportId = $("#exportId").val();
-                    var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
-                    if(window.isSave == false) {
-                        $.ajax({
-                            type: 'POST',
-                            url: "export",
-                            data: {
-                                "htmlCode": $(".grid-stack").html().trim(),
-                                "jsCode": JSON.stringify(optionsArray),
-                                "exportId": exportId,
-                                "extraMsg": shareHref
-                            },
-                            success: function () {
-                                window.isSave = true;                     //点击导出后表明已保存
-
-                                $("body").removeClass("loader");
-                                $(".loader-container").css("display", "none");
-                                top.window.location = "dataAnalysis.page?exportId=" + exportId+"&order="+index;
-                            },
-                            error: function () {
-                                alert("保存失败，请重试！");
+                        // 图表初始化完成后添加菜单
+                        $("#"+cids[i]).append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
+                            '<span style="display:none;">'+
+                            '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
+                            '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
+                            '<a href="#"><i class="fa fa-cog" style="color: white"></i></a>'+
+                            '</span>'+
+                            '</div>');
+                        $("#"+cids[i]).on('mouseenter mouseleave',function(e){
+                            var target = $("#operate",$(this));
+                            if(e.type == 'mouseenter'){
+                                target.stop();
+                                target.children().css("display","block");
+                                target.animate({height:'40px'});
+                            }else if(e.type == 'mouseleave'){
+                                target.stop();
+                                target.children().css("display","none");
+                                if(target.css('height') != '0px') {
+                                    target.animate({height: "0"});
+                                }
                             }
                         });
-                    }else{
-                        top.window.location = "dataAnalysis.page?exportId=" + exportId+"&order="+index;
+
+                        //删除当前容器
+                        $("#"+cids[i]).find('a').eq(0).click(function(){
+                            var area = $(this).parent().parent().parent();
+                            $(area).parent().remove();
+                        });
+
+                        //将选中即将配置的图表渲染到配置面板
+                        //双向绑定
+                        $("#"+cids[i]).find('a').eq(1).click(function(){
+                            var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
+                            var type = instance.getOption().series[0].type;
+
+                            $("#loading").css("display","block");
+                            $("#optionContainer").empty();
+                            $("#optionPanel").empty();
+
+                            $("#optionModal").on("shown.bs.modal",function(e) {
+                                $("#loading").css("display","none");
+                                if (type == "bar" || type == "line") {
+                                    $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
+                                    ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
+                                } else if (type == "pie") {
+                                    $("#optionPanel").html(formatData.tableAndConfigOfPie());
+                                    ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
+                                }
+                            });
+                        });
+
+                        $("#"+cids[i]).find('a').eq(2).click(function(){
+                            $("title").html("Infovis-Designer");
+
+                            $(".grid-stack-placeholder").remove();
+                            $("#fill").parent().remove();
+
+                            $(".app-container").addClass("loader");
+                            $(".loader-container").css("display","block");
+
+                            var index = $(this).parent().parent().parent().attr("id");
+                            var arr = window.location.href.split("/");
+                            var exportId = $("#exportId").val();
+                            var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
+                            if(window.isSave == false) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "export",
+                                    data: {
+                                        "htmlCode": $(".grid-stack").html().trim(),
+                                        "exportId": exportId,
+                                        "extraMsg": shareHref
+                                    },
+                                    success: function () {
+                                        window.isSave = true;                     //点击导出后表明已保存
+
+                                        $("body").removeClass("loader");
+                                        $(".loader-container").css("display", "none");
+                                        top.window.location = "dataAnalysis.page?chartId=" + index;
+                                    },
+                                    error: function () {
+                                        alert("保存失败，请重试！");
+                                    }
+                                });
+                            }else{
+                                top.window.location = "dataAnalysis.page?chartId=" + index;
+                            }
+                        });
                     }
+                }
+            });
+
+            var domId;
+            $("#optionModal").on("show.bs.modal",function(e){
+                domId = e.relatedTarget.parentNode.parentNode.parentNode.getAttribute('id');
+            });
+
+            $(".modal-footer").eq(0).click(function(){
+                var instance = engine.chart.getInstanceByDom(document.getElementById("optionContainer"));
+                engine.chart.getInstanceByDom(document.getElementById(domId)).setOption(instance.getOption());
+                $.ajax({
+                   type: 'POST',
+                   url: 'updateChartInfo',
+                   data: {
+                       'id': domId,
+                       'jsCode': JSON.stringify(instance.getOption())
+                   },
+                   error: function(){
+                       alert("保存时失败，请重试!");
+                   }
                 });
-            }
+            });
 
             // 关闭窗口时弹出确认提示
             $(window).bind('beforeunload', function(){

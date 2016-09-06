@@ -20,24 +20,31 @@ require(['jquery', 'infovis', 'options', 'gridstack', 'bootstrap'],function($, i
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
 
         if($("#exportContainer")){
-            var ids = [];
+            var cids = [];
             var containers = $("#exportContainer").children();
             for(var i=0;i<containers.length;i++){
-                ids.push($(containers[i]).children().first().attr("id"));
+                cids.push($(containers[i]).children().first().attr("id"));
             }
             var options = {
                 float: true
             };
             $('.grid-stack').gridstack(options);
 
-            var containers = $("#exportContainer").children();
-            for(var i=0;i<containers.length-1;i++){
-                var exportChart = engine.chart.init(containers[i]);
-                exportChart.setOption(JSON.parse($("#exportOption").html())[ids[i]]);
-                window.addEventListener("resize",function(){
-                    exportChart.resize();                                            //自适应窗口
-                });
-            }
+            $.ajax({
+               type: 'POST',
+                url: 'getShareOptions',
+               data: 'cids='+cids,
+            success: function(data){
+                    for(var i=0;i<cids.length;i++){
+                        var exportChart = engine.chart.init($("#"+cids[i])[0]);
+                        exportChart.setOption(JSON.parse(data[i].jsCode));
+
+                        window.addEventListener("resize",function(){
+                            exportChart.resize();                                            //自适应窗口
+                        });
+                    }
+                }
+            });
         }
     })
 });

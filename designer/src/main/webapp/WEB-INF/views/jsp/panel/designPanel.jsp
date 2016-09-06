@@ -64,6 +64,10 @@
         .loader:after {
             z-index: 1000000;
         }
+
+        .selected {
+            border-color:red;
+        }
     </style>
 </head>
 
@@ -125,71 +129,11 @@
                         </button>
                     </div>
                     <ul class="nav navbar-nav">
-                        <li class="active panel panel-default dropdown">
-                            <a data-toggle="collapse" href="#dropdown-bar">
-                                <span class="icon fa fa-bar-chart" style="font-size: 20px;"></span><span class="title">柱状图</span>
-                            </a>
-                            <!-- Dropdown level 1 -->
-                            <div id="dropdown-bar" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <ul class="nav navbar-nav">
-                                        <li>
-                                            <div id="bar01" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="resources/img/bar01.png" alt="..." class="img-thumbnail">
-                                            </div>
-                                            <%--<div id="bar02" class="col-md-6" style="margin-top: 10px">--%>
-                                                <%--<img draggable="true" src="resources/img/bar02.png" alt="..." class="img-thumbnail">--%>
-                                            <%--</div>--%>
-                                            <%--<div id="bar03" class="col-md-6" style="margin-top: 10px">--%>
-                                                <%--<img draggable="true" src="resources/img/bar03.png" alt="..." class="img-thumbnail">--%>
-                                            <%--</div>--%>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <li>
+                            <a href="dataAnalysis.page"><span class="icon fa fa-plus"></span><span class="title">新建图表</span></a>
                         </li>
-                        <li class="panel panel-default dropdown">
-                            <a data-toggle="collapse" href="#dropdown-pie">
-                                <span class="icon fa fa-pie-chart" style="font-size: 20px;"></span><span class="title">饼图</span>
-                            </a>
-                            <!-- Dropdown level 1 -->
-                            <div id="dropdown-pie" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <ul class="nav navbar-nav">
-                                        <li>
-                                            <div id="pie01" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="resources/img/pie01.png" alt="..." class="img-thumbnail">
-                                            </div>
-                                            <%--<div id="pie02" class="col-md-6" style="margin-top: 10px">--%>
-                                                <%--<img draggable="true" src="resources/img/pie02.png" alt="..." class="img-thumbnail">--%>
-                                            <%--</div>--%>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="panel panel-default dropdown">
-                            <a data-toggle="collapse" href="#dropdown-line">
-                                <span class="icon fa fa-line-chart" style="font-size: 20px;"></span><span class="title">折线图</span>
-                            </a>
-                            <!-- Dropdown level 1 -->
-                            <div id="dropdown-line" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <ul class="nav navbar-nav">
-                                        <li>
-                                            <div id="line01" class="col-md-6" style="margin-top: 10px">
-                                                <img draggable="true" src="resources/img/line01.png" alt="..." class="img-thumbnail">
-                                            </div>
-                                            <%--<div id="line02" class="col-md-6" style="margin-top: 10px">--%>
-                                                <%--<img draggable="true" src="resources/img/line02.png" alt="..." class="img-thumbnail">--%>
-                                            <%--</div>--%>
-                                            <%--<div id="line03" class="col-md-6" style="margin-top: 10px">--%>
-                                                <%--<img draggable="true" src="resources/img/line03.png" alt="..." class="img-thumbnail">--%>
-                                            <%--</div>--%>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#myChart"><span class="icon fa fa-area-chart"></span><span class="title">添加已有图表</span></a>
                         </li>
                     </ul>
                 </div>
@@ -229,10 +173,24 @@
         </div>
     </div>
 </div>
-
-<div id="exportOption" style="display:none">
-    ${jsCode}
+<div class="modal fade" id="myChart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 70%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">我的图表</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
 </div>
+
 <script src="resources/js/lib/require.js" defer async="true" data-main="resources/js/app/designPanel"></script>
 </body>
 

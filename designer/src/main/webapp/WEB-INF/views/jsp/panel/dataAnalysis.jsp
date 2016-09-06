@@ -121,7 +121,7 @@
                     </nav>
                 </div>
                 <div class="col-lg-1">
-                    <button class="btn btn-info saveChartInfo" type="submit"><span class="glyphicon glyphicon-floppy-saved"></span> 保存</button>
+                    <a href="#" data-toggle="modal" data-target="#addChartModal"><button class="btn btn-info saveChartInfo" type="submit"><span class="glyphicon glyphicon-floppy-saved"></span> 保存</button></a>
                 </div>
             </div>
             <div class="row content-container">
@@ -171,14 +171,39 @@
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="chartType">
-                                <div><button type="button" class="btn btn-success">柱状图</button></div>
-                                <div><button type="button" class="btn btn-info">饼图</button></div>
-                                <div><button type="button" class="btn btn-warning">折线图</button></div>
+                                <div><button type="button" class="btn btn-success bar">柱状图</button></div>
+                                <div><button type="button" class="btn btn-info pie">饼图</button></div>
+                                <div><button type="button" class="btn btn-warning line">折线图</button></div>
                                 <div><button type="button" class="btn btn-primary">二维表</button></div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-success" id="addChartModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">保存图表</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="addChartForm" method="post">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">图表名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="chartName">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success">确认</button>
             </div>
         </div>
     </div>

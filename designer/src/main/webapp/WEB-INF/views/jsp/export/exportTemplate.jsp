@@ -14,9 +14,6 @@
                 ${htmlCode}
             </div>
         </div>
-        <div id="exportOption" style="display:none">
-            ${jsCode}
-        </div>
         <script src="resources/js/lib/require.js" defer async="true" data-main="resources/js/app/exportPanel"></script>
     </body>
 </html>

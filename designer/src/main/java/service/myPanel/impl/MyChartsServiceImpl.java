@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import service.myPanel.MyChartsService;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by ct on 2016/8/30.
@@ -25,8 +26,8 @@ public class MyChartsServiceImpl implements MyChartsService{
 
     @Override
     public int update(MyCharts myCharts) throws Exception {
-        delete(myCharts);
-        return insert(myCharts);
+        myCharts.setStatmentId(NAMESPACE + ".update");
+        return baseMapper.update(myCharts);
     }
 
     @Override
@@ -37,7 +38,13 @@ public class MyChartsServiceImpl implements MyChartsService{
 
     @Override
     public MyCharts selectOneChartInfo(MyCharts myCharts) throws Exception {
-        myCharts.setStatmentId(NAMESPACE + ".selectOneChartInfo");
+        myCharts.setStatmentId(NAMESPACE + ".selectOne");
         return baseMapper.selectOne(myCharts);
+    }
+
+    @Override
+    public List<MyCharts> selectChartInfo(MyCharts myCharts) throws Exception {
+        myCharts.setStatmentId(NAMESPACE + ".selectList");
+        return baseMapper.selectList(myCharts);
     }
 }

@@ -23,73 +23,88 @@ require.config({
     }
 });
 
-require(['jquery', 'options', 'infovis'], function($, baseOptions, infovis){
+require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, infovis, validate){
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
-        var exportId = window.location.href.split("=")[1].replace("&order","");
-        var order = window.location.href.split("=")[2].replace("#","");
+        var chartId = 0;              //chartId 对应myCharts表的主键，默认是0，即新建图表时，查询参数为0
+        if(window.location.href.indexOf("chartId") > 0){          //若通过点击设计面板中的表进入时，则chartId对应其在MyCharts表中的主键
+            chartId = window.location.href.split("=")[1].replace("#","");
+        }
+
         $.ajax({
             type: 'POST',
-            url: 'getOptions',
-            data: "exportId="+exportId,
+            url: 'selectOneChartInfo',
+            data: "id="+chartId,
             success: function(data){
-                var editChart = engine.chart.init(document.getElementById("editArea"));
-                editChart.setOption(JSON.parse(data["jsCode"])[order]);
-                window.currentOption = JSON.parse(data["jsCode"])[order];
-                window.data = data;
+                if(data){
+                    var editChart = engine.chart.init(document.getElementById("editArea"));
+                    editChart.setOption(JSON.parse(data.jsCode));
+                }
             },
             error: function(){
                 alert("图表配置加载失败，请重试");
             }
         });
 
-        $(".saveChartInfo").click(function(){
-            var option = engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption();
-            var optionArray = JSON.parse(window.data["jsCode"]);
-            optionArray[order] = option;
+        $("#addChartModal .btn-success").click(function(){
+            $("#addChartForm").submit();
+        });
 
-            $.ajax({
-                type: 'POST',
-                url: 'updateOptions',
-                data: {
-                    'exportId': exportId,
-                    'jsCode': JSON.stringify(optionArray)
-                },
-                success: function(){
-                    top.window.location = "showPanel.page?exportId=" + exportId;
+        $("#addChartForm").validate({
+            errorElement : 'div',
+            errorClass : 'warning-block',
+            focusInvalid : true,
+            ignore : "",
+            rules : {
+                chartName : {
+                    required : true,
+                    maxlength:300
                 }
-            });
+            },
+            messages : {
+                chartName : {
+                    required : "图表名称为必填项",
+                    maxlength: "最大长度为50个字符"
+                }
+            },
+            submitHandler : function(form){
+                if(chartId == 0){
+                    var deferred = $.ajax({
+                        type: 'POST',
+                        url: 'addCharts',
+                        data : {
+                            'chartType': window.ctype,
+                            'sqlRecordingId': window.sid,
+                            'buildModel': JSON.stringify(window.bmodel),
+                            'jsCode': JSON.stringify(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption()),
+                            'chartName': $("#addChartForm").find("input").val()
+                        }
+                    });
+                }else {
+                    var deferred = $.ajax({
+                        type: 'POST',
+                        url: 'updateChartInfo',
+                        data : {
+                            'id': chartId,
+                            'chartType': window.ctype,
+                            'sqlRecordingId': window.sid,
+                            'buildModel': JSON.stringify(window.bmodel),
+                            'jsCode': JSON.stringify(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption()),
+                            'chartName': $("#addChartForm").find("input").val()
+                        }
+                    });
+                }
+                deferred.done(function(data){
+                    $(form)[0].reset();
+                    $("#addChartModal").modal('toggle');
+                })
+            }
+        });
 
-            $.ajax({
-                type: 'POST',
-                url: 'updateChartInfo',
-                data: {
-                    'exportId': exportId,
-                    'chartId': order.toString(),
-                    'sqlRecordingId': window.sid.toString(),
-                    'buildModel': JSON.stringify(window.bmodel).toString()
-                }
-            });
-        })
     })
 });
 
 require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jqueryui,validate){
-
-    $(".thumbnail").on('mouseenter mouseleave',function(e){
-        var target = $("#operate",$(this));
-        if(e.type == 'mouseenter'){
-            target.stop();
-            target.children().css("display","block");
-            target.animate({height:'40px'});
-        }else if(e.type == 'mouseleave'){
-            target.stop();
-            target.children().css("display","none");
-            if(target.css('height') != '0px') {
-                target.animate({height: "0"});
-            }
-        }
-    });
 
     $(".dropdown").on('mouseenter mouseleave',function(e){
         if(e.type == 'mouseenter'){
@@ -103,8 +118,19 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
     });
 });
 
-//数据集操作模块
 require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
+    var chartType = 'bar';      //图表类型,默认为柱状图
+    $("#chartType").children().find("button").click(function(){
+        if($(this).hasClass("bar")){
+            chartType = 'bar';
+        }else if($(this).hasClass('line')){
+            chartType = 'line';
+        }else if($(this).hasClass("pie")){
+            chartType = 'pie';
+        }
+
+        window.ctype = chartType;                 //保存chartType 为全局变量，方便其他地方调用
+    });
 
     /**标记可接受数据类型(维度、度量)以及图表类型**/
     var axisTagMap = {
@@ -374,7 +400,6 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
             onClick: function(event, treeId, treeNode){
                 var tree = $.fn.zTree.getZTreeObj("dataListTree");
                 var sqlRecordingId = tree.getSelectedNodes()[0].id;       //数据集id
-                var chartType = window.currentOption.series[0].type;      //图表类型
 
                 window.sid = sqlRecordingId;     //用于插入图表关联信息
 
@@ -413,7 +438,6 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                         data: JSON.stringify({
                             'chartType': chartType,
                             'dataRecordId': sqlRecordingId,
-                            'exportId': window.location.href.split("=")[1].replace("&order",""),
                             'builderModel': builderModel
                         }),
                         success: function(data){
@@ -625,16 +649,12 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     }
 
     //页面数据绑定
-    var exportId = window.location.href.split("=")[1].replace("&order","");
-    var order = window.location.href.split("=")[2].replace("#","");
-
     var binddefferd = $.ajax({
         type: 'POST',
         dataType: 'json',
         url: 'selectOneChartInfo',
         data: {
-            'exportId': exportId,
-            'chartId': order
+            'id': window.location.href.split("=")[1].replace("#","")
         }
     });
 

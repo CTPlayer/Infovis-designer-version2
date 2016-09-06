@@ -22,7 +22,9 @@ import service.myPanel.MyPanelService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -93,8 +95,24 @@ public class DefaultController {
     public Object share(String exportId, ModelMap map) throws Exception {
         MyPanel myPanel = myPanelService.queryAsObject(exportId);
         map.addAttribute("htmlCode", myPanel.getHtmlCode());
-        map.addAttribute("jsCode", myPanel.getJsCode());
         return "export/exportTemplate";
+    }
+
+    /**
+     * 获取预览图表配置
+     *
+     * @param cids
+     * @throws Exception
+     */
+    @RequestMapping("/getShareOptions")
+    @ResponseBody
+    public Object getShareOptions(int[] cids,MyCharts myCharts) throws Exception{
+        List<MyCharts> list = new ArrayList<>();
+        for(int i=0;i<cids.length;i++){
+            myCharts.setId(String.valueOf(cids[i]));
+            list.add(myChartsService.selectOneChartInfo(myCharts));
+        }
+        return list;
     }
 
     /**
@@ -106,7 +124,6 @@ public class DefaultController {
     public Object query() throws Exception {
         return "panel/myPanel";
     }
-
 
     @RequestMapping("/dataAnalysis.page")
     public Object dataAnalysis() throws Exception {
@@ -147,32 +164,44 @@ public class DefaultController {
         return myPanelService.delete(exportId);
     }
 
+//    /**
+//     * 根据exportId查询对应设计面板中所有的图表option
+//     *
+//     * @param exportId
+//     * @throws Exception
+//     */
+//    @RequestMapping("/getOptions")
+//    @ResponseBody
+//    public Object getOptions(String exportId) throws Exception {
+//        return myPanelService.queryAsObject(exportId);
+//    }
+
+//    /**
+//     * 更新设计面板中的options
+//     *
+//     * @param myPanel
+//     * @throws Exception
+//     */
+//    @RequestMapping("/updateOptions")
+//    @ResponseBody
+//    public Object updateOptions(MyPanel myPanel) throws Exception {
+//        return myPanelService.update(myPanel);
+//    }
+
     /**
-     * 根据exportId查询对应设计面板中所有的图表option
+     * 添加我的图表
      *
-     * @param exportId
+     * @param myCharts
      * @throws Exception
      */
-    @RequestMapping("/getOptions")
+    @RequestMapping("/addCharts")
     @ResponseBody
-    public Object getOptions(String exportId) throws Exception {
-        return myPanelService.queryAsObject(exportId);
+    public Object addCharts(MyCharts myCharts) throws  Exception{
+        return myChartsService.insert(myCharts);
     }
 
     /**
-     * 更新设计面板中的options
-     *
-     * @param myPanel
-     * @throws Exception
-     */
-    @RequestMapping("/updateOptions")
-    @ResponseBody
-    public Object updateOptions(MyPanel myPanel) throws Exception {
-        return myPanelService.update(myPanel);
-    }
-
-    /**
-     * 更新图表关联信息（并未使用update语句，而是先删除再插入）
+     * 更新图表信息
      *
      * @param myCharts
      * @throws Exception
@@ -188,6 +217,21 @@ public class DefaultController {
     public Object selectOneChartInfo(MyCharts myCharts) throws Exception {
         myCharts =  myChartsService.selectOneChartInfo(myCharts);
         return myCharts;
+    }
+
+    /**
+     * 查询所有图表信息
+     *
+     * @param myCharts
+     * @throws Exception
+     */
+    @RequestMapping("/selectChartInfo")
+    @ResponseBody
+    public Object selectList(MyCharts myCharts) throws  Exception {
+        myCharts.setPaging(false);
+        Map<String, Object> respMap = new HashMap<>();
+        respMap.put("data",myChartsService.selectChartInfo(myCharts));
+        return respMap;
     }
 
     /**
