@@ -140,7 +140,7 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
 
 require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
     var chartType = 'bar';      //图表类型,默认为柱状图
-    $("#chartType").children().find("button").click(function(){
+    $(".chart-type").find("span").click(function(){
         if($(this).hasClass("bar")){
             chartType = 'bar';
         }else if($(this).hasClass('line')){
@@ -669,12 +669,16 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
     }
 
     //页面数据绑定
+    var chartId = 0;              //chartId 对应myCharts表的主键，默认是0，即新建图表时，查询参数为0
+    if(window.location.href.indexOf("chartId") > 0){          //若通过点击设计面板中的表进入时，则chartId对应其在MyCharts表中的主键
+        chartId = window.location.href.split("=")[1].replace("#","");
+    }
     var binddefferd = $.ajax({
         type: 'POST',
         dataType: 'json',
         url: 'selectOneChartInfo',
         data: {
-            'id': window.location.href.split("=")[1].replace("#","")
+            'id': chartId
         }
     });
 
