@@ -2,10 +2,6 @@
     color: #0f77b1;
 }
 
-.flat-blue .navbar.navbar-inverse .navbar-nav > li.danger > a {
-    color: red;
-}
-
 #page-wrapper {
     padding: 0 15px;
     height: 700px;

@@ -29,10 +29,6 @@
             color: #0f77b1;
         }
 
-        .flat-blue .navbar.navbar-inverse .navbar-nav > li.danger > a{
-            color: red;
-        }
-
         #operate i {
             font-size: 20px;
             float:right;
