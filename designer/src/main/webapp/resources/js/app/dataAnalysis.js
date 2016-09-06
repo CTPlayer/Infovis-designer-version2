@@ -48,6 +48,7 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
 
         $("#addChartModal .btn-success").click(function(){
             $("#addChartForm").submit();
+            console.log(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption());
         });
 
         $("#addChartForm").validate({
@@ -73,7 +74,7 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                         type: 'POST',
                         url: 'addCharts',
                         data : {
-                            'chartType': window.ctype,
+                            'chartType': engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption().series[0].type,
                             'sqlRecordingId': window.sid,
                             'buildModel': JSON.stringify(window.bmodel),
                             'jsCode': JSON.stringify(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption()),
@@ -86,7 +87,7 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                         url: 'updateChartInfo',
                         data : {
                             'id': chartId,
-                            'chartType': window.ctype,
+                            'chartType': engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption().series[0].type,
                             'sqlRecordingId': window.sid,
                             'buildModel': JSON.stringify(window.bmodel),
                             'jsCode': JSON.stringify(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption()),
