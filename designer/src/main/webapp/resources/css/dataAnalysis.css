@@ -167,3 +167,7 @@ form.make-model-region .labelDiv .mark-item-right {
 .chart-type-select-panel .drag-tips{
     margin:4px;
 }
+
+.chart-type .active{
+    background-color: #ccc;
+}
