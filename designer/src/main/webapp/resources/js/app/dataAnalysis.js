@@ -48,7 +48,11 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
         });
 
         $("#addChartModal .btn-success").click(function(){
-            $("#addChartForm").submit();
+            if(engine.chart.getInstanceByDom(document.getElementById("editArea"))){
+                $("#addChartForm").submit();
+            }else{
+                alert("请先绘制图表");
+            };
         });
 
         $("#addChartForm").validate({
@@ -88,7 +92,6 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                         data : {
                             'id': chartId,
                             'chartType': engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption().series[0].type,
-                            'sqlRecordingId': window.sid,
                             'buildModel': JSON.stringify(window.bmodel),
                             'jsCode': JSON.stringify(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption()),
                             'chartName': $("#addChartForm").find("input").val()
