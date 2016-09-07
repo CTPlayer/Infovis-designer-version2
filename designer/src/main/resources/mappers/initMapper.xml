@@ -67,11 +67,11 @@
       );
 
       <!--设计面板，图表中间表-->
-      <!--CREATE TABLE IF NOT EXISTS T_PANEL_CHARTS(
+      CREATE TABLE IF NOT EXISTS T_PANEL_CHARTS(
         ID BIGINT AUTO_INCREMENT NOT NULL COMMENT ' 主键',
         EXPORT_ID VARCHAR(36) NOT NULL COMMENT '设计面板唯一标识',
         CHART_ID BIGINT NOT NULL COMMENT '图表标识',
         ORDER_ID BIGINT NOT NULL COMMENT '相同设计面板中的容器标识'
-      )-->
+      )
     </update>
 </mapper>

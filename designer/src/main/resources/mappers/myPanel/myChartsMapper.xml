@@ -13,6 +13,7 @@
             <if test="buildModel != null">BUILD_MODEL = #{buildModel},</if>
             <if test="jsCode != null">JS_CODE = #{jsCode},</if>
             <if test="chartType != null">CHART_TYPE = #{chartType},</if>
+            <if test="chartName != null">CHART_NAME = #{chartName},</if>
         </set>
         <where>
             id = #{id}
