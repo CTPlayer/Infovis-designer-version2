@@ -299,6 +299,9 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
                 target.parent().css("border",'none');
                 target.parent().html('<i class="fa fa-tags"></i> 标签');
             }
+            if(window.sqlRecordingId){
+                commonModule.renderChart(engine,chartType,window.sqlRecordingId);
+            }
         });
     };
 
@@ -328,6 +331,9 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
         $('.trigger-column-tag .trigger-column-tag-close').click(function(){
             var target = $(this).parent().parent();
             target.remove();
+            if(window.sqlRecordingId){
+                commonModule.renderChart(engine,chartType,window.sqlRecordingId);
+            }
         });
 
     }
