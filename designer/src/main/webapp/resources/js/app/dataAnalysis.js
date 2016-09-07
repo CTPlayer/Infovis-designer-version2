@@ -12,7 +12,8 @@ require.config({
         "jqueryCookie": "lib/jquery.cookie",
         "jqueryMd5": "lib/jquery.md5",
         "mousewheel": 'lib/mCustomScrollbar/jquery.mousewheel.min',
-        "scrollbar" : 'lib/mCustomScrollbar/jquery.mCustomScrollbar.min'
+        "scrollbar" : 'lib/mCustomScrollbar/jquery.mCustomScrollbar.min',
+        "commonModule" : 'app/commonModule'
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -48,7 +49,6 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
 
         $("#addChartModal .btn-success").click(function(){
             $("#addChartForm").submit();
-            console.log(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption());
         });
 
         $("#addChartForm").validate({
@@ -119,7 +119,7 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
     });
 });
 
-require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
+require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions,commonModule){
     var chartType = 'bar';      //图表类型,默认为柱状图
     $(".chart-type").find("span").click(function(){
         $(this).addClass('active');
@@ -138,7 +138,6 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
             $('.chart-type-select-panel .drag-tips .tips-pie').siblings().hide();
         }
         chartTypeChangeTag(chartType);
-        window.ctype = chartType;                 //保存chartType 为全局变量，方便其他地方调用
     });
 
     /**
@@ -430,52 +429,8 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
             onClick: function(event, treeId, treeNode){
                 var tree = $.fn.zTree.getZTreeObj("dataListTree");
                 var sqlRecordingId = tree.getSelectedNodes()[0].id;       //数据集id
-
+                var engine = infovis.init(baseOptions.makeAllOptions() || {});    //图表渲染引擎
                 window.sid = sqlRecordingId;     //用于插入图表关联信息
-
-                var engine = infovis.init(baseOptions.makeAllOptions() || {});
-                function renderChart(){
-                    var color = $(".mark-item-color").find("span").text().trim();
-                    var angle = $(".mark-item-corner").find("span").text().trim();
-                    var tag = $(".mark-item-tag").find("span").text().trim();
-                    var xAxis = [];
-                    var yAxis = [];
-
-                    xAxis.push($(".xAxis").find("span").text().trim());
-                    yAxis.push($(".yAxis").find("span").text().trim());
-
-                    if(chartType == 'pie'){
-                        var builderModel = {
-                            'mark': {
-                                'color': color,
-                                'angle': angle,
-                                'tag': tag
-                            }
-                        }
-                    }else if(chartType == 'line' || chartType == 'bar'){
-                        var builderModel = {
-                            'xAxis':  xAxis,
-                            'yAxis':  yAxis
-                        }
-                    }
-
-                    window.bmodel = builderModel;         //用于插入图表关联信息
-
-                    $.ajax({
-                        type: 'POST',
-                        contentType: "application/json; charset=utf-8",
-                        url: 'render',
-                        data: JSON.stringify({
-                            'chartType': chartType,
-                            'dataRecordId': sqlRecordingId,
-                            'builderModel': builderModel
-                        }),
-                        success: function(data){
-                            var editChart = engine.chart.init(document.getElementById("editArea"));
-                            editChart.setOption(data);
-                        }
-                    });
-                }
 
                 if(!treeNode.dbUrl) {
                     $('#side-menu li a:eq(0)').html("<i class='fa fa-sitemap fa-fw'></i>" + treeNode.dbName + "<span class='fa arrow'></span>");
@@ -544,7 +499,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                                 var targetNodeText = $(ui.draggable).find("a").find("span").html();
                                 var isRenderChart = tagDropRender(targetNodeText,tagType,$(this),dragUIDataType(ui),chartType);
                                 if(isRenderChart){
-                                    renderChart();
+                                    commonModule.renderChart(engine,chartType,sqlRecordingId);
                                 }
                                 $(this).css("border","1px dashed #ccc");
                                 $(this).css("background-color","white");
@@ -559,7 +514,6 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                             }
                         });
 
-                        var engine = infovis.init(baseOptions.makeAllOptions() || {});
                         /**
                          * 颜色tag
                          */
@@ -568,7 +522,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                                 var targetNodeText = $(ui.draggable).find("a").find("span").html();
                                 var isRenderChart = tagDropRender(targetNodeText,'color',$(this),dragUIDataType(ui),chartType);
                                 if(isRenderChart){
-                                    renderChart();
+                                    commonModule.renderChart(engine,chartType,sqlRecordingId);
                                 }
                             },
                             over: function (event, ui) {
@@ -589,7 +543,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                                 var targetNodeText = $(ui.draggable).find("a").find("span").html();
                                 var isRenderChart = tagDropRender(targetNodeText,'corner',$(this),dragUIDataType(ui),chartType);
                                 if(isRenderChart){
-                                    renderChart();
+                                    commonModule.renderChart(engine,chartType,sqlRecordingId);
                                 }
                             },
                             over: function (event, ui) {
@@ -610,7 +564,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                                 var targetNodeText = $(ui.draggable).find("a").find("span").html();
                                 var isRenderChart = tagDropRender(targetNodeText,'tag',$(this),dragUIDataType(ui),chartType);
                                 if(isRenderChart){
-                                    renderChart();
+                                    commonModule.renderChart(engine,chartType,sqlRecordingId);
                                 }
                             },
                             over: function (event, ui) {
