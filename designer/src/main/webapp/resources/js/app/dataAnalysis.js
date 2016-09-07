@@ -156,6 +156,17 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
         chartTypeChangeTag(chartType);
     });
 
+
+    /**重置全部标签内容**/
+    var resetTagContent = function () {
+        $('.xAxis').html('');
+        $('.yAxis').html('');
+        restoreTagStyle($('form.make-model-region .mark-item-color'));
+        $('form.make-model-region .mark-item-color').html('<i class="fa fa-tachometer"></i> 颜色');
+        restoreTagStyle($('form.make-model-region .mark-item-corner'));
+        $('form.make-model-region .mark-item-corner').html('<i class="fa fa-clock-o"></i> 角度');
+    }
+
     /**
      * 图表类型切换，标签相应切换
      */
@@ -459,6 +470,9 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
                 var tree = $.fn.zTree.getZTreeObj("dataListTree");
                 var sqlRecordingId = tree.getSelectedNodes()[0].id;       //数据集id
                 var engine = infovis.init(baseOptions.makeAllOptions() || {});    //图表渲染引擎
+                if(window.sqlRecordingId && sqlRecordingId != window.sqlRecordingId){//数据源切换，重置标签
+                    resetTagContent();
+                }
                 window.sqlRecordingId = sqlRecordingId;     //用于插入图表关联信息
 
                 if(!treeNode.dbUrl) {
@@ -696,6 +710,7 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
         }
         window.sqlRecordingId = result.sqlRecordingId;
         if(result.chartType){
+            chartType = result.chartType;
             switch (result.chartType){
                 case 'pie':
                     chartTypeSpanRegistry($('.chart-type .pie'));
