@@ -197,7 +197,8 @@ public class DefaultController {
     @RequestMapping("/addCharts")
     @ResponseBody
     public Object addCharts(MyCharts myCharts) throws  Exception{
-        return myChartsService.insert(myCharts);
+        myChartsService.insert(myCharts);
+        return myCharts.getId();
     }
 
     /**

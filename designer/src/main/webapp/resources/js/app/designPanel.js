@@ -128,6 +128,19 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     '</div>'),node.x, node.y, node.width, node.height);
             };
 
+            if(window.location.href.indexOf("chartId") > 0){
+                var chartId = window.location.href.split("=")[2].replace("#","");
+                $.ajax({
+                   type: 'POST',
+                   url: 'selectOneChartInfo',
+                   data: "id="+chartId,
+                   success: function(data){
+                       add_new_widget(0,0,data.id);
+                       engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
+                   } 
+                });
+            }
+
             $("#myChart").find(".btn-primary").click(function(){
                 $(".thumbnail").each(function(){
                     if($(this).hasClass("selected")){
@@ -220,14 +233,14 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                                                 $("body").removeClass("loader");
                                                 $(".loader-container").css("display", "none");
-                                                top.window.location = "dataAnalysis.page?chartId=" + index;
+                                                top.window.location = "dataAnalysis.page?chartId=" + index + "&exportId=" + exportId;
                                             },
                                             error: function () {
                                                 alert("保存失败，请重试！");
                                             }
                                         });
                                     }else{
-                                        top.window.location = "dataAnalysis.page?chartId=" + index;
+                                        top.window.location = "dataAnalysis.page?chartId=" + index + "&exportId=" + exportId;
                                     }
                                 });
 
@@ -407,14 +420,14 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                                         $("body").removeClass("loader");
                                         $(".loader-container").css("display", "none");
-                                        top.window.location = "dataAnalysis.page?chartId=" + index;
+                                        top.window.location = "dataAnalysis.page?chartId=" + index + "&exportId=" + exportId;
                                     },
                                     error: function () {
                                         alert("保存失败，请重试！");
                                     }
                                 });
                             }else{
-                                top.window.location = "dataAnalysis.page?chartId=" + index;
+                                top.window.location = "dataAnalysis.page?chartId=" + index + "&exportId=" + exportId;
                             }
                         });
                     }

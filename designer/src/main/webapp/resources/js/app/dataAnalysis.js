@@ -28,8 +28,12 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
         var chartId = 0;              //chartId 对应myCharts表的主键，默认是0，即新建图表时，查询参数为0
+        var exportId;                 //对应当前的设计面板
         if(window.location.href.indexOf("chartId") > 0){          //若通过点击设计面板中的表进入时，则chartId对应其在MyCharts表中的主键
-            chartId = window.location.href.split("=")[1].replace("#","");
+            chartId = window.location.href.split("=")[1].replace("&order","");
+            exportId = window.location.href.split("=")[2].replace("#","");
+        }else{
+            exportId = window.location.href.split("=")[1].replace("#","");
         }
 
         $.ajax({
@@ -40,6 +44,7 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                 if(data){
                     var editChart = engine.chart.init(document.getElementById("editArea"));
                     editChart.setOption(JSON.parse(data.jsCode));
+                    $("#addChartModal").find("input").val(data.chartName);
                 }
             },
             error: function(){
@@ -85,6 +90,11 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                             'chartName': $("#addChartForm").find("input").val()
                         }
                     });
+                    deferred.done(function(data){
+                        $(form)[0].reset();
+                        $("#addChartModal").modal('toggle');
+                        top.window.location = "showPanel.page?exportId="+exportId+"&chartId="+data;
+                    })
                 }else {
                     var deferred = $.ajax({
                         type: 'POST',
@@ -97,11 +107,12 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                             'chartName': $("#addChartForm").find("input").val()
                         }
                     });
+                    deferred.done(function(data){
+                        $(form)[0].reset();
+                        $("#addChartModal").modal('toggle');
+                        top.window.location = "showPanel.page?exportId="+exportId;
+                    })
                 }
-                deferred.done(function(data){
-                    $(form)[0].reset();
-                    $("#addChartModal").modal('toggle');
-                })
             }
         });
 
@@ -690,7 +701,7 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
     //页面数据绑定
     var chartId = 0;              //chartId 对应myCharts表的主键，默认是0，即新建图表时，查询参数为0
     if(window.location.href.indexOf("chartId") > 0){          //若通过点击设计面板中的表进入时，则chartId对应其在MyCharts表中的主键
-        chartId = window.location.href.split("=")[1].replace("#","");
+        chartId = window.location.href.split("=")[1].replace("&order","");
     }else{//新建图表,默认bar
         chartTypeSpanRegistry($('.chart-type .bar'));
     }

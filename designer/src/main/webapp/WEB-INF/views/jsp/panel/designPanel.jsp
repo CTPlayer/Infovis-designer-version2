@@ -130,7 +130,7 @@
                     </div>
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="dataAnalysis.page"><span class="icon fa fa-plus"></span><span class="title">新建图表</span></a>
+                            <a href="dataAnalysis.page?exportId=${exportId}"><span class="icon fa fa-plus"></span><span class="title">新建图表</span></a>
                         </li>
                         <li>
                             <a href="#" data-toggle="modal" data-target="#myChart"><span class="icon fa fa-area-chart"></span><span class="title">添加已有图表</span></a>

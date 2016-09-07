@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="model.myPanel.MyCharts">
-    <insert id="insert" parameterType="MyCharts" databaseId="h2">
+    <insert id="insert" parameterType="MyCharts" useGeneratedKeys="true" keyProperty="id" databaseId="h2">
         insert into T_MY_CHARTS(SQLRECORDING_ID,BUILD_MODEL,CHART_TYPE,JS_CODE,CHART_NAME)
         values (#{sqlRecordingId},#{buildModel},#{chartType},#{jsCode},#{chartName});
     </insert>
