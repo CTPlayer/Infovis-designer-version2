@@ -117,41 +117,50 @@ require(['jquery','validate','jquery-ui','bootstrap','metisMenu'], function($,jq
     $('#side-menu').metisMenu({
         toggle: false
     });
-
-    $('.chart-type span').click(function () {
-        var target = $(this);
-        target.css('background-color','#ccc');
-        target.siblings().css('background-color', '#f5f5f5');
-
-        var isLine = target.hasClass('line');
-        var isBar = target.hasClass('bar');
-        var isPie = target.hasClass('pie');
-        if(isLine){
-            $('.chart-type-select-panel .drag-tips .tips-line').show();
-            $('.chart-type-select-panel .drag-tips .tips-line').siblings().hide();
-        }else if(isBar){
-            $('.chart-type-select-panel .drag-tips .tips-bar').show();
-            $('.chart-type-select-panel .drag-tips .tips-bar').siblings().hide();
-        }else if(isPie){
-            $('.chart-type-select-panel .drag-tips .tips-pie').show();
-            $('.chart-type-select-panel .drag-tips .tips-pie').siblings().hide();
-        }
-    });
 });
 
 require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCookie','jqueryMd5','bootstrap'], function($,ztree,infovis,baseOptions){
     var chartType = 'bar';      //图表类型,默认为柱状图
     $(".chart-type").find("span").click(function(){
+        $(this).addClass('active');
+        $(this).siblings().removeClass("active");
         if($(this).hasClass("bar")){
             chartType = 'bar';
+            $('.chart-type-select-panel .drag-tips .tips-bar').show();
+            $('.chart-type-select-panel .drag-tips .tips-bar').siblings().hide();
         }else if($(this).hasClass('line')){
             chartType = 'line';
+            $('.chart-type-select-panel .drag-tips .tips-line').show();
+            $('.chart-type-select-panel .drag-tips .tips-line').siblings().hide();
         }else if($(this).hasClass("pie")){
             chartType = 'pie';
+            $('.chart-type-select-panel .drag-tips .tips-pie').show();
+            $('.chart-type-select-panel .drag-tips .tips-pie').siblings().hide();
         }
-
+        chartTypeChangeTag(chartType);
         window.ctype = chartType;                 //保存chartType 为全局变量，方便其他地方调用
     });
+
+    /**
+     * 图表类型切换，标签相应切换
+     */
+    var chartTypeChangeTag = function (chartType) {
+        var xAxisText = $('.xAxis span').text().trim() || '';
+        var yAxisText = $('.yAxis span').text().trim() || '';
+        var colorText = $('form.make-model-region .mark-item-color span').text().trim() || '';
+        var cornerText = $('form.make-model-region .mark-item-corner span').text().trim() || '';
+        if(chartType == 'pie'){
+            if(xAxisText != ''){
+                tagDropRender(xAxisText,'color',$("form.make-model-region .mark-down-column .mark-item-color"),'text',chartType);
+                $('.xAxis').html('');
+            }
+            if(yAxisText != ''){
+                tagDropRender(yAxisText,'corner',$("form.make-model-region .mark-down-column .mark-item-corner"),'number',chartType);
+                $('.yAxis').html('');
+            }
+            //renderChart();
+        }
+    }
 
     /**标记可接受数据类型(维度、度量)以及图表类型**/
     var axisTagMap = {
@@ -623,7 +632,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
 
     //获取cookie中的维度与度量
     var getCookieInfo = function(res){
-        var key = $.md5(res);
+        var key = $.md5(JSON.stringify(res));
         var result;
         var cookieResult = $.cookie(key);
         if(cookieResult){
@@ -666,7 +675,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
         $.each($('#side-menu ul.nav.nav-third-level:eq(1) span'),function (index, element) {
             columnModle.measure.push($(element).text());
         })
-        $.cookie($.md5(result),JSON.stringify(columnModle),{ expires: 10 });
+        $.cookie($.md5(JSON.stringify(result)),JSON.stringify(columnModle),{ expires: 10 });
     }
 
     //页面数据绑定
@@ -687,10 +696,10 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
         var buildModel = JSON.parse(result.buildModel);
         if(buildModel.mark){//pie
             if(buildModel.mark.color) {
-                tagDropRender(buildModel.mark.color,'color',$("form.make-model-region .mark-down-column .mark-item-color"),'text','');
+                tagDropRender(buildModel.mark.color,'color',$("form.make-model-region .mark-down-column .mark-item-color"),'text','pie');
             }
             if(buildModel.mark.angle){
-                tagDropRender(buildModel.mark.angle,'corner',$("form.make-model-region .mark-down-column .mark-item-corner"),'number','');
+                tagDropRender(buildModel.mark.angle,'corner',$("form.make-model-region .mark-down-column .mark-item-corner"),'number','pie');
             }
         }
         if(buildModel.xAxis){
