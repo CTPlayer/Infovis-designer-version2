@@ -135,6 +135,15 @@
                         <li>
                             <a href="#" data-toggle="modal" data-target="#myChart"><span class="icon fa fa-area-chart"></span><span class="title">添加已有图表</span></a>
                         </li>
+                        <li>
+                            <a href="#"><span class="icon fa fa-magic"></span><span class="title">配色设置</span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon glyphicon glyphicon-picture"></span><span class="title">背景设置</span></a>
+                        </li>
+                        <li>
+                            <a href="#"><span class="icon glyphicon glyphicon-text-size"></span><span class="title">文字组件</span></a>
+                        </li>
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->
