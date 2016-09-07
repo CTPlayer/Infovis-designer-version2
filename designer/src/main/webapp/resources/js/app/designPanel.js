@@ -97,6 +97,15 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
             window.isSave = true;   //记录页面是否有改动
 
+            var order  = 0;
+            //给order赋值，用来在已有面板中继续添加图标时能接着前面已有图表的order顺序
+            var containers = $(".grid-stack").children();
+            for(var i=0;i<containers.length;i++){
+                if($(containers[i]).children().first().attr("id")){
+                    order = $(containers[i]).children().first().attr("id");
+                }
+            }
+
             var options = {
                 float: true,
                 vertical_margin: 10
@@ -106,7 +115,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             var grid = $('.grid-stack').data('gridstack');
 
             var add_new_widget = function (pagex,pagey,cid) {
-                // order++;
+                order++;
                 var node = {
                     x: pagex,
                     y: pagey,
@@ -114,7 +123,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     height: 4
                 };
                 var nWidget = grid.add_widget($('<div>'+
-                    '<div class="grid-stack-item-content"' + 'id="'+cid+'">'+
+                    '<div class="grid-stack-item-content"' + 'id="'+ order + '"chartId="' + cid+ '">'+
                     '</div>'+
                     '</div>'),node.x, node.y, node.width, node.height);
             };
@@ -132,17 +141,17 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                 window.isSave = false;
 
                                 add_new_widget(0,0,cid);
-                                engine.chart.init($("#"+cid)[0]).setOption(JSON.parse(data.jsCode));
+                                engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
 
                                 // 图表初始化完成后添加菜单
-                                $("#"+cid).append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
+                                $("#"+order).append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
                                     '<span style="display:none;">'+
                                     '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
                                     '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
                                     '<a href="#"><i class="fa fa-cog" style="color: white"></i></a>'+
                                     '</span>'+
                                     '</div>');
-                                $("#"+cid).on('mouseenter mouseleave',function(e){
+                                $("#"+order).on('mouseenter mouseleave',function(e){
                                     var target = $("#operate",$(this));
                                     if(e.type == 'mouseenter'){
                                         target.stop();
@@ -157,14 +166,14 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                     }
                                 });
                                 //删除当前容器
-                                $("#"+cid).find('a').eq(0).click(function(){
+                                $("#"+order).find('a').eq(0).click(function(){
                                     var area = $(this).parent().parent().parent();
                                     $(area).parent().remove();
                                 });
 
                                 //将选中即将配置的图表渲染到配置面板
                                 //双向绑定
-                                $("#"+cid).find('a').eq(1).click(function(){
+                                $("#"+order).find('a').eq(1).click(function(){
                                     var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
                                     var type = instance.getOption().series[0].type;
 
@@ -184,7 +193,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                     });
                                 });
 
-                                $("#"+cid).find('a').eq(2).click(function(){
+                                $("#"+order).find('a').eq(2).click(function(){
                                     $("title").html("Infovis-Designer");
 
                                     $(".grid-stack-placeholder").remove();
@@ -193,7 +202,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                     $(".app-container").addClass("loader");
                                     $(".loader-container").css("display","block");
 
-                                    var index = $(this).parent().parent().parent().attr("id");
+                                    var index = $(this).parent().parent().parent().attr("chartId");
                                     var arr = window.location.href.split("/");
                                     var exportId = $("#exportId").val();
                                     var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
@@ -254,7 +263,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 var arr = window.location.href.split("/");
                 var exportId = $("#exportId").val();
                 var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
-                // for(var i=0;i<$(".grid-stack").children().length;i++){
+
                 $.ajax({
                     type: 'POST',
                     url: "export",
@@ -274,14 +283,15 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         alert("保存失败，请重试！");
                     }
                 });
-                // }
+
             });
 
             // 为了防止再次进入以后设计面板时先前的图表不能自定义大小，这里获取先前图表的容器属性，重新添加容器并渲染图表
             var containers = $(".grid-stack").children();
 
             containers.remove();
-            var cids = [];
+            var cids = [];          //保存图表id
+            var ids = [];           //保存容器id
             //每个已存在容器的y坐标需要单独获取
             var positionY = [];
             for(var i=0;i<containers.length-1;i++) {
@@ -299,11 +309,13 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 var y = positionY[i];
                 var width = $(containers[i]).attr("data-gs-width");
                 var height = $(containers[i]).attr("data-gs-height");
-                var cid = $(containers[i]).children().attr("id");
+                var cid = $(containers[i]).children().attr("chartId");
+                var id = $(containers[i]).children().attr("id");
                 cids.push(cid);
+                ids.push(id);
 
                 grid.add_widget($('<div>'+
-                    '<div class="grid-stack-item-content"' + 'id="'+cid+'">'+
+                    '<div class="grid-stack-item-content"' + 'id="'+ id + '"chartId="' + cid+ '">'+
                     '</div>'+
                     '</div>'),x, y, width, height);
             }
@@ -314,18 +326,18 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 data: 'cids='+cids,
                 success: function(data){
                     for(var i=0;i<cids.length;i++){
-                        var exportChart = engine.chart.init($("#"+cids[i])[0]);
+                        var exportChart = engine.chart.init($("#"+ids[i])[0]);
                         exportChart.setOption(JSON.parse(data[i].jsCode));
 
                         // 图表初始化完成后添加菜单
-                        $("#"+cids[i]).append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
+                        $("#"+ids[i]).append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
                             '<span style="display:none;">'+
                             '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
                             '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
                             '<a href="#"><i class="fa fa-cog" style="color: white"></i></a>'+
                             '</span>'+
                             '</div>');
-                        $("#"+cids[i]).on('mouseenter mouseleave',function(e){
+                        $("#"+ids[i]).on('mouseenter mouseleave',function(e){
                             var target = $("#operate",$(this));
                             if(e.type == 'mouseenter'){
                                 target.stop();
@@ -341,14 +353,14 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         });
 
                         //删除当前容器
-                        $("#"+cids[i]).find('a').eq(0).click(function(){
+                        $("#"+ids[i]).find('a').eq(0).click(function(){
                             var area = $(this).parent().parent().parent();
                             $(area).parent().remove();
                         });
 
                         //将选中即将配置的图表渲染到配置面板
                         //双向绑定
-                        $("#"+cids[i]).find('a').eq(1).click(function(){
+                        $("#"+ids[i]).find('a').eq(1).click(function(){
                             var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
                             var type = instance.getOption().series[0].type;
 
@@ -368,7 +380,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                             });
                         });
 
-                        $("#"+cids[i]).find('a').eq(2).click(function(){
+                        $("#"+ids[i]).find('a').eq(2).click(function(){
                             $("title").html("Infovis-Designer");
 
                             $(".grid-stack-placeholder").remove();
@@ -377,7 +389,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                             $(".app-container").addClass("loader");
                             $(".loader-container").css("display","block");
 
-                            var index = $(this).parent().parent().parent().attr("id");
+                            var index = $(this).parent().parent().parent().attr("chartId");
                             var arr = window.location.href.split("/");
                             var exportId = $("#exportId").val();
                             var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
@@ -421,7 +433,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                    type: 'POST',
                    url: 'updateChartInfo',
                    data: {
-                       'id': domId,
+                       'id': $("#"+domId).attr("chartId"),
                        'jsCode': JSON.stringify(instance.getOption())
                    },
                    error: function(){
