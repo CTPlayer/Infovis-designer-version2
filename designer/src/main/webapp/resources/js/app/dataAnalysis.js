@@ -371,6 +371,10 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
         return dragDataType;
     }
 
+
+    var firstLevelDeferred = $.Deferred();  //用于通知第一层树的加载
+    var secondLevelDeferred = $.Deferred(); //用于通知第二层树的加载
+
     var setting_datalist = {
         async: {
             enable: true,
@@ -426,6 +430,11 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
                     axis:"yx",
                     theme:"dark"
                 });
+                if(arguments[3][0].dbUrl){
+                    firstLevelDeferred.resolve();
+                }else{
+                    secondLevelDeferred.resolve();
+                }
             },
             onClick: function(event, treeId, treeNode){
                 var tree = $.fn.zTree.getZTreeObj("dataListTree");
@@ -692,6 +701,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
         }
     });
 
+    //数据绑定部分
     binddefferd.done(function (result) {
         var buildModel = JSON.parse(result.buildModel);
         if(buildModel.mark){//pie
@@ -710,4 +720,35 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
             tagDropRender(buildModel.yAxis,'yAxis',$("form.make-model-region .yAxis"),'number','');
         }
     });
+
+    //查询父级节点id
+    binddefferd.done(function (result) {
+        var parentNode;
+        var treeObj = $.fn.zTree.getZTreeObj("dataListTree");
+
+        var queryParentDeferred = $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: 'sqlRecordingManage/query',
+            data: {
+                'id': result.sqlRecordingId
+            }
+        });
+
+        queryParentDeferred.done(function (v) {
+            parentNode = treeObj.getNodesByFilter(function (node) {
+                return (node.id == v[0].connectionId && node.dbUrl);
+            }, true); // 仅查找一个节点
+            treeObj.expandNode(parentNode, true, true, true);
+        })
+
+        //当树第一层第二层加载好时执行以下逻辑
+        $.when(firstLevelDeferred,secondLevelDeferred).done(function (v1, v2) {
+            var childNode = treeObj.getNodesByFilter(function (node) {
+                return node.id == result.sqlRecordingId;
+            }, true, parentNode); // 仅查找一个节点
+            treeObj.selectNode(childNode);
+            treeObj.setting.callback.onClick(null,"dataListTree",childNode)
+        })
+    })
 });
