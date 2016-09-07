@@ -1,7 +1,7 @@
 /**
  * Created by ct on 2016/9/7.
  */
-define(['jquery'],function($){
+define(['jquery'], function($){
     var renderChart = function(engine,chartType,sqlRecordingId){
         var color = $(".mark-item-color").find("span").text().trim();
         var angle = $(".mark-item-corner").find("span").text().trim();
@@ -43,7 +43,7 @@ define(['jquery'],function($){
                 editChart.setOption(data);
             }
         });
-    }
+    };
 
     return {
         renderChart : renderChart
