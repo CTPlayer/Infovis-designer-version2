@@ -68,6 +68,13 @@
         .selected {
             border-color:red;
         }
+
+        #chartTitle {
+            font-size: 30px;
+            color: white;
+            padding-left:20px;
+            margin-top:10px
+        }
     </style>
 </head>
 

@@ -14,6 +14,7 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
 
         target.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
             '<span style="display:none;">'+
+            '<span id="chartTitle">123</span>'+
             '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
             '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
             '<a href="#"><i class="fa fa-cog" style="color: white"></i></a>'+
