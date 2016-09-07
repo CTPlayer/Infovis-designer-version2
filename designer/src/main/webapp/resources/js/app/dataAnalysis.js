@@ -632,7 +632,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
 
     //获取cookie中的维度与度量
     var getCookieInfo = function(res){
-        var key = $.md5(res);
+        var key = $.md5(JSON.stringify(res));
         var result;
         var cookieResult = $.cookie(key);
         if(cookieResult){
@@ -675,7 +675,7 @@ require(['jquery','ztree','infovis','options','mousewheel','scrollbar','jqueryCo
         $.each($('#side-menu ul.nav.nav-third-level:eq(1) span'),function (index, element) {
             columnModle.measure.push($(element).text());
         })
-        $.cookie($.md5(result),JSON.stringify(columnModle),{ expires: 10 });
+        $.cookie($.md5(JSON.stringify(result)),JSON.stringify(columnModle),{ expires: 10 });
     }
 
     //页面数据绑定
