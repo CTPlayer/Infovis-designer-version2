@@ -30,7 +30,7 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
         var chartId = 0;              //chartId 对应myCharts表的主键，默认是0，即新建图表时，查询参数为0
         var exportId;                 //对应当前的设计面板
         if(window.location.href.indexOf("chartId") > 0){          //若通过点击设计面板中的表进入时，则chartId对应其在MyCharts表中的主键
-            chartId = window.location.href.split("=")[1].replace("&order","");
+            chartId = window.location.href.split("=")[1].replace("&exportId","");
             exportId = window.location.href.split("=")[2].replace("#","");
         }else{
             exportId = window.location.href.split("=")[1].replace("#","");
@@ -701,7 +701,7 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
     //页面数据绑定
     var chartId = 0;              //chartId 对应myCharts表的主键，默认是0，即新建图表时，查询参数为0
     if(window.location.href.indexOf("chartId") > 0){          //若通过点击设计面板中的表进入时，则chartId对应其在MyCharts表中的主键
-        chartId = window.location.href.split("=")[1].replace("&order","");
+        chartId = window.location.href.split("=")[1].replace("&exportId","");
     }else{//新建图表,默认bar
         chartTypeSpanRegistry($('.chart-type .bar'));
     }
