@@ -143,6 +143,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                        engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
 
                        renderMenu.renderMenu($("#"+order));
+                       $("#chartTitle").text(data.chartName);
                    } 
                 });
             }
@@ -163,6 +164,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                 engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
 
                                 renderMenu.renderMenu($("#"+order));
+                                $("#chartTitle").text(data.chartName);
                             }
                         });
                     }
