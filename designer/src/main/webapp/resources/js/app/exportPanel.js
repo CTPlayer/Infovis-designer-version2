@@ -20,23 +20,25 @@ require(['jquery', 'infovis', 'options', 'gridstack', 'bootstrap'],function($, i
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
 
         if($("#exportContainer")){
-            var cids = [];
+            var cids = [];     //图表id
+            var ids = [];      //容器id
             var containers = $("#exportContainer").children();
             for(var i=0;i<containers.length;i++){
-                cids.push($(containers[i]).children().first().attr("id"));
+                cids.push($(containers[i]).children().first().attr("chartId"));
+                ids.push($(containers[i]).children().first().attr("id"));
             }
             var options = {
                 float: true
             };
             $('.grid-stack').gridstack(options);
-
+            
             $.ajax({
                type: 'POST',
                 url: 'getShareOptions',
                data: 'cids='+cids,
             success: function(data){
                     for(var i=0;i<cids.length;i++){
-                        var exportChart = engine.chart.init($("#"+cids[i])[0]);
+                        var exportChart = engine.chart.init($("#"+ids[i])[0]);
                         exportChart.setOption(JSON.parse(data[i].jsCode));
 
                         window.addEventListener("resize",function(){
