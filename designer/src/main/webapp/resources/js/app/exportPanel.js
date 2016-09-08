@@ -7,7 +7,8 @@ require.config({
         "lodash": "lib/gridstack/js/lodash.min",
         "gridstack": "lib/gridstack/js/gridstack.min",
         "infovis": "lib/infovis.min",
-        "options": "lib/charts/options"
+        "options": "lib/charts/options",
+        "domReady" : 'lib/domReady'
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -50,3 +51,27 @@ require(['jquery', 'infovis', 'options', 'gridstack', 'bootstrap'],function($, i
         }
     })
 });
+
+require(['jquery','domReady'], function ($,domReady) {
+    domReady(function () {
+        //This function is called once the DOM is ready.
+        var deferred = $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: 'myPanel/crud',
+            data : {
+                exportId : $("#exportId").val()
+            },
+            headers :{
+                oper : 'query'
+            }
+        });
+        deferred.done(function(data){
+            if(data.myPanel.backgroundClass){
+                $('body').addClass(data.myPanel.backgroundClass);
+            }else{
+                $('body').addClass('background-default');
+            }
+        });
+    });
+})

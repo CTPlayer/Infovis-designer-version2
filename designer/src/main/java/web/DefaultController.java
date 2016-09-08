@@ -95,6 +95,7 @@ public class DefaultController {
     public Object share(String exportId, ModelMap map) throws Exception {
         MyPanel myPanel = myPanelService.queryAsObject(exportId);
         map.addAttribute("htmlCode", myPanel.getHtmlCode());
+        map.addAttribute("exportId",exportId);
         return "export/exportTemplate";
     }
 

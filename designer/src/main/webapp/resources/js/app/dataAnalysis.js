@@ -46,7 +46,7 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                 var editChart = engine.chart.init(document.getElementById("editArea"));
                 editChart.setOption(JSON.parse(data.jsCode));
                 $("#addChartModal").find("input").val(data.chartName);
-                $(".backUp").prepend('<a href="showPanel.page?exportId=' + exportId + '"role="button"><i class="glyphicon glyphicon-menu-left"></i>&nbsp;&nbsp;返回上一级</a>');
+                $(".backUp").prepend('<a href="showPanel.page?exportId=' + exportId + '"role="button"><button class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> 返回</button></a>');
             }
         });
 
