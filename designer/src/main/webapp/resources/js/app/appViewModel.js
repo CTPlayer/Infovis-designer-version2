@@ -226,6 +226,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             }
         });
 
+        self.backgroundOpacity = ko.observable(100);
+
         var optionChart = engine.chart.init(document.getElementById("optionContainer"));
 
         ko.computed(function(){
@@ -280,6 +282,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             option.legend[0].textStyle.fontSize = parseInt(self.legendFontSize());
             option.legend[0].textStyle.fontWeight = self.selectedLegendFontWeight();
             option.legend[0].textStyle.color = self.legendFontColor();
+
+            option.backgroundColor = "rgb(255,255,255,"+self.backgroundOpacity()*0.01+")";
 
             optionChart.setOption(option,true);
         })
