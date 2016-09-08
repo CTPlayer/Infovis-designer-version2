@@ -240,7 +240,7 @@
                     <div><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
                     <div>正在加载,请稍后...</div>
                 </div>
-                <div id="optionContainer" style="width:40%;height:410px;float:left">
+                <div id="optionContainer" style="width:40%;height:410px;float:left;">
                 </div>
                 <div id="optionPanel" style="width:50%;height:410px;float:left;margin-left:50px;">
                 </div>

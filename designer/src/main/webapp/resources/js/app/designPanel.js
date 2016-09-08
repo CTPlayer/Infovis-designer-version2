@@ -193,7 +193,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                        renderMenu.renderMenu($("#"+order));
                        $("#chartTitle").text(data.chartName);
-                   } 
+                   }
                 });
             }
 
@@ -265,7 +265,6 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                         $(".app-container").removeClass("loader");
                         $(".loader-container").css("display","none");
-                        // top.window.location = "query.page";
                     },
                     error : function(){
                         alert("保存失败，请重试！");
