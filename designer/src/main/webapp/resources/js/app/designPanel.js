@@ -294,5 +294,18 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 if(window.isSave == false)
                     return '您可能有数据没有保存';
             });
+
+            $('.background-color-pick-block span').click(function () {
+                var target = $(this);
+                var targetClass = target.attr("class");
+                $.each(target.parent().siblings().find('span'),function (index,obj) {
+                    var sibClass = $(obj).attr("class") || "";
+                    if($('.app-container').hasClass(sibClass)){
+                        $('.app-container').removeClass(sibClass);
+                    }
+                });
+                $('.app-container').addClass(targetClass);
+            });
+
         });
     });

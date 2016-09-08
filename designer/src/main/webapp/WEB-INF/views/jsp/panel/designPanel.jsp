@@ -26,10 +26,6 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <style type="text/css">
-        body {
-            background-image: url("resources/img/pattern.png");
-        }
-
         .grid-stack {
             margin-bottom: 2em;
             margin-left: 3em;
@@ -75,6 +71,68 @@
             padding-left:20px;
             margin-top:10px
         }
+
+        .background-color-pick-block span{
+            width:50px;
+            height: 50px;
+            margin-top:5px;
+            margin-left: 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .background-color-pick-block div{
+            color:white;
+            width: 50px;
+            text-align: center;
+            margin-left: 5px;
+            margin-bottom: 5px;
+        }
+
+        .background-default{
+            background-image: url("resources/img/pattern.png");
+        }
+
+        .background-dream-blue{
+            background-image: url("resources/img/891117.jpg");
+            -moz-background-size:100% 100%;
+            -webkit-background-size:100% 100%;
+            -o-background-size:100% 100%;
+            background-size:100% 100%;
+        }
+
+        .background-dream-sky{
+            background-image: url("resources/img/10000.jpg");
+            -moz-background-size:100% 100%;
+            -webkit-background-size:100% 100%;
+            -o-background-size:100% 100%;
+            background-size:100% 100%;
+        }
+
+        .background-dream-purple{
+            background-image: url("resources/img/10004.jpg");
+            -moz-background-size:100% 100%;
+            -webkit-background-size:100% 100%;
+            -o-background-size:100% 100%;
+            background-size:100% 100%;
+        }
+
+        .background-white{
+            background-color: #ffffff;
+        }
+
+        .background-black{
+            background-color: black;
+        }
+
+        .background-business-grey{
+            background-color: #212837;
+        }
+
+        .background-env-green{
+            background-color: #002536;
+        }
+
     </style>
 </head>
 
@@ -145,8 +203,50 @@
                         <li>
                             <a href="#"><span class="icon fa fa-magic"></span><span class="title">配色设置</span></a>
                         </li>
-                        <li>
-                            <a href="#"><span class="icon glyphicon glyphicon-picture"></span><span class="title">背景设置</span></a>
+                        <li class="panel panel-default dropdown">
+                            <a data-toggle="collapse" href="#dropdown-background-choose">
+                                <span class="icon glyphicon glyphicon-picture"></span><span class="title">背景设置</span>
+                            </a>
+                            <div id="dropdown-background-choose" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <ul class="nav navbar-nav">
+                                        <li>
+                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                                <span class="background-default"></span>
+                                                <div>默认</div>
+                                            </div>
+                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                                <span class="background-white"></span>
+                                                <div>优雅白</div>
+                                            </div>
+                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                                <span class="background-black"></span>
+                                                <div>高端黑</div>
+                                            </div>
+                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                                <span class="background-env-green"></span>
+                                                <div>环保绿</div>
+                                            </div>
+                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                                <span class="background-business-grey"></span>
+                                                <div>商务灰</div>
+                                            </div>
+                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                                <span class="background-dream-blue"></span>
+                                                <div>梦幻蓝</div>
+                                            </div>
+                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                                <span class="background-dream-sky"></span>
+                                                <div>星空蓝</div>
+                                            </div>
+                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                                <span class="background-dream-purple"></span>
+                                                <div>绚丽紫</div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </li>
                         <li>
                             <a href="#"><span class="icon glyphicon glyphicon-text-size"></span><span class="title">文字组件</span></a>
