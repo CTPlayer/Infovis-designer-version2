@@ -37,6 +37,8 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
 
         //删除当前容器
         target.find('a').eq(0).click(function(){
+            $("title").html("*Infovis-Designer");                                     //改动标记
+            window.isSave = false;
             var area = $(this).parent().parent().parent();
             $(area).parent().remove();
         });
