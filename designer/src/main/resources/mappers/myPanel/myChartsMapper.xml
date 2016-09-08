@@ -9,6 +9,7 @@
     <update id="update" parameterType="MyCharts" databaseId="h2">
         update T_MY_CHARTS
         <set>
+            <if test="sqlRecordingId != null">SQLRECORDING_ID = #{sqlRecordingId},</if>
             <if test="buildModel != null">BUILD_MODEL = #{buildModel},</if>
             <if test="jsCode != null">JS_CODE = #{jsCode},</if>
             <if test="chartType != null">CHART_TYPE = #{chartType},</if>

@@ -102,6 +102,7 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                         data : {
                             'id': chartId,
                             'chartType': engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption().series[0].type,
+                            'sqlRecordingId': window.sqlRecordingId,
                             'buildModel': JSON.stringify(window.bmodel),
                             'jsCode': JSON.stringify(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption()),
                             'chartName': $("#addChartForm").find("input").val()
