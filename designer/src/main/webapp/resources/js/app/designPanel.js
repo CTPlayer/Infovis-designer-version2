@@ -181,19 +181,20 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             if(window.location.href.indexOf("chartId") > 0){
                 var chartId = window.location.href.split("=")[2].replace("#","");
                 $.ajax({
-                   type: 'POST',
-                   url: 'selectOneChartInfo',
-                   data: "id="+chartId,
-                   success: function(data){
-                       $("title").html("*Infovis-Designer");                                     //改动标记
-                       window.isSave = false;
+                    type: 'POST',
+                    url: 'selectOneChartInfo',
+                    data: "id="+chartId,
+                    success: function(data){
+                        if($('[chartId='+data.id+']').length <= 0) {
+                            $("title").html("*Infovis-Designer");                                     //改动标记
+                            window.isSave = false;
 
-                       add_new_widget(0,0,data.id);
-                       engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
-
-                       renderMenu.renderMenu($("#"+order));
-                       $("#chartTitle").text(data.chartName);
-                   }
+                            add_new_widget(0,0,data.id);
+                            engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
+                            renderMenu.renderMenu($("#"+order));
+                            $("#chartTitle").text(data.chartName);
+                        }
+                    }
                 });
             }
 
