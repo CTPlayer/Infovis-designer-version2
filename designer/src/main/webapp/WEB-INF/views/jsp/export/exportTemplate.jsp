@@ -7,9 +7,12 @@
         <title>报表展示</title>
         <link href="resources/js/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="resources/js/lib/gridstack/css/gridstack.min.css"/>
+        <!--background theme-->
+        <link rel="stylesheet" type="text/css" href="resources/css/backgroundTheme.css">
     </head>
     <body>
         <div class="container">
+            <input type="hidden" value="${exportId}" id="exportId">
             <div class="grid-stack" id="exportContainer">
                 ${htmlCode}
             </div>

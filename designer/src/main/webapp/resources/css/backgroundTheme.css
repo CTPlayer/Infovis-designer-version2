@@ -1,0 +1,37 @@
+.background-default{
+    background-image: url("../img/pattern.png");
+}
+
+.background-dream-blue{
+    background-image: url("../img/891117.jpg");
+}
+
+.background-dream-sky{
+    background-image: url("../img/10000.jpg");
+    /**
+    -moz-background-size:100% 100%;
+    -webkit-background-size:100% 100%;
+    -o-background-size:100% 100%;
+    background-size:100% 100%;
+    **/
+}
+
+.background-dream-purple{
+    background-image: url("../img/10004.jpg");
+}
+
+.background-white{
+    background-color: #ffffff;
+}
+
+.background-black{
+    background-color: black;
+}
+
+.background-business-grey{
+    background-color: #212837;
+}
+
+.background-env-green{
+    background-color: #002536;
+}
