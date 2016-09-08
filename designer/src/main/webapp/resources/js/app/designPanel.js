@@ -237,12 +237,6 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 positionY.push($(containers[i]).attr("data-gs-y"));
             }
 
-            // 解决上下容器间距问题而添加的一个div
-            grid.add_widget($('<div style="display: none">'+
-                '<div class="grid-stack-item-content"' + 'id="fill">'+
-                '</div>'+
-                '</div>'),0, 0, 12, 0);
-
             for(var i=0;i<containers.length-1;i++) {
                 var x = $(containers[i]).attr("data-gs-x");
                 var y = positionY[i];

@@ -67,7 +67,7 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
             $("title").html("Infovis-Designer");
 
             $(".grid-stack-placeholder").remove();
-            $("#fill").parent().remove();
+            // $("#fill").parent().remove();
 
             $(".app-container").addClass("loader");
             $(".loader-container").css("display","block");
