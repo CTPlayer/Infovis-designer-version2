@@ -196,7 +196,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel">我的图表</h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="height: 386px;overflow-y: scroll">
                 <div class="row"></div>
             </div>
             <div class="modal-footer">

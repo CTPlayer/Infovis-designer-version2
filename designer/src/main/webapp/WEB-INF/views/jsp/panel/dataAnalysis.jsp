@@ -111,7 +111,7 @@
         <!-- Main Content -->
         <div id="page-wrapper">
             <div>
-                <div class="col-lg-11">
+                <div class="col-lg-11 backUp" style="margin-top: 10px;">
                 </div>
                 <div class="col-lg-1">
                     <a href="#" data-toggle="modal" data-target="#addChartModal"><button class="btn btn-info saveChartInfo" type="submit"><span class="glyphicon glyphicon-floppy-saved"></span> 保存</button></a>

@@ -36,19 +36,17 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
             exportId = window.location.href.split("=")[1].replace("#","");
         }
 
-        $.ajax({
+        var deferred = $.ajax({
             type: 'POST',
             url: 'selectOneChartInfo',
-            data: "id="+chartId,
-            success: function(data){
-                if(data){
-                    var editChart = engine.chart.init(document.getElementById("editArea"));
-                    editChart.setOption(JSON.parse(data.jsCode));
-                    $("#addChartModal").find("input").val(data.chartName);
-                }
-            },
-            error: function(){
-                alert("图表配置加载失败，请重试");
+            data: "id="+chartId
+        });
+        deferred.done(function(data){
+            if(data){
+                var editChart = engine.chart.init(document.getElementById("editArea"));
+                editChart.setOption(JSON.parse(data.jsCode));
+                $("#addChartModal").find("input").val(data.chartName);
+                $(".backUp").prepend('<a href="showPanel.page?exportId=' + exportId + '"role="button"><i class="glyphicon glyphicon-menu-left"></i>&nbsp;&nbsp;返回上一级</a>');
             }
         });
 
