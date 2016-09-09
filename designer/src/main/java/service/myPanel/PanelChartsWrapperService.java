@@ -7,4 +7,6 @@ import model.myPanel.PanelChartsWrapper;
  */
 public interface PanelChartsWrapperService {
     int insert(PanelChartsWrapper panelChartsWrapper) throws Exception;
+
+    int delete(PanelChartsWrapper panelChartsWrapper) throws Exception;
 }

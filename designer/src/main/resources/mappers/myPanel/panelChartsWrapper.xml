@@ -4,4 +4,17 @@
     <insert id="insert" parameterType="PanelChartsWrapper" databaseId="h2">
         insert into T_PANEL_CHARTS (EXPORT_ID,CHART_ID,ORDER_ID) values (#{exportId},#{chartId},#{orderId})
     </insert>
+
+    <delete id="delete" parameterType="PanelChartsWrapper" databaseId="h2">
+        delete from T_PANEL_CHARTS
+        <where>
+            <if test="exportId != null and exportId !=''">
+                EXPORT_ID = #{exportId}
+            </if>
+            <if test="chartId != null and chartId !=''">
+                CHART_ID = #{chartId}
+            </if>
+        </where>
+    </delete>
+
 </mapper>

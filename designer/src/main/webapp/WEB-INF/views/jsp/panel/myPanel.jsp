@@ -61,10 +61,10 @@
 <body class="flat-blue">
 <div class="app-container" style="background-color: rgb(240,240,240)">
     <div class="row content-container">
-        <nav class="navbar navbar-inverse navbar-static-top" style="margin-left:-60px;background-color: rgb(238,238,238)">
+        <nav class="navbar navbar-inverse navbar-static-top">
             <div class="container-fluid">
                 <ul class="nav navbar-nav navbar-left">
-                    <a class="navbar-brand" href="#" style="color: #ffffff">作品列表</a>
+                    <a class="navbar-brand" href="#" style="color: #ffffff"><i class="glyphicon glyphicon-equalizer" aria-hidden="true"></i> 作品列表</a>
                 </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown danger">
@@ -75,24 +75,6 @@
                 </li>
                 <li class="dropdown" id="exportHtml">
                     <a href="#"  role="button" data-toggle="modal" data-target="#addPanelModal"><i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;新建面板</a>
-                </li>
-                <li class="dropdown profile">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">试用人员1<span class="caret"></span></a>
-                    <ul class="dropdown-menu animated fadeInDown">
-                        <li class="profile-img">
-                            <img src="resources/js/lib/flatadmin/img/profile/picjumbo.com_HNCK4153_resize.jpg" class="profile-img">
-                        </li>
-                        <li>
-                            <div class="profile-info">
-                                <h4 class="username">试用人员1</h4>
-                                <p>test@jiudaotech.com</p>
-                                <div class="btn-group margin-bottom-2x" role="group">
-                                    <button type="button" class="btn btn-default"><i class="fa fa-user"></i> 个人信息</button>
-                                    <button type="button" class="btn btn-default"><i class="fa fa-sign-out"></i> 登出</button>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
                 </li>
             </ul>
             </div>

@@ -22,11 +22,13 @@ require.config({
         "zrender": "lib/zrender/zrender",
         "zrender/shape/Rectangle": "lib/zrender/zrender",
         "zrender/tool/color": "lib/zrender/zrender",
-        "CanvasTag" : "customModule/CanvasTag/CanvasTag"
+        "CanvasTag" : "customModule/CanvasTag/CanvasTag",
+        "confirmModal": "lib/confirm/confirm-bootstrap"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
-        "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] }
+        "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] },
+        "confirmModal" : { "deps" :['jquery'] }
     }
 });
 
@@ -79,9 +81,9 @@ require(['jquery','domReady'], function ($,domReady) {
     });
 })
 
-require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu','CanvasTag',
+require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu','CanvasTag','renderMenu',
         'bootstrap', 'gridstack', 'spectrum'],
-    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu,CanvasTag){
+    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu,CanvasTag,renderMenu){
         $(function() {
             $(".navbar-expand-toggle").click(function() {
                 $(".app-container").toggleClass("expanded");
@@ -127,11 +129,14 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                success: function(response){
                    for(var i=0;i<response.data.length;i++){
                        if(response.data[i].chartType == 'pie'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;margin-left: 10px;float: left"><img src="resources/img/pie_chart.png" alt="..."><p style="text-align: center">'+response.data[i].chartName+'</p></div>');
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/pie_chart.png" alt="...">' +
+                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
                        }else if(response.data[i].chartType == 'line'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;margin-left: 10px;float: left"><img src="resources/img/line_chart.png" alt="..."><p style="text-align: center">'+response.data[i].chartName+'</p></div>');
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/line_chart.png" alt="...">' +
+                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
                        }else if(response.data[i].chartType == 'bar'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;margin-left: 10px;float: left"><img src="resources/img/bar_chart.png" alt="..."><p style="text-align: center">'+response.data[i].chartName+'</p></div>');
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/bar_chart.png" alt="...">' +
+                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
                        }
                    }
                    $(".thumbnail").click(function(){
@@ -141,6 +146,41 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                            $(this).addClass("selected");
                        }
                    });
+
+                   /**
+                    * 注册图表删除事件
+                    */
+                   $('.myChart-topbar .glyphicon-remove').click(function (event) {
+                       event.stopPropagation();//屏蔽父元素select样式选择
+                   });
+                   $('.myChart-topbar .glyphicon-remove').confirmModal({
+                       confirmTitle     : '提示',
+                       confirmMessage   : '你确定删除该图表？图表删除后，各面板上添加的该图表也会被删除。',
+                       confirmOk        : '是的',
+                       confirmCancel    : '取消',
+                       confirmDirection : 'rtl',
+                       confirmStyle     : 'primary',
+                       confirmCallback  : function (target) {
+                           var cid = target.parent().parent().attr('data-cid');
+                           var deferred = $.ajax({
+                               type: 'POST',
+                               dataType: 'json',
+                               url: 'myChart/crud',
+                               data : {
+                                   id: cid
+                               },
+                               headers :{
+                                   oper : 'delete'
+                               }
+                           });
+                           deferred.done(function(){
+                               target.parent().parent().remove();
+                           })
+                       },
+                       confirmDismiss   : true,
+                       confirmAutoOpen  : false
+                   });
+
                }
             });
         });

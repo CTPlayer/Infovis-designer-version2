@@ -37,7 +37,7 @@
 <body class="flat-blue">
 <div class="app-container">
     <div class="row content-container">
-        <nav class="navbar navbar-inverse navbar-static-top" style="margin-left:-60px;background-color: rgb(238,238,238)">
+        <nav class="navbar navbar-inverse navbar-static-top">
             <div class="container-fluid">
                 <ul class="nav navbar-nav navbar-left">
                     <a class="navbar-brand" href="#" style="color: #ffffff"><i class="glyphicon glyphicon-equalizer" aria-hidden="true"></i> 数据分析</a>
@@ -48,24 +48,6 @@
                     </li>
                     <li class="dropdown">
                         <a href="sqlClient.page"  role="button"><i class="icon fa fa-database"></i>&nbsp;&nbsp;数据源</a>
-                    </li>
-                    <li class="dropdown profile">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">试用人员1<span class="caret"></span></a>
-                        <ul class="dropdown-menu animated fadeInDown">
-                            <li class="profile-img">
-                                <img src="resources/js/lib/flatadmin/img/profile/picjumbo.com_HNCK4153_resize.jpg" class="profile-img">
-                            </li>
-                            <li>
-                                <div class="profile-info">
-                                    <h4 class="username">试用人员1</h4>
-                                    <p>test@jiudaotech.com</p>
-                                    <div class="btn-group margin-bottom-2x" role="group">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-user"></i> 个人信息</button>
-                                        <button type="button" class="btn btn-default"><i class="fa fa-sign-out"></i> 登出</button>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
                     </li>
                 </ul>
             </div>
@@ -147,15 +129,18 @@
                     </form>
                 </div>
             </div>
-            <p style="border-bottom: dashed 1px grey"></p>
-            <div class="row">
+            <div class="row row-editArea">
                 <div class="col-lg-12 col-xs-12 col-sm-12">
                     <div class="col-lg-10 col-xs-10">
                         <div id="editArea">
+                            <h3>
+                                <p><i class="glyphicon glyphicon-info-sign"></i>  请选择数据集</p>
+                                <p>将维度、度量拖入工作区（行、列、标记）</p>
+                            </h3>
                         </div>
                     </div>
                     <div class="col-lg-2 col-xs-2 col-sm-2">
-                        <div class="panel fresh-color panel-default chart-type-select-panel" style="width:100px;float: right">
+                        <div class="panel fresh-color panel-default chart-type-select-panel" style="width:100px;float: right;margin-top:40px;">
                             <div class="panel-heading">图表类型</div>
                             <div class="chart-type">
                                 <span class="bar">
