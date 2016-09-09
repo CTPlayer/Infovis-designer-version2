@@ -68,7 +68,7 @@
         }
 
         #chartTitle {
-            font-size: 30px;
+            font-size: 24px;
             color: white;
             padding-left:20px;
             margin-top:10px

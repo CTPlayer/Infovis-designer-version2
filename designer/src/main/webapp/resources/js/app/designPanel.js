@@ -81,9 +81,9 @@ require(['jquery','domReady'], function ($,domReady) {
     });
 })
 
-require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu','CanvasTag','renderMenu',
+require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu','CanvasTag','confirmModal',
         'bootstrap', 'gridstack', 'spectrum'],
-    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu,CanvasTag,renderMenu){
+    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu,CanvasTag,confirmModal){
         $(function() {
             $(".navbar-expand-toggle").click(function() {
                 $(".app-container").toggleClass("expanded");
@@ -155,7 +155,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                    });
                    $('.myChart-topbar .glyphicon-remove').confirmModal({
                        confirmTitle     : '提示',
-                       confirmMessage   : '你确定删除该图表？图表删除后，各面板上添加的该图表也会被删除。',
+                       confirmMessage   : '你确定删除该图表？',
                        confirmOk        : '是的',
                        confirmCancel    : '取消',
                        confirmDirection : 'rtl',
@@ -174,7 +174,13 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                }
                            });
                            deferred.done(function(){
-                               target.parent().parent().remove();
+                               target.parent().parent().remove();//当前面板的图表类型选择框删除
+                               $.each($('.grid-stack-item-content'),function (index,target) {//删除htmlcode中该图表的div元素
+                                   if(cid == $(target).attr("chartid")){
+                                       $(target).parent().remove();
+                                   }
+                               });
+                               window.saveCurrentPanel();//重新保存html
                            })
                        },
                        confirmDismiss   : true,
@@ -229,7 +235,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     url: 'selectOneChartInfo',
                     data: "id="+chartId,
                     success: function(data){
-                        if($('[chartId='+data.id+']').length <= 0) {
+                        if(data && $('[chartId='+data.id+']').length <= 0) {
                             $("title").html("*Infovis-Designer");                                     //改动标记
                             window.isSave = false;
 
@@ -290,15 +296,16 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             /**
              * 保存当前设计面板
              */
-            $("#exportHtml").click(function(){
+
+            window.saveCurrentPanel = function () {
                 $("title").html("Infovis-Designer");
-            
+
                 $(".grid-stack-placeholder").remove();
                 $("#fill").parent().remove();
-            
+
                 $(".app-container").addClass("loader");
                 $(".loader-container").css("display","block");
-            
+
                 var arr = window.location.href.split("/");
                 var exportId = $("#exportId").val();
                 var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
@@ -321,7 +328,10 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         alert("保存失败，请重试！");
                     }
                 });
+            }
 
+            $("#exportHtml").click(function(){
+                window.saveCurrentPanel();
             });
 
             // 为了防止再次进入以后设计面板时先前的图表不能自定义大小，这里获取先前图表的容器属性，重新添加容器并渲染图表
