@@ -17,7 +17,8 @@ require.config({
         "knockback": "lib/knockback.min",
         "spectrum": "lib/bootstrap/js/spectrum",
         "infovis": "lib/infovis.min",
-        "renderMenu" : 'app/renderMenu'
+        "renderMenu" : 'app/renderMenu',
+        "domReady" : 'lib/domReady'
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -25,10 +26,58 @@ require.config({
     }
 });
 
+require(['jquery','domReady'], function ($,domReady) {
+    domReady(function () {
+        //This function is called once the DOM is ready.
+        var deferred = $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: 'myPanel/crud',
+            data : {
+                exportId : $("#exportId").val()
+            },
+            headers :{
+                oper : 'query'
+            }
+        });
+        deferred.done(function(data){
+            if(data.myPanel.backgroundClass){
+                $('.app-container').addClass(data.myPanel.backgroundClass);
+            }else{
+                $('.app-container').addClass('background-default');
+            }
+        });
+
+        $('.background-color-pick-block span').click(function () {
+            var target = $(this);
+            var targetClass = target.attr("class");
+            $.each(target.parent().siblings().find('span'),function (index,obj) {
+                var sibClass = $(obj).attr("class") || "";
+                if($('.app-container').hasClass(sibClass)){
+                    $('.app-container').removeClass(sibClass);
+                }
+            });
+            $('.app-container').addClass(targetClass);
+
+            var deferred = $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: 'myPanel/crud',
+                data : {
+                    exportId : $("#exportId").val(),
+                    backgroundClass : targetClass
+                },
+                headers :{
+                    oper : 'update'
+                }
+            });
+        });
+    });
+})
+
 require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu',
         'bootstrap', 'gridstack', 'spectrum'],
     function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu){
-
         $(function() {
             $(".navbar-expand-toggle").click(function() {
                 $(".app-container").toggleClass("expanded");
@@ -132,19 +181,20 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             if(window.location.href.indexOf("chartId") > 0){
                 var chartId = window.location.href.split("=")[2].replace("#","");
                 $.ajax({
-                   type: 'POST',
-                   url: 'selectOneChartInfo',
-                   data: "id="+chartId,
-                   success: function(data){
-                       $("title").html("*Infovis-Designer");                                     //改动标记
-                       window.isSave = false;
+                    type: 'POST',
+                    url: 'selectOneChartInfo',
+                    data: "id="+chartId,
+                    success: function(data){
+                        if($('[chartId='+data.id+']').length <= 0) {
+                            $("title").html("*Infovis-Designer");                                     //改动标记
+                            window.isSave = false;
 
-                       add_new_widget(0,0,data.id);
-                       engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
-
-                       renderMenu.renderMenu($("#"+order));
-                       $("#chartTitle").text(data.chartName);
-                   } 
+                            add_new_widget(0,0,data.id);
+                            engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
+                            renderMenu.renderMenu($("#"+order));
+                            $("#chartTitle").text(data.chartName);
+                        }
+                    }
                 });
             }
 
@@ -216,7 +266,6 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                         $(".app-container").removeClass("loader");
                         $(".loader-container").css("display","none");
-                        // top.window.location = "query.page";
                     },
                     error : function(){
                         alert("保存失败，请重试！");
@@ -295,18 +344,5 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 if(window.isSave == false)
                     return '您可能有数据没有保存';
             });
-
-            $('.background-color-pick-block span').click(function () {
-                var target = $(this);
-                var targetClass = target.attr("class");
-                $.each(target.parent().siblings().find('span'),function (index,obj) {
-                    var sibClass = $(obj).attr("class") || "";
-                    if($('.app-container').hasClass(sibClass)){
-                        $('.app-container').removeClass(sibClass);
-                    }
-                });
-                $('.app-container').addClass(targetClass);
-            });
-
         });
     });

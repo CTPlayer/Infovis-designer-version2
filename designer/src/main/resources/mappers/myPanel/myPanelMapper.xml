@@ -3,20 +3,20 @@
 <mapper namespace="model.myPanel.MyPanel">
 
     <select id="selectOne" parameterType="MyPanel" resultType="MyPanel" databaseId="h2">
-        select PANEL_NAME,PANEL_REMARK,CREATE_TIME,UPDATE_TIME,HTML_CODE,JS_CODE,IMG,EXPORT_ID
+        select PANEL_NAME,PANEL_REMARK,CREATE_TIME,UPDATE_TIME,HTML_CODE,JS_CODE,IMG,EXPORT_ID,BACKGROUND_CLASS
           from T_MY_PANEL
           where EXPORT_ID = #{exportId}
     </select>
 
     <select id="selectList" resultType="MyPanel" parameterType="MyPanel" databaseId="h2">
-        select ID,PANEL_NAME,PANEL_REMARK,CREATE_TIME,UPDATE_TIME,IMG,EXPORT_ID
+        select ID,PANEL_NAME,PANEL_REMARK,CREATE_TIME,UPDATE_TIME,IMG,EXPORT_ID,BACKGROUND_CLASS
           from T_MY_PANEL
           order by UPDATE_TIME DESC
     </select>
 
     <insert id="insert" parameterType="MyPanel" databaseId="h2">
-        insert into T_MY_PANEL(PANEL_NAME,PANEL_REMARK,CREATE_TIME,UPDATE_TIME,HTML_CODE,JS_CODE,IMG,EXPORT_ID)
-        values(#{panelName},#{panelRemark},#{createTime},#{updateTime},#{htmlCode},#{jsCode},#{img},#{exportId})
+        insert into T_MY_PANEL(PANEL_NAME,PANEL_REMARK,CREATE_TIME,UPDATE_TIME,HTML_CODE,JS_CODE,IMG,EXPORT_ID,BACKGROUND_CLASS)
+        values(#{panelName},#{panelRemark},#{createTime},#{updateTime},#{htmlCode},#{jsCode},#{img},#{exportId},#{backgroundClass})
     </insert>
 
     <update id="update" parameterType="MyPanel" databaseId="h2">
@@ -28,6 +28,7 @@
               <if test="htmlCode != null">HTML_CODE = #{htmlCode},</if>
               <if test="jsCode != null">JS_CODE = #{jsCode},</if>
               <if test="img != null">IMG = #{img},</if>
+              <if test="backgroundClass != null">BACKGROUND_CLASS = #{backgroundClass},</if>
           </set>
           <where>
               EXPORT_ID = #{exportId}

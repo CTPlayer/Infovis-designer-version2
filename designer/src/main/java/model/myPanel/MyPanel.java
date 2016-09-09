@@ -30,6 +30,7 @@ public class MyPanel extends BaseModel {
     private String updateTime;
     private String img;
     private String exportId;
+    private String backgroundClass;
 
     public String getId() {
         return id;
@@ -101,5 +102,13 @@ public class MyPanel extends BaseModel {
 
     public void setExportId(String exportId) {
         this.exportId = exportId;
+    }
+
+    public String getBackgroundClass() {
+        return backgroundClass;
+    }
+
+    public void setBackgroundClass(String backgroundClass) {
+        this.backgroundClass = backgroundClass;
     }
 }

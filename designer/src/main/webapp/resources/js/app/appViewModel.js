@@ -75,6 +75,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             }
         });
 
+        self.backgroundOpacity = ko.observable(100);
+
         var optionChart = engine.chart.init(document.getElementById("optionContainer"));
         //每次被观察的数据变动后调用下列方法
         ko.computed(function(){
@@ -111,6 +113,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             option.tooltip[0].borderColor = self.tooltipBorderColor();
             option.tooltip[0].backgroundColor = self.tooltipBackgroundColor();
             option.tooltip[0].textStyle.color = self.tooltipFontColor();
+
+            option.backgroundColor = "rgb(255,255,255,"+self.backgroundOpacity()*0.01+")";
 
             optionChart.setOption(option,true);
         })
@@ -222,6 +226,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             }
         });
 
+        self.backgroundOpacity = ko.observable(100);
+
         var optionChart = engine.chart.init(document.getElementById("optionContainer"));
 
         ko.computed(function(){
@@ -276,6 +282,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             option.legend[0].textStyle.fontSize = parseInt(self.legendFontSize());
             option.legend[0].textStyle.fontWeight = self.selectedLegendFontWeight();
             option.legend[0].textStyle.color = self.legendFontColor();
+
+            option.backgroundColor = "rgb(255,255,255,"+self.backgroundOpacity()*0.01+")";
 
             optionChart.setOption(option,true);
         })

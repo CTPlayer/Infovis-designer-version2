@@ -21,6 +21,8 @@
     <!--flat admin-->
     <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/css/style.css">
     <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/css/themes/flat-blue.css">
+    <!--background theme-->
+    <link rel="stylesheet" type="text/css" href="resources/css/backgroundTheme.css">
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -98,56 +100,16 @@
             cursor: pointer;
         }
 
+        .background-color-pick-block{
+            display: inline-block;
+        }
+
         .background-color-pick-block div{
             color:white;
             width: 50px;
             text-align: center;
             margin-left: 5px;
             margin-bottom: 5px;
-        }
-
-        .background-default{
-            background-image: url("resources/img/pattern.png");
-        }
-
-        .background-dream-blue{
-            background-image: url("resources/img/891117.jpg");
-            -moz-background-size:100% 100%;
-            -webkit-background-size:100% 100%;
-            -o-background-size:100% 100%;
-            background-size:100% 100%;
-        }
-
-        .background-dream-sky{
-            background-image: url("resources/img/10000.jpg");
-            -moz-background-size:100% 100%;
-            -webkit-background-size:100% 100%;
-            -o-background-size:100% 100%;
-            background-size:100% 100%;
-        }
-
-        .background-dream-purple{
-            background-image: url("resources/img/10004.jpg");
-            -moz-background-size:100% 100%;
-            -webkit-background-size:100% 100%;
-            -o-background-size:100% 100%;
-            background-size:100% 100%;
-        }
-
-        .background-white{
-            background-color: #ffffff;
-        }
-
-        .background-black{
-            background-color: black;
-        }
-
-        .background-business-grey{
-            background-color: #212837;
-        }
-
-        .background-env-green{
-            background-color: #002536;
         }
 
     </style>
@@ -228,35 +190,35 @@
                                 <div class="panel-body">
                                     <ul class="nav navbar-nav">
                                         <li>
-                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                            <div class="background-color-pick-block">
                                                 <span class="background-default"></span>
                                                 <div>默认</div>
                                             </div>
-                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                            <div class="background-color-pick-block">
                                                 <span class="background-white"></span>
                                                 <div>优雅白</div>
                                             </div>
-                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                            <div class="background-color-pick-block">
                                                 <span class="background-black"></span>
                                                 <div>高端黑</div>
                                             </div>
-                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                            <div class="background-color-pick-block">
                                                 <span class="background-env-green"></span>
                                                 <div>环保绿</div>
                                             </div>
-                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                            <div class="background-color-pick-block">
                                                 <span class="background-business-grey"></span>
                                                 <div>商务灰</div>
                                             </div>
-                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                            <div class="background-color-pick-block">
                                                 <span class="background-dream-blue"></span>
                                                 <div>梦幻蓝</div>
                                             </div>
-                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                            <div class="background-color-pick-block">
                                                 <span class="background-dream-sky"></span>
                                                 <div>星空蓝</div>
                                             </div>
-                                            <div style="display:inline-block;" class="background-color-pick-block">
+                                            <div class="background-color-pick-block">
                                                 <span class="background-dream-purple"></span>
                                                 <div>绚丽紫</div>
                                             </div>
@@ -309,7 +271,7 @@
                     <div><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
                     <div>正在加载,请稍后...</div>
                 </div>
-                <div id="optionContainer" style="width:40%;height:410px;float:left">
+                <div id="optionContainer" style="width:40%;height:410px;float:left;">
                 </div>
                 <div id="optionPanel" style="width:50%;height:410px;float:left;margin-left:50px;">
                 </div>
