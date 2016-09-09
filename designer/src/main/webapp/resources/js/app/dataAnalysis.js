@@ -36,6 +36,8 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
             exportId = window.location.href.split("=")[1].replace("#","");
         }
 
+        $(".backUp").prepend('<a href="showPanel.page?exportId=' + exportId + '"role="button"><button class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> 返回</button></a>');
+
         var deferred = $.ajax({
             type: 'POST',
             url: 'selectOneChartInfo',
@@ -46,7 +48,6 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                 var editChart = engine.chart.init(document.getElementById("editArea"));
                 editChart.setOption(JSON.parse(data.jsCode));
                 $("#addChartModal").find("input").val(data.chartName);
-                $(".backUp").prepend('<a href="showPanel.page?exportId=' + exportId + '"role="button"><button class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> 返回</button></a>');
             }
         });
 
