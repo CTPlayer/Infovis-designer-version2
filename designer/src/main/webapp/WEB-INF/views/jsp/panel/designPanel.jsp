@@ -72,6 +72,23 @@
             margin-top:10px
         }
 
+        .background-text-pick-block span{
+            width:50px;
+            height: 50px;
+            margin-top:5px;
+            margin-left: 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .background-text-pick-block div{
+            color:white;
+            width: 50px;
+            text-align: center;
+            margin-left: 5px;
+            margin-bottom: 5px;
+        }
+
         .background-color-pick-block span{
             width:50px;
             height: 50px;
@@ -248,8 +265,22 @@
                                 </div>
                             </div>
                         </li>
-                        <li>
-                            <a href="#"><span class="icon glyphicon glyphicon-text-size"></span><span class="title">文字组件</span></a>
+                        <li class="panel panel-default dropdown">
+                            <a data-toggle="collapse" href="#dropdown-text-choose">
+                                <span class="icon glyphicon glyphicon-text-size"></span><span class="title">文字组件</span>
+                            </a>
+                            <div id="dropdown-text-choose" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <ul class="nav navbar-nav">
+                                        <li>
+                                            <div style="display:inline-block;" class="background-text-pick-block">
+                                                <span class="background-default"></span>
+                                                <div>默认</div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>
