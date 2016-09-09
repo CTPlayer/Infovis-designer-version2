@@ -264,7 +264,7 @@
                 <form id="addConnectionForm" method="post">
                     <div id="addConnectionModel">
                         <div class="form-group">
-                            <select class="form-control" name="dbType" data-bind="value: dbType">
+                            <select class="form-control" name="dbType" data-bind="value: dbType,event: { change: changeType}">
                                 <option name="MySql">MySql</option>
                                 <option name="SqlServer">SqlServer</option>
                                 <option name="Oracle">Oracle</option>

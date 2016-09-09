@@ -18,7 +18,11 @@ require.config({
         "spectrum": "lib/bootstrap/js/spectrum",
         "infovis": "lib/infovis.min",
         "renderMenu" : 'app/renderMenu',
-        "domReady" : 'lib/domReady'
+        "domReady" : 'lib/domReady',
+        "zrender": "lib/zrender/zrender",
+        "zrender/shape/Rectangle": "lib/zrender/zrender",
+        "zrender/tool/color": "lib/zrender/zrender",
+        "CanvasTag" : "customModule/CanvasTag/CanvasTag"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -75,9 +79,9 @@ require(['jquery','domReady'], function ($,domReady) {
     });
 })
 
-require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu',
+require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu','CanvasTag',
         'bootstrap', 'gridstack', 'spectrum'],
-    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu){
+    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu,CanvasTag){
         $(function() {
             $(".navbar-expand-toggle").click(function() {
                 $(".app-container").toggleClass("expanded");
@@ -225,11 +229,17 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             $(".grid-stack").on("resizestop",function(event,ui){
                 $("title").html("*Infovis-Designer");                                     //改动标记
                 window.isSave = false;
-                var id = ui.element[0].firstChild.getAttribute("id");
-                engine.chart.getInstanceByDom(document.getElementById(id)).resize();
-                window.addEventListener("resize",function(){
+                //判断chart类型
+                if(ui.element.find("div:eq(0)").attr("chartType").indexOf("text") >= 0){
+                    CanvasTag.render(ui.element.find("div:eq(0)").attr("id"));
+                    renderMenu.renderMenu($("#" + ui.element.find("div:eq(0)").attr("id")));
+                }else {
+                    var id = ui.element[0].firstChild.getAttribute("id");
                     engine.chart.getInstanceByDom(document.getElementById(id)).resize();
-                });
+                    window.addEventListener("resize", function () {
+                        engine.chart.getInstanceByDom(document.getElementById(id)).resize();
+                    });
+                }
             });
 
             $(".grid-stack").on("dragstop",function(event,ui){
@@ -344,5 +354,47 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 if(window.isSave == false)
                     return '您可能有数据没有保存';
             });
+
+
+            //左边拖动文本框业务逻辑
+            $('.background-text-pick-block').draggable({
+                cursor: "move",
+                opacity: 0.7,
+                appendTo :'body',
+                helper: function (event) {
+                    var target = $(this).clone();
+                    target.zIndex( 100000000 );
+                    target.css('position','absolute');
+                    return target;
+                }
+            });
+            $(".app-container").droppable({
+                drop : function (event,ui) {
+                    //屏蔽重复拖拽
+                    if(ui.draggable.hasClass("background-text-pick-block")) {
+                        addTextWidget(ui);
+                        CanvasTag.render(order);
+                        renderMenu.renderMenu($("#" + order));
+                    }
+                }
+            })
+            
+            var addTextWidget = function (ui) {
+                order++;
+                var pagex = (ui.position.left - 60) /  105;
+                var pagey = (ui.position.top - 60+$(document).scrollTop()) /  70;
+                var node = {
+                    x: pagex,
+                    y: pagey,
+                    width: 4,
+                    height: 4
+                };
+                //获取文字组件子类型
+                var textType = ui.draggable.find("span").attr('textType');
+                return grid.add_widget($('<div>'+
+                    '<div class="grid-stack-item-content" chartType="text:' + textType+ '" ' + 'id="'+ order + '"chartId="' + 1+ '">'+
+                    '</div>'+
+                    '</div>'),node.x, node.y, node.width, node.height);
+            }
         });
     });

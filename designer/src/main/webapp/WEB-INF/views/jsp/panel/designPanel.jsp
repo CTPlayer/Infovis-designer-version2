@@ -236,7 +236,7 @@
                                     <ul class="nav navbar-nav">
                                         <li>
                                             <div style="display:inline-block;" class="background-text-pick-block">
-                                                <span class="background-default"></span>
+                                                <span class="background-default" textType="rectangle"></span>
                                                 <div>默认</div>
                                             </div>
                                         </li>
