@@ -173,7 +173,10 @@
             font-weight: bolder;
             width:130px;
             height:18px;
-            overflow: hidden;
+            display:block;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
         }
 
     </style>

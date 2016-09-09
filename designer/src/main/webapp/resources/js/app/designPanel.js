@@ -126,13 +126,13 @@ require(['confirmModal','jquery', 'infovis', 'knockout', 'knockback', 'options',
                    for(var i=0;i<response.data.length;i++){
                        if(response.data[i].chartType == 'pie'){
                            $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/pie_chart.png" alt="...">' +
-                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p>'+response.data[i].chartName+'</p></div>');
+                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
                        }else if(response.data[i].chartType == 'line'){
                            $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/line_chart.png" alt="...">' +
-                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p>'+response.data[i].chartName+'</p></div>');
+                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
                        }else if(response.data[i].chartType == 'bar'){
                            $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/bar_chart.png" alt="...">' +
-                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p>'+response.data[i].chartName+'</p></div>');
+                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
                        }
                    }
                    $(".thumbnail").click(function(){
@@ -146,6 +146,9 @@ require(['confirmModal','jquery', 'infovis', 'knockout', 'knockback', 'options',
                    /**
                     * 注册图表删除事件
                     */
+                   $('.myChart-topbar .glyphicon-remove').click(function (event) {
+                       event.stopPropagation();//屏蔽父元素select样式选择
+                   });
                    $('.myChart-topbar .glyphicon-remove').confirmModal({
                        confirmTitle     : '提示',
                        confirmMessage   : '你确定删除该图表？图表删除后，各面板上添加的该图表也会被删除。',
