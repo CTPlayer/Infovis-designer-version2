@@ -36,7 +36,7 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
             exportId = window.location.href.split("=")[1].replace("#","");
         }
 
-        $(".backUp").prepend('<a href="showPanel.page?exportId=' + exportId + '"role="button"><button class="btn btn-default"><span class="glyphicon glyphicon-menu-left"></span> 返回</button></a>');
+        $(".backUp").prepend('<a href="showPanel.page?exportId=' + exportId + '"role="button"><button class="btn btn-info"><span class="glyphicon glyphicon-menu-left"></span> 返回</button></a>');
 
         var deferred = $.ajax({
             type: 'POST',
