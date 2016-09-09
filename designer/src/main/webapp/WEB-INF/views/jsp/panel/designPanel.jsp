@@ -64,7 +64,7 @@
         }
 
         .selected {
-            border-color:red;
+            border-color:#3ac34f;
         }
 
         #chartTitle {
@@ -110,6 +110,70 @@
             text-align: center;
             margin-left: 5px;
             margin-bottom: 5px;
+        }
+
+        .myChart-topbar{
+            width:199px;
+            height: 30px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background:#000;
+            display:block;
+            zoom:1;
+            filter:alpha(opacity=50);
+            opacity:0.5;
+            color:#fff;
+            line-height:30px
+        }
+
+        .myChart-topbar i{
+            margin-top: 5px;
+            margin-right: 15px;
+            cursor:pointer;
+        }
+
+        #myChart .thumbnail .glyphicon-ok{
+            display: none;
+        }
+
+        #myChart .selected .glyphicon-ok{
+            position: absolute;
+            right: 5px;
+            top:130px;
+            color:white;
+            display: block;
+            height: 10px;
+            width: 10px;
+        }
+
+        #myChart .selected .arrow_left{
+            border-color: transparent #3ac34f #3ac34f transparent;
+            border-style: solid;
+            border-width: 18px;
+            font-size: 0;
+            display: block;
+            height: 0;
+            line-height: 0;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 0;
+        }
+
+        #myChart .thumbnail{
+            cursor: pointer;
+        }
+
+        #myChart .thumbnail p{
+            position: absolute;
+            top:5px;
+            left:15px;
+            color: white;
+            font-weight: bolder;
+            width:130px;
+            height:18px;
+            overflow: hidden;
         }
 
     </style>
