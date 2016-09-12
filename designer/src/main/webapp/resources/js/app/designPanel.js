@@ -209,6 +209,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
             var options = {
                 float: true,
+                auto: false,
                 vertical_margin: 10
             };
             $('.grid-stack').gridstack(options);
@@ -242,6 +243,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                             add_new_widget(0,0,data.id);
                             engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
+                            console.log(JSON.parse(data.jsCode));
                             renderMenu.renderMenu($("#"+order));
                             $("#chartTitle").text(data.chartName);
                         }
@@ -342,14 +344,15 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             var cids = [];          //保存图表id
             var ids = [];           //保存容器id
             //每个已存在容器的y坐标需要单独获取
-            var positionY = [];
-            for(var i=0;i<containers.length-1;i++) {
-                positionY.push($(containers[i]).attr("data-gs-y"));
-            }
+            // var positionY = [];
+            // for(var i=0;i<containers.length-1;i++) {
+            //     positionY.push($(containers[i]).attr("data-gs-y"));
+            // }
 
             for(var i=0;i<containers.length-1;i++) {
                 var x = $(containers[i]).attr("data-gs-x");
-                var y = positionY[i];
+                // var y = positionY[i];
+                var y = $(containers[i]).attr("data-gs-y");
                 var width = $(containers[i]).attr("data-gs-width");
                 var height = $(containers[i]).attr("data-gs-height");
                 var cid = $(containers[i]).children().attr("chartId");
@@ -385,6 +388,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
             $(".modal-footer").eq(0).click(function(){
                 var instance = engine.chart.getInstanceByDom(document.getElementById("optionContainer"));
+                console.log(instance.getOption());
                 engine.chart.getInstanceByDom(document.getElementById(domId)).setOption(instance.getOption());
                 $.ajax({
                    type: 'POST',
