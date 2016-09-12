@@ -625,19 +625,28 @@ require([
         //打开模态框绑定数据
         $('#addConnectionModal').on('show.bs.modal', function () {
             ko.cleanNode($('#addConnectionModel')[0]);
-            var addConnectionModel = new Backbone.Model({dbType: "MySql",dbHost: "",dbPort: "3306",dbName: ""});
+            var addConnectionModel = new Backbone.Model(
+                {
+                    dbType: "MySql",
+                    dbHost: "",
+                    dbPort: "3306",
+                    dbName: ""
+                });
             var addConnectionViewModel = function(model) {
                 this.dbType = kb.observable(model, 'dbType');
                 this.dbHost = kb.observable(model, 'dbHost');
-                this.dbPort = ko.computed((function() {
+                this.dbPort = kb.observable(model, 'dbPort');
+                this.dbName = kb.observable(model, 'dbName');
+                this.changeType = function(){
+                    console.log(1);
+
                     var port = {
                         MySql:"3306",
                         SqlServer:"1433",
                         Oracle:"1521"
                     }
-                    return port[this.dbType()];
-                }), this);
-                this.dbName = kb.observable(model, 'dbName');
+                    this.dbPort(port[this.dbType()]);
+                };
                 this.dbUrl = ko.computed((function() {
                     return buildUrl(this.dbType(),this.dbHost(),this.dbPort(),this.dbName());
                 }), this);

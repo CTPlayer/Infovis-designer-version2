@@ -11,7 +11,7 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
     var renderMenu = function(target){
         var allOptions = baseOptions.makeAllOptions();
         var engine = infovis.init(allOptions || {});
-
+        //根据target判断不同的渲染方式以及事件绑定
         target.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
             '<span style="display:none;">'+
             '<span id="chartTitle"></span>'+

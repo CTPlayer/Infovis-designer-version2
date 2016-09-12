@@ -176,15 +176,13 @@
                         <ul class="nav navbar-nav navbar-left">
                             <a class="navbar-brand" href="#" style="color: #ffffff"><i class="glyphicon glyphicon-equalizer" aria-hidden="true"></i> 数据源</a>
                         </ul>
-                        <ul class="nav navbar-nav navbar-left">
+                        <ul class="nav navbar-nav navbar-right">
                             <li>
                                 <a href="javascript: void(0);" data-toggle="modal" data-target="#addConnectionModal">新增连接</a>
                             </li>
                             <li>
                                 <a href="javascript: void(0);" id="deleteDB" >删除连接</a>
                             </li>
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
                             <li class="dropdown">
                                 <a href="query.page" role="button"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;我的作品</a>
                             </li>
@@ -264,7 +262,7 @@
                 <form id="addConnectionForm" method="post">
                     <div id="addConnectionModel">
                         <div class="form-group">
-                            <select class="form-control" name="dbType" data-bind="value: dbType">
+                            <select class="form-control" name="dbType" data-bind="value: dbType,event: { change: changeType}">
                                 <option name="MySql">MySql</option>
                                 <option name="SqlServer">SqlServer</option>
                                 <option name="Oracle">Oracle</option>

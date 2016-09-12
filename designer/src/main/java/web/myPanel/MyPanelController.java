@@ -23,19 +23,19 @@ public class MyPanelController {
 
     @RequestMapping("/crud")
     @ResponseBody
-    public Object crud(@RequestHeader(required = true) String oper, MyPanel myPanel) throws Exception{
-        Map<String,Object> resMap = new HashMap<>();
-        if("insert".equals(oper)){
+    public Object crud(@RequestHeader(required = true) String oper, MyPanel myPanel) throws Exception {
+        Map<String, Object> resMap = new HashMap<>();
+        if ("insert".equals(oper)) {
             myPanelService.insert(myPanel);
-        }else if("update".equals(oper)){
+        } else if ("update".equals(oper)) {
             myPanelService.update(myPanel);
-        }else if("delete".equals(oper)){
+        } else if ("delete".equals(oper)) {
             myPanelService.delete(myPanel.getExportId());
-        }else if("query".equals(oper)){
+        } else if ("query".equals(oper)) {
             myPanel = myPanelService.queryAsObject(myPanel.getExportId());
         }
-        resMap.put("success",true);
-        resMap.put("myPanel",myPanel);
+        resMap.put("success", true);
+        resMap.put("myPanel", myPanel);
         return resMap;
     }
 }

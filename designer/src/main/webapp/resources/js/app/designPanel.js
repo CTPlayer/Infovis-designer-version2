@@ -18,11 +18,17 @@ require.config({
         "spectrum": "lib/bootstrap/js/spectrum",
         "infovis": "lib/infovis.min",
         "renderMenu" : 'app/renderMenu',
-        "domReady" : 'lib/domReady'
+        "domReady" : 'lib/domReady',
+        "zrender": "lib/zrender/zrender",
+        "zrender/shape/Rectangle": "lib/zrender/zrender",
+        "zrender/tool/color": "lib/zrender/zrender",
+        "CanvasTag" : "customModule/CanvasTag/CanvasTag",
+        "confirmModal": "lib/confirm/confirm-bootstrap"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
-        "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] }
+        "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] },
+        "confirmModal" : { "deps" :['jquery'] }
     }
 });
 
@@ -75,9 +81,9 @@ require(['jquery','domReady'], function ($,domReady) {
     });
 })
 
-require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu',
+require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu','CanvasTag','confirmModal',
         'bootstrap', 'gridstack', 'spectrum'],
-    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu){
+    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu,CanvasTag,confirmModal){
         $(function() {
             $(".navbar-expand-toggle").click(function() {
                 $(".app-container").toggleClass("expanded");
@@ -123,11 +129,14 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                success: function(response){
                    for(var i=0;i<response.data.length;i++){
                        if(response.data[i].chartType == 'pie'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;margin-left: 10px;float: left"><img src="resources/img/pie_chart.png" alt="..."><p style="text-align: center">'+response.data[i].chartName+'</p></div>');
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/pie_chart.png" alt="...">' +
+                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
                        }else if(response.data[i].chartType == 'line'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;margin-left: 10px;float: left"><img src="resources/img/line_chart.png" alt="..."><p style="text-align: center">'+response.data[i].chartName+'</p></div>');
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/line_chart.png" alt="...">' +
+                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
                        }else if(response.data[i].chartType == 'bar'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;margin-left: 10px;float: left"><img src="resources/img/bar_chart.png" alt="..."><p style="text-align: center">'+response.data[i].chartName+'</p></div>');
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/bar_chart.png" alt="...">' +
+                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
                        }
                    }
                    $(".thumbnail").click(function(){
@@ -137,6 +146,47 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                            $(this).addClass("selected");
                        }
                    });
+
+                   /**
+                    * 注册图表删除事件
+                    */
+                   $('.myChart-topbar .glyphicon-remove').click(function (event) {
+                       event.stopPropagation();//屏蔽父元素select样式选择
+                   });
+                   $('.myChart-topbar .glyphicon-remove').confirmModal({
+                       confirmTitle     : '提示',
+                       confirmMessage   : '你确定删除该图表？',
+                       confirmOk        : '是的',
+                       confirmCancel    : '取消',
+                       confirmDirection : 'rtl',
+                       confirmStyle     : 'primary',
+                       confirmCallback  : function (target) {
+                           var cid = target.parent().parent().attr('data-cid');
+                           var deferred = $.ajax({
+                               type: 'POST',
+                               dataType: 'json',
+                               url: 'myChart/crud',
+                               data : {
+                                   id: cid
+                               },
+                               headers :{
+                                   oper : 'delete'
+                               }
+                           });
+                           deferred.done(function(){
+                               target.parent().parent().remove();//当前面板的图表类型选择框删除
+                               $.each($('.grid-stack-item-content'),function (index,target) {//删除htmlcode中该图表的div元素
+                                   if(cid == $(target).attr("chartid")){
+                                       $(target).parent().remove();
+                                   }
+                               });
+                               window.saveCurrentPanel();//重新保存html
+                           })
+                       },
+                       confirmDismiss   : true,
+                       confirmAutoOpen  : false
+                   });
+
                }
             });
         });
@@ -186,7 +236,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     url: 'selectOneChartInfo',
                     data: "id="+chartId,
                     success: function(data){
-                        if($('[chartId='+data.id+']').length <= 0) {
+                        if(data && $('[chartId='+data.id+']').length <= 0) {
                             $("title").html("*Infovis-Designer");                                     //改动标记
                             window.isSave = false;
 
@@ -227,11 +277,17 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             $(".grid-stack").on("resizestop",function(event,ui){
                 $("title").html("*Infovis-Designer");                                     //改动标记
                 window.isSave = false;
-                var id = ui.element[0].firstChild.getAttribute("id");
-                engine.chart.getInstanceByDom(document.getElementById(id)).resize();
-                window.addEventListener("resize",function(){
+                //判断chart类型
+                if(ui.element.find("div:eq(0)").attr("chartType").indexOf("text") >= 0){
+                    CanvasTag.render(ui.element.find("div:eq(0)").attr("id"));
+                    renderMenu.renderMenu($("#" + ui.element.find("div:eq(0)").attr("id")));
+                }else {
+                    var id = ui.element[0].firstChild.getAttribute("id");
                     engine.chart.getInstanceByDom(document.getElementById(id)).resize();
-                });
+                    window.addEventListener("resize", function () {
+                        engine.chart.getInstanceByDom(document.getElementById(id)).resize();
+                    });
+                }
             });
 
             $(".grid-stack").on("dragstop",function(event,ui){
@@ -242,15 +298,16 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             /**
              * 保存当前设计面板
              */
-            $("#exportHtml").click(function(){
+
+            window.saveCurrentPanel = function () {
                 $("title").html("Infovis-Designer");
-            
+
                 $(".grid-stack-placeholder").remove();
                 $("#fill").parent().remove();
-            
+
                 $(".app-container").addClass("loader");
                 $(".loader-container").css("display","block");
-            
+
                 var arr = window.location.href.split("/");
                 var exportId = $("#exportId").val();
                 var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
@@ -273,7 +330,10 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         alert("保存失败，请重试！");
                     }
                 });
+            }
 
+            $("#exportHtml").click(function(){
+                window.saveCurrentPanel();
             });
 
             // 为了防止再次进入以后设计面板时先前的图表不能自定义大小，这里获取先前图表的容器属性，重新添加容器并渲染图表
@@ -348,5 +408,47 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 if(window.isSave == false)
                     return '您可能有数据没有保存';
             });
+
+
+            //左边拖动文本框业务逻辑
+            $('.background-text-pick-block').draggable({
+                cursor: "move",
+                opacity: 0.7,
+                appendTo :'body',
+                helper: function (event) {
+                    var target = $(this).clone();
+                    target.zIndex( 100000000 );
+                    target.css('position','absolute');
+                    return target;
+                }
+            });
+            $(".app-container").droppable({
+                drop : function (event,ui) {
+                    //屏蔽重复拖拽
+                    if(ui.draggable.hasClass("background-text-pick-block")) {
+                        addTextWidget(ui);
+                        CanvasTag.render(order);
+                        renderMenu.renderMenu($("#" + order));
+                    }
+                }
+            })
+            
+            var addTextWidget = function (ui) {
+                order++;
+                var pagex = (ui.position.left - 60) /  105;
+                var pagey = (ui.position.top - 60+$(document).scrollTop()) /  70;
+                var node = {
+                    x: pagex,
+                    y: pagey,
+                    width: 4,
+                    height: 4
+                };
+                //获取文字组件子类型
+                var textType = ui.draggable.find("span").attr('textType');
+                return grid.add_widget($('<div>'+
+                    '<div class="grid-stack-item-content" chartType="text:' + textType+ '" ' + 'id="'+ order + '"chartId="' + 1+ '">'+
+                    '</div>'+
+                    '</div>'),node.x, node.y, node.width, node.height);
+            }
         });
     });
