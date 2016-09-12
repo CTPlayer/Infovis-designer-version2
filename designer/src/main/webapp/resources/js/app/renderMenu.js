@@ -69,7 +69,6 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
             $("title").html("Infovis-Designer");
 
             $(".grid-stack-placeholder").remove();
-            // $("#fill").parent().remove();
 
             $(".app-container").addClass("loader");
             $(".loader-container").css("display","block");
@@ -97,6 +96,21 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
                     error: function () {
                         alert("保存失败，请重试！");
                     }
+                });
+
+                var containers = $(".grid-stack").children();
+                var chartIds = [];          //保存图表id
+                var containerIds = [];           //保存容器id
+                for(var i=0;i<containers.length-1;i++) {
+                    var chartId = $(containers[i]).children().attr("chartId");
+                    var containerId = $(containers[i]).children().attr("id");
+                    chartIds.push(chartId);
+                    containerIds.push(containerId);
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: "panelChartsWrapper/updateWrapper",
+                    data: "chartIds="+chartIds+"&containerIds="+containerIds+"&exportId="+exportId
                 });
             }else{
                 top.window.location = "dataAnalysis.page?chartId=" + index + "&exportId=" + exportId;
