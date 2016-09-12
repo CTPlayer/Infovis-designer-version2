@@ -353,10 +353,38 @@ define(function(){
             '</div>'].join("");
 
         return table;
+    };
+
+    var tableAndConfigOfText = function(){
+        var table = [
+            '<ul class="nav nav-tabs" role="tablist">',
+                '<li role="presentation" class="active"><a href="#param" data-toggle="tab">配置项</a></li>',
+            '</ul>',
+            '<div class="col-xs-11" style="height:350px;overflow:auto;" id="chartConfig">',
+                '<form role="form">',
+                    '<div class="form-group form-group-sm">',
+                        '<label >文字内容&nbsp;&nbsp;</label>',
+                        '<input class="form-control" data-bind="value: text, valueUpdate: \'keyup\'">',
+                        '</div>',
+                        '<div class="form-group form-group-sm">',
+                        '<label >文字颜色&nbsp;&nbsp;</label>',
+                        '<input class="form-control" data-bind="value: textColor, valueUpdate: \'input\'">',
+                        '</div>',
+                        '<div class="form-group form-group-sm">',
+                        '<label >背景颜色&nbsp;&nbsp;</label>',
+                        '<input class="form-control"  data-bind="value: color, valueUpdate: \'keyup\'">',
+                        '</div>',
+                    '</div>',
+                '</form>',
+            '</div>'
+            ].join("");
+
+        return table;
     }
                     
 	return {
         tableAndConfigOfBarAndLine : tableAndConfigOfBarAndLine,
-        tableAndConfigOfPie : tableAndConfigOfPie
+        tableAndConfigOfPie : tableAndConfigOfPie,
+        tableAndConfigOfText : tableAndConfigOfText
 	};
 });

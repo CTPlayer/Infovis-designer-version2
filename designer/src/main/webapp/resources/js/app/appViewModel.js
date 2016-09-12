@@ -291,14 +291,28 @@ define(['knockout', 'infovis'],function(ko, infovis){
             option.legend[0].textStyle.fontWeight = self.selectedLegendFontWeight();
             option.legend[0].textStyle.color = self.legendFontColor();
 
-            option.backgroundColor = "rgba(255,255,255,"+self.backgroundOpacity()*0.01+")";
-
+            option.backgroundColor = "rgb(255,255,255,"+self.backgroundOpacity()*0.01+")";
             optionChart.setOption(option,true);
         })
     };
-    
+
+    var bindTableAndConfigOfText = function(option,engine){
+        return function() {
+            this.text = ko.observable(option.text);
+            this.textColor = ko.observable(option.textColor);
+            this.color = ko.observable(option.color);
+            ko.computed(function () {
+                option.text = this.text();
+                option.textColor = this.textColor();
+                option.color = this.color();
+                engine.render("textOptionContainer",option);
+            })
+        }
+    }
+
     return {
         bindTableAndConfigOfBarAndLine : bindTableAndConfigOfBarAndLine,
-        bindTableAndConfigOfPie : bindTableAndConfigOfPie
+        bindTableAndConfigOfPie : bindTableAndConfigOfPie,
+        bindTableAndConfigOfText : bindTableAndConfigOfText
     }
 });

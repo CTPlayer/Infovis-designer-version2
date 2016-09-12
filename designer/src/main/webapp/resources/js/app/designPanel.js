@@ -22,6 +22,7 @@ require.config({
         "zrender": "lib/zrender/zrender",
         "zrender/shape/Rectangle": "lib/zrender/zrender",
         "zrender/tool/color": "lib/zrender/zrender",
+        "zrender/Storage" : "lib/zrender/zrender",
         "CanvasTag" : "customModule/CanvasTag/CanvasTag",
         "confirmModal": "lib/confirm/confirm-bootstrap"
     },
@@ -224,7 +225,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     height: 4
                 };
                 var nWidget = grid.add_widget($('<div>'+
-                    '<div class="grid-stack-item-content"' + 'id="'+ order + '"chartId="' + cid+ '">'+
+                    '<div class="grid-stack-item-content" chartType="chart" ' + 'id="'+ order + '"chartId="' + cid+ '">'+
                     '</div>'+
                     '</div>'),node.x, node.y, node.width, node.height);
             };
@@ -279,7 +280,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 window.isSave = false;
                 //判断chart类型
                 if(ui.element.find("div:eq(0)").attr("chartType").indexOf("text") >= 0){
-                    CanvasTag.render(ui.element.find("div:eq(0)").attr("id"));
+                    CanvasTag().render(ui.element.find("div:eq(0)").attr("id"));
                     renderMenu.renderMenu($("#" + ui.element.find("div:eq(0)").attr("id")));
                 }else {
                     var id = ui.element[0].firstChild.getAttribute("id");
@@ -376,7 +377,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 ids.push(id);
 
                 grid.add_widget($('<div>'+
-                    '<div class="grid-stack-item-content"' + 'id="'+ id + '"chartId="' + cid+ '">'+
+                    '<div class="grid-stack-item-content" chartType="chart" ' + 'id="'+ id + '"chartId="' + cid+ '">'+
                     '</div>'+
                     '</div>'),x, y, width, height);
             }
@@ -443,7 +444,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     //屏蔽重复拖拽
                     if(ui.draggable.hasClass("background-text-pick-block")) {
                         addTextWidget(ui);
-                        CanvasTag.render(order);
+                        CanvasTag().render(order);
                         renderMenu.renderMenu($("#" + order));
                     }
                 }

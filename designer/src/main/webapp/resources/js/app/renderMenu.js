@@ -1,9 +1,9 @@
 /**
  * Created by ct on 2016/9/7.
  */
-define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel',
+define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel','zrender','CanvasTag',
     'bootstrap', 'gridstack', 'spectrum'],
-    function($, infovis, ko, kb, baseOptions, formatData, appViewModel){
+    function($, infovis, ko, kb, baseOptions, formatData, appViewModel,zrender,CanvasTag){
     /**
      * 渲染设计面板图表菜单
      * @param target
@@ -12,14 +12,26 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
         var allOptions = baseOptions.makeAllOptions();
         var engine = infovis.init(allOptions || {});
         //根据target判断不同的渲染方式以及事件绑定
-        target.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">'+
-            '<span style="display:none;">'+
-            '<span id="chartTitle"></span>'+
-            '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>'+
-            '<a href="#" data-toggle="modal" data-target=".bs-option-modal-lg"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>'+
-            '<a href="#"><i class="fa fa-cog" style="color: white"></i></a>'+
-            '</span>'+
-            '</div>');
+        var charttype = target.attr("chartType")
+        if(charttype.indexOf("text") < 0) {
+            target.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">' +
+                '<span style="display:none;">' +
+                '<span id="chartTitle"></span>' +
+                '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>' +
+                '<a href="#" data-toggle="modal" data-target="#optionModal"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>' +
+                '<a href="#"><i class="fa fa-cog" style="color: white"></i></a>' +
+                '</span>' +
+                '</div>');
+        }else{
+            target.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">' +
+                '<span style="display:none;">' +
+                '<span id="chartTitle"></span>' +
+                '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>' +
+                '<a href="#" data-toggle="modal" data-target="#textOptionModal"><i class="glyphicon glyphicon-pencil" style="color: white"></i></a>' +
+                '</span>' +
+                '</div>');
+        }
+
         target.on('mouseenter mouseleave',function(e){
             var target = $("#operate",$(this));
             if(e.type == 'mouseenter'){
@@ -43,79 +55,97 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
             $(area).parent().remove();
         });
 
-        //将选中即将配置的图表渲染到配置面板
-        //双向绑定
-        target.find('a').eq(1).click(function(){
-            var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
-            var type = instance.getOption().series[0].type;
+        //根据target判断不同的渲染方式以及事件绑定
+        if(charttype.indexOf("text") < 0) {
+            //将选中即将配置的图表渲染到配置面板
+            //双向绑定
+            target.find('a').eq(1).click(function () {
+                var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
+                var type = instance.getOption().series[0].type;
 
-            $("#loading").css("display","block");
-            $("#optionContainer").empty();
-            $("#optionPanel").empty();
+                $("#loading").css("display", "block");
+                $("#optionContainer").empty();
+                $("#optionPanel").empty();
 
-            $("#optionModal").on("shown.bs.modal",function(e) {
-                $("#loading").css("display","none");
-                if (type == "bar" || type == "line") {
-                    $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
-                    ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
-                } else if (type == "pie") {
-                    $("#optionPanel").html(formatData.tableAndConfigOfPie());
-                    ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
-                }
-            });
-        });
-
-        target.find('a').eq(2).click(function(){
-            $("title").html("Infovis-Designer");
-
-            $(".grid-stack-placeholder").remove();
-
-            $(".app-container").addClass("loader");
-            $(".loader-container").css("display","block");
-
-            var index = $(this).parent().parent().parent().attr("chartId");
-            var arr = window.location.href.split("/");
-            var exportId = $("#exportId").val();
-            var shareHref = arr[0]+"//"+arr[2]+"/"+arr[3]+"/share.page?exportId="+exportId;
-            if(window.isSave == false) {
-                $.ajax({
-                    type: 'POST',
-                    url: "export",
-                    data: {
-                        "htmlCode": $(".grid-stack").html().trim(),
-                        "exportId": exportId,
-                        "extraMsg": shareHref
-                    },
-                    success: function () {
-                        window.isSave = true;                     //点击导出后表明已保存
-
-                        $("body").removeClass("loader");
-                        $(".loader-container").css("display", "none");
-                        top.window.location = "dataAnalysis.page?chartId=" + index + "&exportId=" + exportId;
-                    },
-                    error: function () {
-                        alert("保存失败，请重试！");
+                $("#optionModal").on("shown.bs.modal", function (e) {
+                    $("#loading").css("display", "none");
+                    if (type == "bar" || type == "line") {
+                        $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
+                        ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
+                    } else if (type == "pie") {
+                        $("#optionPanel").html(formatData.tableAndConfigOfPie());
+                        ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
                     }
                 });
+            });
 
-                var containers = $(".grid-stack").children();
-                var chartIds = [];          //保存图表id
-                var containerIds = [];           //保存容器id
-                for(var i=0;i<containers.length-1;i++) {
-                    var chartId = $(containers[i]).children().attr("chartId");
-                    var containerId = $(containers[i]).children().attr("id");
-                    chartIds.push(chartId);
-                    containerIds.push(containerId);
+            target.find('a').eq(2).click(function () {
+                $("title").html("Infovis-Designer");
+
+
+                $(".grid-stack-placeholder").remove();
+                // $("#fill").parent().remove();
+
+                $(".app-container").addClass("loader");
+                $(".loader-container").css("display", "block");
+
+                var index = $(this).parent().parent().parent().attr("chartId");
+                var arr = window.location.href.split("/");
+                var exportId = $("#exportId").val();
+                var shareHref = arr[0] + "//" + arr[2] + "/" + arr[3] + "/share.page?exportId=" + exportId;
+                if (window.isSave == false) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "export",
+                        data: {
+                            "htmlCode": $(".grid-stack").html().trim(),
+                            "exportId": exportId,
+                            "extraMsg": shareHref
+                        },
+                        success: function () {
+                            window.isSave = true;                     //点击导出后表明已保存
+
+                            $("body").removeClass("loader");
+                            $(".loader-container").css("display", "none");
+                            top.window.location = "dataAnalysis.page?chartId=" + index + "&exportId=" + exportId;
+                        },
+                        error: function () {
+                            alert("保存失败，请重试！");
+                        }
+                    });
+
+                    var containers = $(".grid-stack").children();
+                    var chartIds = [];          //保存图表id
+                    var containerIds = [];           //保存容器id
+                    for(var i=0;i<containers.length-1;i++) {
+                        var chartId = $(containers[i]).children().attr("chartId");
+                        var containerId = $(containers[i]).children().attr("id");
+                        chartIds.push(chartId);
+                        containerIds.push(containerId);
+                    }
+                    $.ajax({
+                        type: 'POST',
+                        url: "panelChartsWrapper/updateWrapper",
+                        data: "chartIds="+chartIds+"&containerIds="+containerIds+"&exportId="+exportId
+                    });
+                } else {
+                    top.window.location = "dataAnalysis.page?chartId=" + index + "&exportId=" + exportId;
                 }
-                $.ajax({
-                    type: 'POST',
-                    url: "panelChartsWrapper/updateWrapper",
-                    data: "chartIds="+chartIds+"&containerIds="+containerIds+"&exportId="+exportId
-                });
-            }else{
-                top.window.location = "dataAnalysis.page?chartId=" + index + "&exportId=" + exportId;
-            }
-        });
+            });
+        }else{
+            target.find('a').eq(1).click(function () {
+                $("#textOptionContainer").empty();
+                $("#textOptionPanel").empty();
+            });
+            var pzr = zrender.getInstance(target.attr("zid"));//原控件
+            $("#textOptionModal").on("shown.bs.modal", function (e) {
+                var option = pzr.storage.getShapeList()[0].style;
+                $("#textOptionPanel").html(formatData.tableAndConfigOfText);
+                var canvasTag = CanvasTag().render("textOptionContainer",option);
+                ko.applyBindings(appViewModel.bindTableAndConfigOfText(option, canvasTag), $("#textOptionPanel").children()[1]);  //开启双向绑定监听
+
+            })
+        }
     };
 
     return {
