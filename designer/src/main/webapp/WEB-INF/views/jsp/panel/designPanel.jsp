@@ -367,6 +367,30 @@
     </div>
 </div>
 
+<div class="modal fade bs-option-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="textOptionModal">
+    <div class="modal-dialog modal-lg" style="width: 90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">自定义配置</h4>
+            </div>
+            <div class="modal-body">
+                <div id="textLoading" class="loader-container text-center color-black" style="display: none;">
+                    <div><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
+                    <div>正在加载,请稍后...</div>
+                </div>
+                <div id="textOptionContainer" style="width:40%;height:410px;float:left;">
+                </div>
+                <div id="textOptionPanel" style="width:50%;height:410px;float:left;margin-left:50px;">
+                </div>
+            </div>
+            <div class="modal-footer" style="clear:both">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="resources/js/lib/require.js" defer async="true" data-main="resources/js/app/designPanel"></script>
 </body>
 
