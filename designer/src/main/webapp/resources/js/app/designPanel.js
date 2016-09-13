@@ -80,7 +80,7 @@ require(['jquery','domReady'], function ($,domReady) {
             });
         });
     });
-})
+});
 
 require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu','CanvasTag','confirmModal','zrender',
         'bootstrap', 'gridstack', 'spectrum'],
@@ -166,22 +166,25 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                            var deferred = $.ajax({
                                type: 'POST',
                                dataType: 'json',
-                               url: 'myChart/crud',
+                               url: 'myChart/deleteOneChart',
                                data : {
-                                   id: cid
+                                   "chartId": cid
                                },
                                headers :{
                                    oper : 'delete'
                                }
                            });
-                           deferred.done(function(){
-                               target.parent().parent().remove();//当前面板的图表类型选择框删除
-                               $.each($('.grid-stack-item-content'),function (index,target) {//删除htmlcode中该图表的div元素
-                                   if(cid == $(target).attr("chartid")){
-                                       $(target).parent().remove();
-                                   }
-                               });
-                               window.saveCurrentPanel();//重新保存html
+                           deferred.done(function(data){
+                               if(data.isDelete == true){
+                                   target.parent().parent().remove();//当前面板的图表类型选择框删除
+                                   $.each($('.grid-stack-item-content'),function (index,target) {//删除htmlcode中该图表的div元素
+                                       if(cid == $(target).attr("chartid")){
+                                           $(target).parent().remove();
+                                       }
+                                   });
+                               }else{
+                                   alert("部分设计面板中使用了本图表，暂不可删除");
+                               }
                            })
                        },
                        confirmDismiss   : true,
@@ -243,7 +246,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                             add_new_widget(0,0,data.id);
                             engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
-                            console.log(JSON.parse(data.jsCode));
+
                             renderMenu.renderMenu($("#"+order));
                             $("#chartTitle").text(data.chartName);
                         }
@@ -267,7 +270,8 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                 engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
 
                                 renderMenu.renderMenu($("#"+order));
-                                $("#chartTitle").text(data.chartName);
+
+                                $("#"+order).find("#chartTitle").text(data.chartName);
                             }
                         });
                     }
@@ -337,7 +341,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 var containers = $(".grid-stack").children();
                 var chartIds = [];          //保存图表id
                 var containerIds = [];           //保存容器id
-                for(var i=0;i<containers.length-1;i++) {
+                for(var i=0;i<containers.length;i++) {
                     var chartId = $(containers[i]).children().attr("chartId");
                     var containerId = $(containers[i]).children().attr("id");
                     chartIds.push(chartId);
@@ -361,15 +365,9 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             containers.remove();
             var cids = [];          //保存图表id
             var ids = [];           //保存容器id
-            //每个已存在容器的y坐标需要单独获取
-            // var positionY = [];
-            // for(var i=0;i<containers.length-1;i++) {
-            //     positionY.push($(containers[i]).attr("data-gs-y"));
-            // }
 
             for(var i=0;i<containers.length-1;i++) {
                 var x = $(containers[i]).attr("data-gs-x");
-                // var y = positionY[i];
                 var y = $(containers[i]).attr("data-gs-y");
                 var width = $(containers[i]).attr("data-gs-width");
                 var height = $(containers[i]).attr("data-gs-height");
@@ -415,9 +413,8 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 domId = e.relatedTarget.parentNode.parentNode.parentNode.getAttribute('id');
             });
 
-            $(".modal-footer").eq(0).click(function(){
+            $("#optionModal").find(".btn-primary").click(function(){
                 var instance = engine.chart.getInstanceByDom(document.getElementById("optionContainer"));
-                console.log(instance.getOption());
                 engine.chart.getInstanceByDom(document.getElementById(domId)).setOption(instance.getOption());
                 $.ajax({
                    type: 'POST',
@@ -475,7 +472,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         })
                     }
                 }
-            })
+            });
             
             var addTextWidget = function (ui) {
                 order++;

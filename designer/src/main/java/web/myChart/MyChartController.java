@@ -11,6 +11,7 @@ import service.myPanel.PanelChartsWrapperService;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +45,29 @@ public class MyChartController {
             panelChartsWrapperService.delete(panelChartsWrapper);
         }
         resMap.put("success", true);
+        return resMap;
+    }
+
+    /**
+     * 从我的图表中删除一条记录（需要先确认该图表未被使用）
+     * @param panelChartsWrapper
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/deleteOneChart")
+    @ResponseBody
+    public Object deleteOneChart(PanelChartsWrapper panelChartsWrapper) throws Exception {
+        Map<String, Object> resMap = new HashMap<>();
+        panelChartsWrapper.setPaging(false);
+        List<PanelChartsWrapper> panelChartsWrappers = panelChartsWrapperService.selectList(panelChartsWrapper);
+        if(panelChartsWrappers.size() > 0){
+            resMap.put("isDelete",false);
+        }else{
+            MyCharts myCharts = new MyCharts();
+            myCharts.setId(panelChartsWrapper.getChartId());
+            myChartsService.delete(myCharts);
+            resMap.put("isDelete",true);
+        }
         return resMap;
     }
 }

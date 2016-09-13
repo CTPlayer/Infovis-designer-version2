@@ -165,30 +165,6 @@ public class DefaultController {
         return myPanelService.delete(exportId);
     }
 
-//    /**
-//     * 根据exportId查询对应设计面板中所有的图表option
-//     *
-//     * @param exportId
-//     * @throws Exception
-//     */
-//    @RequestMapping("/getOptions")
-//    @ResponseBody
-//    public Object getOptions(String exportId) throws Exception {
-//        return myPanelService.queryAsObject(exportId);
-//    }
-
-//    /**
-//     * 更新设计面板中的options
-//     *
-//     * @param myPanel
-//     * @throws Exception
-//     */
-//    @RequestMapping("/updateOptions")
-//    @ResponseBody
-//    public Object updateOptions(MyPanel myPanel) throws Exception {
-//        return myPanelService.update(myPanel);
-//    }
-
     /**
      * 添加我的图表
      *

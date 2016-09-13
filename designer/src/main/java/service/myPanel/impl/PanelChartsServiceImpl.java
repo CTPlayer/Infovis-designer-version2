@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import service.myPanel.PanelChartsWrapperService;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by ct on 2016/9/5.
@@ -34,6 +35,12 @@ public class PanelChartsServiceImpl implements PanelChartsWrapperService{
     public int update(PanelChartsWrapper panelChartsWrapper) throws Exception {
        delete(panelChartsWrapper);
         return insert(panelChartsWrapper);
+    }
+
+    @Override
+    public List<PanelChartsWrapper> selectList(PanelChartsWrapper panelChartsWrapper) throws Exception {
+        panelChartsWrapper.setStatmentId(NAMESPACE + ".selectList");
+        return baseMapper.selectList(panelChartsWrapper);
     }
 
 

@@ -131,6 +131,7 @@
             margin-top: 5px;
             margin-right: 15px;
             cursor:pointer;
+            font-size: 20px;
         }
 
         #myChart .thumbnail .glyphicon-ok{
