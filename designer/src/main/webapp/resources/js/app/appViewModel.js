@@ -302,6 +302,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
 
     var bindTableAndConfigOfText = function(option,engine){
         return new function() {
+            var that = this;
             this.text = ko.observable(option.text);
             this.textColor = ko.observable(option.textColor);
             this.color = ko.observable(option.color);
