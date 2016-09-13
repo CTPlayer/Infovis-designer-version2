@@ -454,7 +454,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     //屏蔽重复拖拽
                     if(ui.draggable.hasClass("background-text-pick-block")) {
                         addTextWidget(ui);
-                         var canvasTag = CanvasTag().render(order);
+                        var canvasTag = CanvasTag().render(order);
                         renderMenu.renderMenu($("#" + order));
                         var deferred = $.ajax({
                             type: 'POST',
