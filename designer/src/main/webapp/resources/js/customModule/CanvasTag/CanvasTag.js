@@ -22,7 +22,7 @@ define(['zrender','zrender/tool/color','zrender/shape/Rectangle','jquery','jquer
                             text: '请输入文字',
                             textFont: "bold " + pageX / 8 + "px verdana",
                             textPosition: 'inside',
-                            textColor: 'yellow',
+                            textColor: 'white',
                             radius: [20, 50],
                             lineWidth: 5
                         },
@@ -30,9 +30,10 @@ define(['zrender','zrender/tool/color','zrender/shape/Rectangle','jquery','jquer
                     }));
                 } else {
                     option.x = pageX / 8;
-                    option.y = pageY / 8;
-                    option.width = pageX - (pageX / 4);
-                    option.height = pageY - (pageY / 4);
+                    // option.y = pageY / 8;
+                    option.width = pageX - (pageX / 5);
+                    // option.height = pageY - (pageY / 4);
+                    // //option.textFont =  "bold " + pageX / 8 + "px verdana";
                     zr.addShape(new RectangleShape({
                         style: option,
                         hoverable: false,

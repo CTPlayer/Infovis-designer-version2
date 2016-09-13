@@ -82,9 +82,9 @@ require(['jquery','domReady'], function ($,domReady) {
     });
 });
 
-require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu','CanvasTag','confirmModal',
+require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu','CanvasTag','confirmModal','zrender',
         'bootstrap', 'gridstack', 'spectrum'],
-    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu,CanvasTag,confirmModal){
+    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu,CanvasTag,confirmModal,zrender){
         $(function() {
             $(".navbar-expand-toggle").click(function() {
                 $(".app-container").toggleClass("expanded");
@@ -284,7 +284,9 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 window.isSave = false;
                 //判断chart类型
                 if(ui.element.find("div:eq(0)").attr("chartType").indexOf("text") >= 0){
-                    CanvasTag().render(ui.element.find("div:eq(0)").attr("id"));
+                    var pzr = zrender.getInstance(ui.element.find("div:eq(0)").attr("zid"));//原控件
+                    var option = $.extend(true, {}, pzr.storage.getShapeList()[0].style);
+                    CanvasTag().render(ui.element.find("div:eq(0)").attr("id"),option);
                     renderMenu.renderMenu($("#" + ui.element.find("div:eq(0)").attr("id")));
                 }else {
                     var id = ui.element[0].firstChild.getAttribute("id");
@@ -371,13 +373,21 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 var height = $(containers[i]).attr("data-gs-height");
                 var cid = $(containers[i]).children().attr("chartId");
                 var id = $(containers[i]).children().attr("id");
+                var chartType = $(containers[i]).children().attr("chartType");
                 cids.push(cid);
                 ids.push(id);
 
-                grid.add_widget($('<div>'+
-                    '<div class="grid-stack-item-content" chartType="chart" ' + 'id="'+ id + '"chartId="' + cid+ '">'+
-                    '</div>'+
-                    '</div>'),x, y, width, height);
+                if(chartType.indexOf("text") < 0) {
+                    grid.add_widget($('<div>' +
+                        '<div class="grid-stack-item-content" chartType="chart" ' + 'id="' + id + '"chartId="' + cid + '">' +
+                        '</div>' +
+                        '</div>'), x, y, width, height);
+                }else{
+                    grid.add_widget($('<div>'+
+                        '<div class="grid-stack-item-content" style="overflow: hidden;" chartType="' + chartType+ '" ' + 'id="'+ id + '"chartId="' + cid + '">'+
+                        '</div>'+
+                        '</div>'), x, y, width, height);
+                }
             }
 
             $.ajax({
@@ -386,9 +396,12 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 data: 'cids='+cids,
                 success: function(data){
                     for(var i=0;i<cids.length;i++){
-                        var exportChart = engine.chart.init($("#"+ids[i])[0]);
-                        exportChart.setOption(JSON.parse(data[i].jsCode));
-
+                        if(data[i].chartType.indexOf("text") < 0) {
+                            var exportChart = engine.chart.init($("#" + ids[i])[0]);
+                            exportChart.setOption(JSON.parse(data[i].jsCode));
+                        }else{
+                            CanvasTag().render(ids[i],JSON.parse(data[i].jsCode));
+                        }
                         renderMenu.renderMenu($("#"+ids[i]));
                         $("#chartTitle").text(data[i].chartName);
                     }
@@ -441,8 +454,22 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     //屏蔽重复拖拽
                     if(ui.draggable.hasClass("background-text-pick-block")) {
                         addTextWidget(ui);
-                        CanvasTag().render(order);
+                         var canvasTag = CanvasTag().render(order);
                         renderMenu.renderMenu($("#" + order));
+                        var deferred = $.ajax({
+                            type: 'POST',
+                            url: 'addCharts',
+                            data : {
+                                'chartType': "text:" + ui.draggable.find("span").attr('textType'),
+                                'sqlRecordingId': "0",
+                                'buildModel': "",
+                                'jsCode': JSON.stringify(canvasTag.getOption()),
+                                'chartName': "文字组件"
+                            }
+                        });
+                        deferred.done(function(result){
+                            $("#" + order).attr("chartId",result);
+                        })
                     }
                 }
             });
@@ -454,13 +481,14 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 var node = {
                     x: pagex,
                     y: pagey,
-                    width: 4,
-                    height: 4
+                    width: 3,
+                    height: 1
                 };
+
                 //获取文字组件子类型
                 var textType = ui.draggable.find("span").attr('textType');
                 return grid.add_widget($('<div>'+
-                    '<div class="grid-stack-item-content" chartType="text:' + textType+ '" ' + 'id="'+ order + '"chartId="' + 1+ '">'+
+                    '<div class="grid-stack-item-content" style="overflow: hidden;" chartType="text:' + textType+ '" ' + 'id="'+ order + '">'+
                     '</div>'+
                     '</div>'),node.x, node.y, node.width, node.height);
             }

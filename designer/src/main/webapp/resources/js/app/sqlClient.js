@@ -638,8 +638,6 @@ require([
                 this.dbPort = kb.observable(model, 'dbPort');
                 this.dbName = kb.observable(model, 'dbName');
                 this.changeType = function(){
-                    console.log(1);
-
                     var port = {
                         MySql:"3306",
                         SqlServer:"1433",
