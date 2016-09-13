@@ -13,9 +13,11 @@ package service.myPanel.impl;
 import dao.BaseMapper;
 import model.myPanel.MyCharts;
 import model.myPanel.MyPanel;
+import model.myPanel.PanelChartsWrapper;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 import service.myPanel.MyPanelService;
+import service.myPanel.PanelChartsWrapperService;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -30,6 +32,9 @@ public class MyPanelServiceImpl implements MyPanelService {
     private static final String NAMESPACE = MyPanel.class.getName();
     @Resource
     private BaseMapper<MyPanel> baseMapper;
+
+    @Resource
+    private PanelChartsWrapperService panelChartsWrapperService;
 
     @Override
     public MyPanel queryAsObject(String exportId) throws Exception {
@@ -70,6 +75,9 @@ public class MyPanelServiceImpl implements MyPanelService {
 
     @Override
     public int delete(String exportId) throws Exception {
+        PanelChartsWrapper panelChartsWrapper = new PanelChartsWrapper();
+        panelChartsWrapper.setExportId(exportId);
+        panelChartsWrapperService.delete(panelChartsWrapper);
         MyPanel myPanel = new MyPanel();
         myPanel.setExportId(exportId);
         myPanel.setStatmentId(NAMESPACE + ".delete");

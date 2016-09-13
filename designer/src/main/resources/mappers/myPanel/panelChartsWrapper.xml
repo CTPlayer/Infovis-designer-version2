@@ -6,6 +6,10 @@
     </insert>
 
     <delete id="delete" parameterType="PanelChartsWrapper" databaseId="h2">
-        delete from T_PANEL_CHARTS where EXPORT_ID = #{exportId} and ORDER_ID = #{orderId}
+        delete from T_PANEL_CHARTS where EXPORT_ID = #{exportId}
     </delete>
+
+    <select id="selectList" parameterType="PanelChartsWrapper" resultType="PanelChartsWrapper" databaseId="h2">
+        select EXPORT_ID,ORDER_ID from T_PANEL_CHARTS where CHART_ID = #{chartId}
+    </select>
 </mapper>

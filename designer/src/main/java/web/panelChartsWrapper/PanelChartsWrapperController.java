@@ -39,10 +39,11 @@ public class PanelChartsWrapperController {
     @ResponseBody
     public Object updateWrapper(int[] chartIds,int[] containerIds,PanelChartsWrapper panelChartsWrapper) throws Exception{
         Map<String, Object> resMap = new HashMap<>();
+        panelChartsWrapperService.delete(panelChartsWrapper);
         for(int i=0;i<chartIds.length;i++){
             panelChartsWrapper.setOrderId(String.valueOf(containerIds[i]));
             panelChartsWrapper.setChartId(String.valueOf(chartIds[i]));
-            panelChartsWrapperService.update(panelChartsWrapper);
+            panelChartsWrapperService.insert(panelChartsWrapper);
         }
         resMap.put("success", true);
         return resMap;
