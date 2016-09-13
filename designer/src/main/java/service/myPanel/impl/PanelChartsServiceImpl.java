@@ -29,4 +29,12 @@ public class PanelChartsServiceImpl implements PanelChartsWrapperService{
         panelChartsWrapper.setStatmentId(NAMESPACE + ".delete");
         return baseMapper.delete(panelChartsWrapper);
     }
+
+    @Override
+    public int update(PanelChartsWrapper panelChartsWrapper) throws Exception {
+       delete(panelChartsWrapper);
+        return insert(panelChartsWrapper);
+    }
+
+
 }

@@ -9,4 +9,6 @@ public interface PanelChartsWrapperService {
     int insert(PanelChartsWrapper panelChartsWrapper) throws Exception;
 
     int delete(PanelChartsWrapper panelChartsWrapper) throws Exception;
+
+    int update(PanelChartsWrapper panelChartsWrapper) throws Exception;
 }

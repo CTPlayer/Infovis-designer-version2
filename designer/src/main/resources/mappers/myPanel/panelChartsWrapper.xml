@@ -6,15 +6,6 @@
     </insert>
 
     <delete id="delete" parameterType="PanelChartsWrapper" databaseId="h2">
-        delete from T_PANEL_CHARTS
-        <where>
-            <if test="exportId != null and exportId !=''">
-                EXPORT_ID = #{exportId}
-            </if>
-            <if test="chartId != null and chartId !=''">
-                CHART_ID = #{chartId}
-            </if>
-        </where>
+        delete from T_PANEL_CHARTS where EXPORT_ID = #{exportId} and ORDER_ID = #{orderId}
     </delete>
-
 </mapper>
