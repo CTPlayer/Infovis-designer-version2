@@ -8,7 +8,12 @@ require.config({
         "gridstack": "lib/gridstack/js/gridstack.min",
         "infovis": "lib/infovis.min",
         "options": "lib/charts/options",
-        "domReady" : 'lib/domReady'
+        "domReady" : 'lib/domReady',
+        "zrender": "lib/zrender/zrender",
+        "zrender/shape/Rectangle": "lib/zrender/zrender",
+        "zrender/tool/color": "lib/zrender/zrender",
+        "zrender/Storage" : "lib/zrender/zrender",
+        "CanvasTag" : "customModule/CanvasTag/CanvasTag"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -16,7 +21,7 @@ require.config({
     }
 });
 
-require(['jquery', 'infovis', 'options', 'gridstack', 'bootstrap'],function($, infovis, baseOptions){
+require(['jquery', 'infovis', 'options','CanvasTag', 'gridstack', 'bootstrap'],function($, infovis, baseOptions,CanvasTag){
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
 
@@ -39,12 +44,16 @@ require(['jquery', 'infovis', 'options', 'gridstack', 'bootstrap'],function($, i
                data: 'cids='+cids,
             success: function(data){
                     for(var i=0;i<cids.length;i++){
-                        var exportChart = engine.chart.init($("#"+ids[i])[0]);
-                        exportChart.setOption(JSON.parse(data[i].jsCode));
+                        if(data[i].chartType.indexOf("text") < 0) {
+                            var exportChart = engine.chart.init($("#" + ids[i])[0]);
+                            exportChart.setOption(JSON.parse(data[i].jsCode));
 
-                        window.addEventListener("resize",function(){
-                            exportChart.resize();                                            //自适应窗口
-                        });
+                            window.addEventListener("resize", function () {
+                                exportChart.resize();                                            //自适应窗口
+                            });
+                        }else{
+                            CanvasTag().render(ids[i],JSON.parse(data[i].jsCode));
+                        }
                     }
                 }
             });

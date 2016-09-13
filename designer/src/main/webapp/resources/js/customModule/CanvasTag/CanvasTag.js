@@ -17,12 +17,12 @@ define(['zrender','zrender/tool/color','zrender/shape/Rectangle','jquery','jquer
                             width: pageX - (pageX / 4),
                             height: pageY - (pageY / 4),
                             brushType: 'both',
-                            color: 'rgba(0, 153, 255, 0.8)',          // rgba supported
-                            strokeColor: 'rgba(0, 153, 255, 1)',
+                            color: 'rgba(0, 153, 255, 0)',          // rgba supported
+                            strokeColor: 'rgba(0, 153, 255, 0)',
                             text: '请输入文字',
                             textFont: "bold " + pageX / 8 + "px verdana",
                             textPosition: 'inside',
-                            textColor: 'white',
+                            textColor: 'black',
                             radius: [20, 50],
                             lineWidth: 5
                         },
