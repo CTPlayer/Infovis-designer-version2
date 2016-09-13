@@ -136,14 +136,33 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
             target.find('a').eq(1).click(function () {
                 $("#textOptionContainer").empty();
                 $("#textOptionPanel").empty();
+
+                var pzr = zrender.getInstance(target.attr("zid"));//原控件
+                var option = $.extend(true, {}, pzr.storage.getShapeList()[0].style);
+
+                $("#textOptionModal").unbind("shown.bs.modal");
+                $("#textOptionModal .btn-primary").unbind("click");
+                $("#textOptionModal").on("shown.bs.modal", function (e) {
+                    $("#textOptionPanel").html(formatData.tableAndConfigOfText);
+                    var canvasTag = CanvasTag().render("textOptionContainer",option);
+                    ko.applyBindings(appViewModel.bindTableAndConfigOfText(option, canvasTag), $("#textOptionPanel").children()[1]);  //开启双向绑定监听
+                });
+                $("#textOptionModal .btn-primary").on("click",function () {
+                    CanvasTag().render(target.attr("id"),option);
+                    $.ajax({
+                        type: 'POST',
+                        url: 'updateChartInfo',
+                        data: {
+                            'id': target.attr("chartId"),
+                            'jsCode': JSON.stringify(option)
+                        },
+                        error: function(){
+                            alert("保存时失败，请重试!");
+                        }
+                    });
+                    renderMenu(target);
+                });
             });
-            var pzr = zrender.getInstance(target.attr("zid"));//原控件
-            $("#textOptionModal").on("shown.bs.modal", function (e) {
-                var option = pzr.storage.getShapeList()[0].style;
-                $("#textOptionPanel").html(formatData.tableAndConfigOfText);
-                var canvasTag = CanvasTag().render("textOptionContainer",option);
-                ko.applyBindings(appViewModel.bindTableAndConfigOfText(option, canvasTag), $("#textOptionPanel").children()[1]);  //开启双向绑定监听
-            })
         }
     };
 

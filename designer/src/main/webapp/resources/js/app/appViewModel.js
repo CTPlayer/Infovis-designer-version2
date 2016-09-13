@@ -297,20 +297,51 @@ define(['knockout', 'infovis'],function(ko, infovis){
     };
 
     var bindTableAndConfigOfText = function(option,engine){
-        return function() {
+        return new function() {
+            var that =this;
             this.text = ko.observable(option.text);
             this.textColor = ko.observable(option.textColor);
             this.color = ko.observable(option.color);
+            this.strokeColor = ko.observable(option.strokeColor);
             this.fontSize = ko.observable(option.textFont.split(" ")[1].replace("px",""));
+
+            $("#textColor").spectrum({
+                color: option.textColor,
+                change: function(color) {
+                    that.textColor(color.toHexString());
+                }
+            });
+
+            $("#tagColor").spectrum({
+                color: option.color,
+                showAlpha: true,
+                change: function(color) {
+                    var c = color.toRgb();
+                    that.color("rgba(" + c.r + ", " + c.g + ", " + c.b + ", " + c.a + ")");
+                }
+            });
+
+
+            $("#tagStrokeColor").spectrum({
+                color: option.strokeColor,
+                showAlpha: true,
+                change: function(color) {
+                    var c = color.toRgb();
+                    that.strokeColor("rgba(" + c.r + ", " + c.g + ", " + c.b + ", " + c.a + ")");
+                }
+            });
+
+
             ko.computed(function () {
                 option.text = this.text();
                 option.textColor = this.textColor();
                 option.color = this.color();
                 option.textFont = option.textFont.split(" ")[0] + " " +this.fontSize() + "px " + option.textFont.split(" ")[2];
-                console.log(option);
+                option.color = this.color();
+                option.strokeColor = this.strokeColor();
                 engine.render("textOptionContainer",option);
-            })
-        }
+            },this);
+        };
     }
 
     return {
