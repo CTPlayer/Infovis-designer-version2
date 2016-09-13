@@ -403,7 +403,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                             CanvasTag().render(ids[i],JSON.parse(data[i].jsCode));
                         }
                         renderMenu.renderMenu($("#"+ids[i]));
-                        $("#chartTitle").text(data[i].chartName);
+                        $("#"+ids[i]).find("#chartTitle").text(data[i].chartName);
                     }
                 }
             });
