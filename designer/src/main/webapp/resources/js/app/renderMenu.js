@@ -127,7 +127,6 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
                 $("#textOptionPanel").html(formatData.tableAndConfigOfText);
                 var canvasTag = CanvasTag().render("textOptionContainer",option);
                 ko.applyBindings(appViewModel.bindTableAndConfigOfText(option, canvasTag), $("#textOptionPanel").children()[1]);  //开启双向绑定监听
-
             })
         }
     };

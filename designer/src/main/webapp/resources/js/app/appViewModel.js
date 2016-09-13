@@ -301,10 +301,13 @@ define(['knockout', 'infovis'],function(ko, infovis){
             this.text = ko.observable(option.text);
             this.textColor = ko.observable(option.textColor);
             this.color = ko.observable(option.color);
+            this.fontSize = ko.observable(option.textFont.split(" ")[1].replace("px",""));
             ko.computed(function () {
                 option.text = this.text();
                 option.textColor = this.textColor();
                 option.color = this.color();
+                option.textFont = option.textFont.split(" ")[0] + " " +this.fontSize() + "px " + option.textFont.split(" ")[2];
+                console.log(option);
                 engine.render("textOptionContainer",option);
             })
         }
