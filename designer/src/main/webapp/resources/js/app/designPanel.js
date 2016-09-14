@@ -30,7 +30,8 @@ require.config({
         "bootstrap" : { "deps" :['jquery'] },
         "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] },
         "confirmModal" : { "deps" :['jquery'] }
-    }
+    },
+    waitSeconds: 30
 });
 
 require(['jquery','domReady'], function ($,domReady) {
