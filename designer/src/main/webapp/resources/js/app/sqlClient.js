@@ -14,13 +14,15 @@ require.config({
         "DT-bootstrap": "lib/dataTables/js/dataTables.bootstrap.min",
         "underscore": "lib/underscore/underscore-min",
         "bootpag": "lib/bootpag/jquery.bootpag.min",
-        "confirmModal": "lib/confirm/confirm-bootstrap"
+        "confirmModal": "lib/confirm/confirm-bootstrap",
+        "jquery-steps" : "lib/jquery.steps/jquery.steps.min"
     },
     shim : {
         "ztree" : { "deps" :['jquery'] },
         "codemirror_sql" : { "deps" :['codemirror'] },
         "jquery-ui" : { "deps" :['jquery'] },
         "jquery-layout" : { "deps" :['jquery','jquery-ui'] },
+        "jquery-steps" : { "deps" :['jquery'] },
         "bootstrap" : { "deps" :['jquery'] },
         "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] },
         "bootpag" : { "deps" :['jquery'] },
@@ -73,7 +75,8 @@ require([
     'datatables.net',
     'DT-bootstrap',
     'bootpag',
-    'confirmModal'],
+    'confirmModal',
+    'jquery-steps'],
     function($,bootstrap,jquery_ui,jquery_ayout,ztree,validate,ko,bo,kb,dataTables,DT_bootstrap,bootpag){
     $(function(){
         var outerLayout = $('body').layout({
@@ -285,10 +288,10 @@ require([
 
         });
 
-        //新增保存
-        $("#addConnectionModal .btn-primary").click(function(){
-            $('#addConnectionForm').submit();
-        })
+        // //新增保存
+        // $("#addConnectionModal .btn-primary").click(function(){
+        //     $('#addConnectionForm').submit();
+        // })
 
         $('#addConnectionForm').validate({
             errorElement : 'div',
@@ -625,6 +628,34 @@ require([
         //打开模态框绑定数据
         $('#addConnectionModal').on('show.bs.modal', function () {
             ko.cleanNode($('#addConnectionModel')[0]);
+            //初始化step插件
+            $("#addConnectionModel").steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "slideLeft",
+                autoFocus: true,
+                labels: {
+                    finish: "保存",
+                    next: "下一步",
+                    previous: "上一步"
+                },
+                onFinished: function (event) {
+                    $('#addConnectionForm').submit();
+                },
+
+            });
+
+            $('#addConnectionModal section:eq(0) div').removeClass("selectDB");
+            $('#addConnectionModal section:eq(0) span:eq(0) div').addClass("selectDB");
+
+            //绑定image点击事件
+            $('#addConnectionModal .dbSpan').unbind();
+            $('#addConnectionModal .dbSpan').on("click",function(){
+                $('#addConnectionModal select[name="dbType"]').val($(this).attr("dbType"));
+                $('#addConnectionModal section:eq(0) div').removeClass("selectDB");
+                $(this).parent().addClass("selectDB");
+            });
+
             var addConnectionModel = new Backbone.Model(
                 {
                     dbType: "MySql",
@@ -660,6 +691,11 @@ require([
             }
             var model = new addConnectionViewModel(addConnectionModel);
             ko.applyBindings(model, $('#addConnectionModel')[0]);
+
         })
+
+        $('#addConnectionModal').on('hidden.bs.modal', function () {
+            $("#addConnectionModel").steps("destroy");
+        });
     });
 })
