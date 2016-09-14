@@ -341,7 +341,7 @@ define(function(){
                     '<hr style="margin-top:10px;">',
                     '<form role="form">',
                     '<div class="form-group form-group-sm">',
-                    '<label >背景透明度&nbsp;&nbsp;</label>',
+                    '<label>背景透明度&nbsp;&nbsp;<span id="backGroundOpacity"></span></label>',
                     '<input type="range" id="backgroundOpacity" min="0" max="100" data-bind="value: backgroundOpacity, valueUpdate: \'input\'"/>',
                     '</div>',
                     '</form>',

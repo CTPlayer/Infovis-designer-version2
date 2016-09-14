@@ -268,7 +268,6 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                                 add_new_widget(0,0,cid);
                                 engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
-
                                 renderMenu.renderMenu($("#"+order));
 
                                 $("#"+order).find("#chartTitle").text(data.chartName);
