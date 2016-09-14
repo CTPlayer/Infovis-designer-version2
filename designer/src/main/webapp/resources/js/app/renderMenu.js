@@ -59,32 +59,31 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
         if(charttype.indexOf("text") < 0) {
             //将选中即将配置的图表渲染到配置面板
             //双向绑定
-            var instance;
-            var type;
+            // var instance;
+            // var type;
             target.find('a').eq(1).click(function () {
-                instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
-                type = instance.getOption().series[0].type;
+                var instance = engine.chart.getInstanceByDom($(this).parent().parent().parent()[0]);
+                var type = instance.getOption().series[0].type;
 
                 $("#loading").css("display", "block");
                 $("#optionContainer").empty();
                 $("#optionPanel").empty();
 
-            });
-
-            $("#optionModal").on("shown.bs.modal", function (e) {
-                $("#loading").css("display", "none");
-                if (type == "bar" || type == "line") {
-                    $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
-                    ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
-                } else if (type == "pie") {
-                    $("#optionPanel").html(formatData.tableAndConfigOfPie());
-                    ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
-                }
+                $("#optionModal").unbind("shown.bs.modal");
+                $("#optionModal").on("shown.bs.modal", function (e) {
+                    $("#loading").css("display", "none");
+                    if (type == "bar" || type == "line") {
+                        $("#optionPanel").html(formatData.tableAndConfigOfBarAndLine());
+                        ko.applyBindings(appViewModel.bindTableAndConfigOfBarAndLine(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
+                    } else if (type == "pie") {
+                        $("#optionPanel").html(formatData.tableAndConfigOfPie());
+                        ko.applyBindings(appViewModel.bindTableAndConfigOfPie(instance.getOption(), engine), $("#optionPanel").children()[1]);  //开启双向绑定监听
+                    }
+                });
             });
 
             target.find('a').eq(2).click(function () {
                 $("title").html("Infovis-Designer");
-
 
                 $(".grid-stack-placeholder").remove();
                 // $("#fill").parent().remove();

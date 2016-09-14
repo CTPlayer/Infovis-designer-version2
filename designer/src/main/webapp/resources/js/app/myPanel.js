@@ -7,7 +7,8 @@ require.config({
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] }
-    }
+    },
+    waitSeconds: 30
 });
 
 //panel删除函数

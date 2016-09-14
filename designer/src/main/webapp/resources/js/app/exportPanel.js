@@ -18,7 +18,8 @@ require.config({
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
         "gridstack" : { "deps" :['bootstrap', 'jquery-ui', 'lodash'] }
-    }
+    },
+    waitSeconds: 30
 });
 
 require(['jquery', 'infovis', 'options','CanvasTag', 'gridstack', 'bootstrap'],function($, infovis, baseOptions,CanvasTag){

@@ -32,7 +32,8 @@ require.config({
         name: "codemirror",
         location: "lib/cm",
         main: "lib/codemirror"
-    }]
+    }],
+    waitSeconds: 30
 });
 
 require([
