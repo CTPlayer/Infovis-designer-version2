@@ -21,7 +21,8 @@ require.config({
         "jqueryMd5" : { "deps" :['jquery'] },
         "metisMenu" : { "deps" :['jquery'] },
         "ztree" : { "deps" :['jquery'] }
-    }
+    },
+    waitSeconds: 30
 });
 
 require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, infovis, validate){
