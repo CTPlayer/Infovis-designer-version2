@@ -57,7 +57,7 @@ require(['jquery'], function ($) {
                             $(".card-body").find(".row").append([
                                 '<div>',
                                 '<div class="thumbnail no-margin-bottom col-md-2" style="margin-top: 25px;margin-left: 40px;">',
-                                '<img src=\'data:image/jpg;base64,'+response.data[i].img+'\'>',
+                                '<img src=\'data:image/jpg;base64,'+response.data[i].img+'\' onerror="this.src=\'resources/img/white.jpg\'">',
                                 '<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">',
                                 '<span style="display:none;">',
                                 '<a href="#" onclick=\'dropMyPanel("'+response.data[i].exportId+'", this);\'><i class="glyphicon glyphicon-remove" style="color: white"></i></a>',
