@@ -29,6 +29,10 @@
     <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/css/themes/flat-blue.css">
     <!--custom ztree css-->
     <link href="resources/css/customZtreeStyle.css" rel="stylesheet">
+
+    <!--steps-->
+    <link href="resources/js/lib/jquery.steps/jquery.steps.css" rel="stylesheet">
+
     <style type="text/css">
 
         .scrollable {
@@ -162,6 +166,11 @@
         .flat-blue .navbar .navbar-nav > li > a, .flat-blue .navbar.navbar-default .navbar-nav > li > a,.leftBarLiIcon{
             color: #0f77b1;
         }
+
+        .selectDB {
+            border-style:solid;
+            border-color: #19B5FE;
+        }
     </style>
 
     <script src="resources/js/lib/require.js" defer async="true" data-main="resources/js/app/sqlClient"></script>
@@ -261,37 +270,58 @@
             <div class="modal-body">
                 <form id="addConnectionForm" method="post">
                     <div id="addConnectionModel">
-                        <div class="form-group">
-                            <select class="form-control" name="dbType" data-bind="value: dbType,event: { change: changeType}">
-                                <option name="MySql">MySql</option>
-                                <option name="SqlServer">SqlServer</option>
-                                <option name="Oracle">Oracle</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="dbName" placeholder="数据库名称" data-bind="value: dbName, valueUpdate: 'input'" />
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="dbHost" placeholder="数据库主机名" data-bind="value: dbHost, valueUpdate: 'input'">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="dbPort" placeholder="数据库端口号" data-bind="value: dbPort, valueUpdate: 'input'">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="userName" placeholder="用户名">
-                        </div>
-                        <div class="form-group">
-                            <input type="password" class="form-control" name="password" placeholder="密码">
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" class="form-control" name="dbUrl" data-bind="value: dbUrl" placeholder="数据库连接地址">
-                        </div>
+                        <h3>选择数据库类型</h3>
+                        <section>
+                            <div>
+                                <div style="position: absolute;top : 50%;margin-top: -75px;width: 100%" align="center">
+                                    <span style="margin-left: 10px">
+                                        <div class="selectDB" style="display: inline-block">
+                                            <img class="dbSpan" dbtype="MySql" src="resources/img/addMysql.png" style="width: 150px;height: 150px">
+                                        </div>
+                                    </span>
+                                    <span style="margin-left: 10px">
+                                        <div style="display: inline-block">
+                                            <img class="dbSpan" dbtype="Oracle"  src="resources/img/addOracle.png" style="width: 150px;height: 150px">
+                                        </div>
+                                    </span>
+                                    <span style="margin-left: 10px">
+                                        <div style="display: inline-block">
+                                            <img class="dbSpan" dbtype="SqlServer"  src="resources/img/addSqlserver.png" style="width: 150px;height: 150px">
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+                        <h3>连接信息</h3>
+                        <section>
+                            <div class="form-group">
+                                <select class="form-control" name="dbType" style="display: none" data-bind="value: dbType,event: { change: changeType}">
+                                    <option name="MySql">MySql</option>
+                                    <option name="SqlServer">SqlServer</option>
+                                    <option name="Oracle">Oracle</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="dbName" placeholder="数据库名称" data-bind="value: dbName, valueUpdate: 'input'" />
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="dbHost" placeholder="数据库主机名" data-bind="value: dbHost, valueUpdate: 'input'">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="dbPort" placeholder="数据库端口号" data-bind="value: dbPort, valueUpdate: 'input'">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="userName" placeholder="用户名">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password" placeholder="密码">
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="dbUrl" data-bind="value: dbUrl" placeholder="数据库连接地址">
+                            </div>
+                        </section>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">保存</button>
             </div>
         </div>
     </div>

@@ -603,8 +603,13 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
                                 tagDropOverRender(chartType,'color',$(this),dragTextType);
                             },
                             out:function (event,ui) {
-                                $(this).css("border","");
-                                $(this).css("background-color","white");
+                                if($(this).children().length == 1){
+                                    $(this).css("border","");
+                                    $(this).css("background-color","white");
+                                }else{
+                                    $(this).css("background-color",'#f6eedb');
+                                    $(this).css("border",'1px #f9e7bb solid');
+                                }
                             }
                         });
 
@@ -624,8 +629,13 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
                                 tagDropOverRender(chartType,'corner',$(this),dragTextType);
                             },
                             out:function (event,ui) {
-                                $(this).css("border","");
-                                $(this).css("background-color","white");
+                                if($(this).children().length == 1){
+                                    $(this).css("border","");
+                                    $(this).css("background-color","white");
+                                }else{
+                                    $(this).css("background-color",'#d2ddf0');
+                                    $(this).css("border",'1px #b1caf4 solid');
+                                }
                             }
                         });
 
@@ -725,18 +735,18 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
     binddefferd.done(function (result) {
         var buildModel = JSON.parse(result.buildModel);
         if(buildModel.mark){//pie
-            if(buildModel.mark.color) {
+            if(buildModel.mark.color && buildModel.mark.color != '') {
                 tagDropRender(buildModel.mark.color,'color',$("form.make-model-region .mark-down-column .mark-item-color"),'text','pie');
             }
-            if(buildModel.mark.angle){
+            if(buildModel.mark.angle && buildModel.mark.angle != ''){
                 tagDropRender(buildModel.mark.angle,'corner',$("form.make-model-region .mark-down-column .mark-item-corner"),'number','pie');
             }
         }
-        if(buildModel.xAxis){
+        if(buildModel.xAxis && buildModel.xAxis != ''){
             tagDropRender(buildModel.xAxis,'xAxis',$("form.make-model-region .xAxis"),'text','');
         }
 
-        if(buildModel.yAxis){
+        if(buildModel.yAxis && buildModel.yAxis != ''){
             tagDropRender(buildModel.yAxis,'yAxis',$("form.make-model-region .yAxis"),'number','');
         }
         window.sqlRecordingId = result.sqlRecordingId;
