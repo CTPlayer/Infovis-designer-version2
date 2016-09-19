@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="model.myPanel.MyCharts">
     <insert id="insert" parameterType="MyCharts" useGeneratedKeys="true" keyProperty="id" databaseId="h2">
-        insert into T_MY_CHARTS(SQLRECORDING_ID,BUILD_MODEL,CHART_TYPE,JS_CODE,CHART_NAME)
-        values (#{sqlRecordingId},#{buildModel},#{chartType},#{jsCode},#{chartName});
+        insert into T_MY_CHARTS(SQLRECORDING_ID,BUILD_MODEL,CHART_TYPE,JS_CODE,CHART_NAME,IS_REAL_TIME)
+        values (#{sqlRecordingId},#{buildModel},#{chartType},#{jsCode},#{chartName},#{isRealTime});
     </insert>
 
     <update id="update" parameterType="MyCharts" databaseId="h2">
@@ -14,6 +14,7 @@
             <if test="jsCode != null">JS_CODE = #{jsCode},</if>
             <if test="chartType != null">CHART_TYPE = #{chartType},</if>
             <if test="chartName != null">CHART_NAME = #{chartName},</if>
+            <if test="isRealTime != null">IS_REAL_TIME = #{isRealTime},</if>
         </set>
         <where>
             id = #{id}

@@ -47,7 +47,29 @@ require(['jquery', 'infovis', 'options','CanvasTag', 'gridstack', 'bootstrap'],f
                     for(var i=0;i<cids.length;i++){
                         if(data[i].chartType.indexOf("text") < 0) {
                             var exportChart = engine.chart.init($("#" + ids[i])[0]);
-                            exportChart.setOption(JSON.parse(data[i].jsCode));
+                            if(parseInt(data[i].isRealTime) == 0){
+                                exportChart.setOption(JSON.parse(data[i].jsCode));
+                            }else if(parseInt(data[i].isRealTime) == 1){
+                                $.ajax({
+                                    async: false,
+                                    type: 'POST',
+                                    contentType: "application/json; charset=utf-8",
+                                    url: 'render',
+                                    data: JSON.stringify({
+                                        'chartType': data[i].chartType,
+                                        'dataRecordId': data[i].sqlRecordingId,
+                                        'builderModel': JSON.parse(data[i].buildModel)
+                                    }),
+                                    success: function(option){
+                                        console.log(option);
+                                        exportChart.setOption(option);
+                                    },
+                                    error: function(){
+                                        $("#" + ids[i]).text("当前图表渲染失败，请检查数据库连接是否正常。");
+                                    }
+                                });
+                            }
+
 
                             window.addEventListener("resize", function () {
                                 exportChart.resize();                                            //自适应窗口
@@ -84,4 +106,4 @@ require(['jquery','domReady'], function ($,domReady) {
             }
         });
     });
-})
+});

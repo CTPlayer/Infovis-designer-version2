@@ -15,7 +15,8 @@
     <!--flat admin-->
     <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/css/style.css">
     <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/css/themes/flat-blue.css">
-
+    <!-- checkbox -->
+    <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/lib/css/checkbox3.min.css">
     <!-- Font Icons -->
     <link href="resources/js/lib/bootstrap/css/font-awesome.css" rel="stylesheet">
     <!--ztree-->
@@ -190,7 +191,24 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">图表名称</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="chartName">
+                            <input type="text" class="form-control chartName" name="chartName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">数据模式</label>
+                        <div class="col-sm-10">
+                            <div class="radio3 radio-check radio-inline">
+                                <input type="radio" id="radio4" name="radio2" value="0" checked="">
+                                <label for="radio4">
+                                    引用当前库数据
+                                </label>
+                            </div>
+                            <div class="radio3 radio-check radio-success radio-inline">
+                                <input type="radio" id="radio5" name="radio2" value="1">
+                                <label for="radio5">
+                                    实时获取
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </form>

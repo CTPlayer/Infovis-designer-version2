@@ -9,13 +9,12 @@ import org.apache.ibatis.type.Alias;
 @Alias("MyCharts")
 public class MyCharts extends BaseModel{
     private String id;
-//    private String chartId;
-//    private String exportId;
     private String sqlRecordingId;
     private String buildModel;
     private String chartType;
     private String jsCode;
     private String chartName;
+    private String isRealTime;
 
     public String getId() {
         return id;
@@ -24,22 +23,6 @@ public class MyCharts extends BaseModel{
     public void setId(String id) {
         this.id = id;
     }
-
-//    public String getChartId() {
-//        return chartId;
-//    }
-//
-//    public void setChartId(String chartId) {
-//        this.chartId = chartId;
-//    }
-//
-//    public String getExportId() {
-//        return exportId;
-//    }
-//
-//    public void setExportId(String exportId) {
-//        this.exportId = exportId;
-//    }
 
     public String getSqlRecordingId() {
         return sqlRecordingId;
@@ -79,5 +62,13 @@ public class MyCharts extends BaseModel{
 
     public void setChartName(String chartName) {
         this.chartName = chartName;
+    }
+
+    public String getIsRealTime() {
+        return isRealTime;
+    }
+
+    public void setIsRealTime(String isRealTime) {
+        this.isRealTime = isRealTime;
     }
 }

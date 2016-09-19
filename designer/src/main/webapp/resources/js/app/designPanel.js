@@ -191,7 +191,6 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                        confirmDismiss   : true,
                        confirmAutoOpen  : false
                    });
-
                }
             });
         });
@@ -236,20 +235,40 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
             if(window.location.href.indexOf("chartId") > 0){
                 var chartId = window.location.href.split("=")[2].replace("#","");
-                $.ajax({
+                var defer01 = $.ajax({
                     type: 'POST',
                     url: 'selectOneChartInfo',
-                    data: "id="+chartId,
-                    success: function(data){
-                        if(data && $('[chartId='+data.id+']').length <= 0) {
-                            $("title").html("*Infovis-Designer");                                     //改动标记
-                            window.isSave = false;
+                    data: "id="+chartId
+                });
+                defer01.done(function(data){
+                    if(data && $('[chartId='+data.id+']').length <= 0) {
+                        $("title").html("*Infovis-Designer");                                     //改动标记
+                        window.isSave = false;
 
-                            add_new_widget(0,0,data.id);
+                        add_new_widget(0,0,data.id);
+                        if(parseInt(data.isRealTime) == 0){
                             engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
-
                             renderMenu.renderMenu($("#"+order));
                             $("#"+order).find("#chartTitle").text(data.chartName);
+                        }else if(parseInt(data.isRealTime) == 1){
+                            $.ajax({
+                                type: 'POST',
+                                contentType: "application/json; charset=utf-8",
+                                url: 'render',
+                                data: JSON.stringify({
+                                    'chartType': data.chartType,
+                                    'dataRecordId': data.sqlRecordingId,
+                                    'builderModel': JSON.parse(data.buildModel)
+                                }),
+                                success: function(option){
+                                    engine.chart.init($("#"+order)[0]).setOption(option);
+                                    renderMenu.renderMenu($("#"+order));
+                                    $("#"+order).find("#chartTitle").text(data.chartName);
+                                },
+                                error: function(){
+                                    $("#"+order).text("当前图表渲染失败，请检查数据库连接是否正常。");
+                                }
+                            });
                         }
                     }
                 });
@@ -259,19 +278,39 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 $(".thumbnail").each(function(){
                     if($(this).hasClass("selected")){
                         var cid = $(this).attr("data-cid");
-                        $.ajax({
+                        var defer02 = $.ajax({
                             type: 'POST',
                             url: 'selectOneChartInfo',
-                            data: "id=" + cid,
-                            success: function(data){
-                                $("title").html("*Infovis-Designer");                                     //改动标记
-                                window.isSave = false;
+                            data: "id=" + cid
+                        });
+                        defer02.done(function(data){
+                            $("title").html("*Infovis-Designer");                                     //改动标记
+                            window.isSave = false;
 
-                                add_new_widget(0,0,cid);
+                            add_new_widget(0,0,data.id);
+                            if(parseInt(data.isRealTime) == 0){
                                 engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
                                 renderMenu.renderMenu($("#"+order));
-
                                 $("#"+order).find("#chartTitle").text(data.chartName);
+                            }else if(parseInt(data.isRealTime) == 1){
+                                $.ajax({
+                                    type: 'POST',
+                                    contentType: "application/json; charset=utf-8",
+                                    url: 'render',
+                                    data: JSON.stringify({
+                                        'chartType': data.chartType,
+                                        'dataRecordId': data.sqlRecordingId,
+                                        'builderModel': JSON.parse(data.buildModel)
+                                    }),
+                                    success: function(option){
+                                        engine.chart.init($("#"+order)[0]).setOption(option);
+                                        renderMenu.renderMenu($("#"+order));
+                                        $("#"+order).find("#chartTitle").text(data.chartName);
+                                    },
+                                    error: function(){
+                                        $("#"+order).text("当前图表渲染失败，请检查数据库连接是否正常。");
+                                    }
+                                });
                             }
                         });
                     }
@@ -390,20 +429,42 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 }
             }
 
-            $.ajax({
+            var defer03 = $.ajax({
                 type: 'POST',
                 url: 'getShareOptions',
-                data: 'cids='+cids,
-                success: function(data){
-                    for(var i=0;i<cids.length;i++){
-                        if(data[i].chartType.indexOf("text") < 0) {
-                            var exportChart = engine.chart.init($("#" + ids[i])[0]);
+                data: 'cids='+cids
+            });
+            defer03.done(function(data){
+                for(var i=0;i<cids.length;i++){
+                    if(data[i].chartType.indexOf("text") < 0) {
+                        var exportChart = engine.chart.init($("#" + ids[i])[0]);
+                        if(parseInt(data[i].isRealTime) == 0){
                             exportChart.setOption(JSON.parse(data[i].jsCode));
-                        }else{
-                            CanvasTag().render(ids[i],JSON.parse(data[i].jsCode));
+                            renderMenu.renderMenu($("#"+ids[i]));
+                            $("#"+ids[i]).find("#chartTitle").text(data[i].chartName);
+                        }else if(parseInt(data[i].isRealTime) == 1){
+                            $.ajax({
+                                async: false,
+                                type: 'POST',
+                                contentType: "application/json; charset=utf-8",
+                                url: 'render',
+                                data: JSON.stringify({
+                                    'chartType': data[i].chartType,
+                                    'dataRecordId': data[i].sqlRecordingId,
+                                    'builderModel': JSON.parse(data[i].buildModel)
+                                }),
+                                success: function(option){
+                                    exportChart.setOption(option);
+                                    renderMenu.renderMenu($("#"+ids[i]));
+                                    $("#"+ids[i]).find("#chartTitle").text(data[i].chartName);
+                                },
+                                error: function(){
+                                    $("#" + ids[i]).text("当前图表渲染失败，请检查数据库连接是否正常。");
+                                }
+                            });
                         }
-                        renderMenu.renderMenu($("#"+ids[i]));
-                        $("#"+ids[i]).find("#chartTitle").text(data[i].chartName);
+                    }else{
+                        CanvasTag().render(ids[i],JSON.parse(data[i].jsCode));
                     }
                 }
             });

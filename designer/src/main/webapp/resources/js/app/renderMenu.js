@@ -12,7 +12,7 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
         var allOptions = baseOptions.makeAllOptions();
         var engine = infovis.init(allOptions || {});
         //根据target判断不同的渲染方式以及事件绑定
-        var charttype = target.attr("chartType")
+        var charttype = target.attr("chartType");
         if(charttype.indexOf("text") < 0) {
             target.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">' +
                 '<span style="display:none;">' +
@@ -86,7 +86,6 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
                 $("title").html("Infovis-Designer");
 
                 $(".grid-stack-placeholder").remove();
-                // $("#fill").parent().remove();
 
                 $(".app-container").addClass("loader");
                 $(".loader-container").css("display", "block");

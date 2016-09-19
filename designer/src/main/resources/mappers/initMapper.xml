@@ -64,7 +64,8 @@
         BUILD_MODEL CLOB NOT NULL COMMENT '数据模型',
         CHART_TYPE VARCHAR(50) NOT NULL COMMENT '图表类型',
         JS_CODE CLOB NOT NULL COMMENT '图表配置',
-        CHART_NAME VARCHAR(50) NOT NULL COMMENT '面板名称'
+        CHART_NAME VARCHAR(50) NOT NULL COMMENT '面板名称',
+        IS_REAL_TIME VARCHAR(10) DEFAULT NULL COMMENT '是否实时获取图表配置'
       );
 
       <!--设计面板，图表中间表-->

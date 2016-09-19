@@ -45,11 +45,29 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
             data: "id="+chartId
         });
         deferred.done(function(data){
-            if(data){
-                var editChart = engine.chart.init(document.getElementById("editArea"));
+            var editChart = engine.chart.init(document.getElementById("editArea"));
+            if(parseInt(data.isRealTime) == 0){
                 editChart.setOption(JSON.parse(data.jsCode));
-                $("#addChartModal").find("input").val(data.chartName);
+            }else if(parseInt(data.isRealTime) == 1){
+                $.ajax({
+                    type: 'POST',
+                    contentType: "application/json; charset=utf-8",
+                    url: 'render',
+                    data: JSON.stringify({
+                        'chartType': data.chartType,
+                        'dataRecordId': data.sqlRecordingId,
+                        'builderModel': JSON.parse(data.buildModel)
+                    }),
+                    success: function(option){
+                        editChart.setOption(option);
+                    },
+                    error: function(){
+                        $("editArea").text("当前图表渲染失败，请检查远程数据库连接是否正常或刷新重试。");
+                    }
+                });
             }
+            $("#addChartForm").find(".chartName").val(data.chartName);
+            $("input[name='radio2'][value="+data.isRealTime+"]").attr("checked",true);
         });
 
         $("#addChartModal .btn-success").click(function(){
@@ -87,7 +105,8 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                             'sqlRecordingId': window.sqlRecordingId,
                             'buildModel': JSON.stringify(window.bmodel),
                             'jsCode': JSON.stringify(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption()),
-                            'chartName': $("#addChartForm").find("input").val()
+                            'chartName': $("#addChartForm").find(".chartName").val(),
+                            'isRealTime' : $("input:radio:checked").val()
                         }
                     });
                     deferred.done(function(data){
@@ -105,7 +124,8 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                             'sqlRecordingId': window.sqlRecordingId,
                             'buildModel': JSON.stringify(window.bmodel),
                             'jsCode': JSON.stringify(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption()),
-                            'chartName': $("#addChartForm").find("input").val()
+                            'chartName': $("#addChartForm").find("input").val(),
+                            'isRealTime' : $("input:radio:checked").val()
                         }
                     });
                     deferred.done(function(data){
