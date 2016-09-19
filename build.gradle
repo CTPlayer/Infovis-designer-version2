@@ -69,6 +69,7 @@ subprojects {
                 "org.logback-extensions:logback-ext-spring:0.1.4",
                 "org.apache.commons:commons-lang3:$commonLang",
                 "org.apache.commons:commons-collections4:4.1",
+                "org.apache.commons:commons-exec:1.3",
                 "commons-io:commons-io:$commonIO",
                 "commons-fileupload:commons-fileupload:$commonFileupload",
                 "com.fasterxml.jackson.core:jackson-core:$jackson2",
@@ -165,10 +166,10 @@ project(":util") {
                 "com.belerweb:pinyin4j:$pinyin4j",
                 "commons-codec:commons-codec:$codec",
                 "org.javassist:javassist:$javassist",
-                "com.moodysalem:phantomjs-wrapper:$phantomjs",
-                "com.moodysalem:phantomjs-wrapper-windows-binary:$phantomjs",
-                "com.moodysalem:phantomjs-wrapper-linux-binary:$phantomjs",
-                "com.moodysalem:phantomjs-wrapper-macosx-binary:$phantomjs",
+                //"com.moodysalem:phantomjs-wrapper:$phantomjs",
+                //"com.moodysalem:phantomjs-wrapper-windows-binary:$phantomjs",
+                //"com.moodysalem:phantomjs-wrapper-linux-binary:$phantomjs",
+                //"com.moodysalem:phantomjs-wrapper-macosx-binary:$phantomjs",
                 "javax.servlet:javax.servlet-api:$servlet"
     }
 
