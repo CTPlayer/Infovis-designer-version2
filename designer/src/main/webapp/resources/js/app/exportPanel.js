@@ -61,8 +61,9 @@ require(['jquery', 'infovis', 'options','CanvasTag', 'gridstack', 'bootstrap'],f
                                         'builderModel': JSON.parse(data[i].buildModel)
                                     }),
                                     success: function(option){
-                                        console.log(option);
-                                        exportChart.setOption(option);
+                                        var newOption = JSON.parse(data[i].jsCode);
+                                        newOption.series = option.series;
+                                        exportChart.setOption(newOption);
                                     },
                                     error: function(){
                                         $("#" + ids[i]).text("当前图表渲染失败，请检查数据库连接是否正常。");

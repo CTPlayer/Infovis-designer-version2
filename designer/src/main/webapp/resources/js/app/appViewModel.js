@@ -5,8 +5,9 @@ define(['knockout', 'infovis'],function(ko, infovis){
             var title = option.title[0];
             self.titleContent = ko.observable(title.text);
             self.titleTop = ko.observable(title.top);
-            self.titleLeft = ko.observableArray(["left","center","right"]);
-            self.selectedLeft = ko.observable(title.left);
+            // self.titleLeft = ko.observableArray(["left","center","right"]);
+            // self.selectedLeft = ko.observable(title.left);
+            self.titleLeft = ko.observable(title.left);
             self.titleFontFamily = ko.observableArray(["SimSun","Microsoft YaHei","sans-serif","SimHei","KaiTi"]);
             self.selectedFontFamily = ko.observable(title.textStyle.fontFamily);
             self.titleFontSize = ko.observable(title.textStyle.fontSize);
@@ -88,7 +89,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 //title
                 option.title[0].text = self.titleContent();
                 option.title[0].top = self.titleTop();
-                option.title[0].left = self.selectedLeft();
+                option.title[0].left = self.titleLeft();
                 option.title[0].textStyle.fontFamily = self.selectedFontFamily();
                 option.title[0].textStyle.fontSize = self.titleFontSize();
                 option.title[0].textStyle.fontWeight = self.selectedFontWeight();
@@ -119,7 +120,6 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 option.tooltip[0].textStyle.color = self.tooltipFontColor();
 
                 option.backgroundColor = "rgba(255,255,255,"+self.backgroundOpacity()*0.01+")";
-                $("#backGroundOpacityOfBarAndLine").text(self.backgroundOpacity()*0.01);
 
                 optionChart.setOption(option,true);
             }, this);
@@ -132,8 +132,9 @@ define(['knockout', 'infovis'],function(ko, infovis){
             var title = option.title[0];
             self.titleContent = ko.observable(title.text);
             self.titleTop = ko.observable(title.top);
-            self.titleLeft = ko.observableArray(["left","center","right"]);
-            self.selectedLeft = ko.observable(title.left);
+            // self.titleLeft = ko.observableArray(["left","center","right"]);
+            // self.selectedLeft = ko.observable(title.left);
+            self.titleLeft = ko.observable(title.left);
             self.titleFontFamily = ko.observableArray(["SimSun","Microsoft YaHei","sans-serif","SimHei","KaiTi"]);
             self.selectedFontFamily = ko.observable(title.textStyle.fontFamily);
             self.titleFontSize = ko.observable(title.textStyle.fontSize);
@@ -245,7 +246,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 //title
                 option.title[0].text = self.titleContent();
                 option.title[0].top = self.titleTop();
-                option.title[0].left = self.selectedLeft();
+                option.title[0].left = self.titleLeft();
                 option.title[0].textStyle.fontFamily = self.selectedFontFamily();
                 option.title[0].textStyle.fontSize = self.titleFontSize();
                 option.title[0].textStyle.fontWeight = self.selectedFontWeight();
@@ -295,7 +296,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 option.legend[0].textStyle.color = self.legendFontColor();
 
                 option.backgroundColor = "rgba(255,255,255,"+self.backgroundOpacity()*0.01+")";
-                $("#backGroundOpacityOfPie").text(self.backgroundOpacity()*0.01);
+
                 optionChart.setOption(option,true);
             },this)
         };

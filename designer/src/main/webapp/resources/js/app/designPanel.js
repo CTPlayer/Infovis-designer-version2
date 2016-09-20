@@ -303,7 +303,9 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                         'builderModel': JSON.parse(data.buildModel)
                                     }),
                                     success: function(option){
-                                        engine.chart.init($("#"+order)[0]).setOption(option);
+                                        var newOption = JSON.parse(data.jsCode);
+                                        newOption.series = option.series;
+                                        engine.chart.init($("#"+order)[0]).setOption(newOption);
                                         renderMenu.renderMenu($("#"+order));
                                         $("#"+order).find("#chartTitle").text(data.chartName);
                                     },
@@ -454,7 +456,9 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                     'builderModel': JSON.parse(data[i].buildModel)
                                 }),
                                 success: function(option){
-                                    exportChart.setOption(option);
+                                    var newOption = JSON.parse(data[i].jsCode);        // 若本图表选择数据获取模式为实时获取，
+                                    newOption.series = option.series;                  // 在渲染时将数据库中的option中的series部分替换为新生成的option的series部分即可
+                                    exportChart.setOption(newOption);
                                     renderMenu.renderMenu($("#"+ids[i]));
                                     $("#"+ids[i]).find("#chartTitle").text(data[i].chartName);
                                 },

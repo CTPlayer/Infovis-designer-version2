@@ -59,7 +59,9 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                         'builderModel': JSON.parse(data.buildModel)
                     }),
                     success: function(option){
-                        editChart.setOption(option);
+                        var newOption = JSON.parse(data.jsCode);
+                        newOption.series = option.series;
+                        editChart.setOption(newOption);
                     },
                     error: function(){
                         $("editArea").text("当前图表渲染失败，请检查远程数据库连接是否正常或刷新重试。");
