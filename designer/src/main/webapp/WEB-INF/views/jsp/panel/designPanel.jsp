@@ -112,28 +112,6 @@
             margin-bottom: 5px;
         }
 
-        .myChart-topbar{
-            width:199px;
-            height: 30px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background:#000;
-            display:block;
-            zoom:1;
-            filter:alpha(opacity=50);
-            opacity:0.5;
-            color:#fff;
-            line-height:30px
-        }
-
-        .myChart-topbar i{
-            margin-top: 5px;
-            margin-right: 15px;
-            cursor:pointer;
-            font-size: 20px;
-        }
-
         #myChart .thumbnail .glyphicon-ok{
             display: none;
         }
@@ -142,6 +120,16 @@
             position: absolute;
             right: 5px;
             top:130px;
+            color:white;
+            display: block;
+            height: 10px;
+            width: 10px;
+        }
+
+        #myChart .thumbnail .glyphicon-remove{
+            position: absolute;
+            right: 5px;
+            top:5px;
             color:white;
             display: block;
             height: 10px;
@@ -162,17 +150,31 @@
             width: 0;
         }
 
+        .thumbnail .arrow_top{
+            border-color: #337ab7 #337ab7 transparent transparent;
+            border-style: solid;
+            border-width: 18px;
+            font-size: 0;
+            display: block;
+            height: 0;
+            line-height: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 0;
+        }
+
         #myChart .thumbnail{
             cursor: pointer;
         }
 
         #myChart .thumbnail p{
             position: absolute;
-            top:5px;
+            bottom:5px;
             left:15px;
-            color: white;
+            color: rgba(70, 49, 49, 0.49);
             font-weight: bolder;
-            width:130px;
+            width:180px;
             height:18px;
             display:block;
             white-space:nowrap;

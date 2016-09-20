@@ -131,14 +131,19 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                success: function(response){
                    for(var i=0;i<response.data.length;i++){
                        if(response.data[i].chartType == 'pie'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/pie_chart.png" alt="...">' +
-                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/pie_chart.png" alt="...">' +
+                               '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
                        }else if(response.data[i].chartType == 'line'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/line_chart.png" alt="...">' +
-                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/line_chart.png" alt="...">' +
+                               '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
                        }else if(response.data[i].chartType == 'bar'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img src="resources/img/bar_chart.png" alt="...">' +
-                               '<span class="myChart-topbar"><i class="glyphicon glyphicon-remove pull-right" title="删除图表"></i></span><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'</p></div>');
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/bar_chart.png" alt="...">' +
+                               '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
+                       }
+                       if(parseInt(response.data[i].isRealTime) == 0){
+                            $(".dataType").text("引用当前数据库");
+                       }else if(parseInt(response.data[i].isRealTime) == 1){
+                            $(".dataType").text("实时获取");
                        }
                    }
                    $(".thumbnail").click(function(){
@@ -152,10 +157,10 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                    /**
                     * 注册图表删除事件
                     */
-                   $('.myChart-topbar .glyphicon-remove').click(function (event) {
+                   $('.deleteOneChart').click(function (event) {
                        event.stopPropagation();//屏蔽父元素select样式选择
                    });
-                   $('.myChart-topbar .glyphicon-remove').confirmModal({
+                   $('.deleteOneChart').confirmModal({
                        confirmTitle     : '提示',
                        confirmMessage   : '你确定删除该图表？',
                        confirmOk        : '是的',
@@ -163,7 +168,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                        confirmDirection : 'rtl',
                        confirmStyle     : 'primary',
                        confirmCallback  : function (target) {
-                           var cid = target.parent().parent().attr('data-cid');
+                           var cid = target.parent().attr('data-cid');
                            var deferred = $.ajax({
                                type: 'POST',
                                dataType: 'json',
