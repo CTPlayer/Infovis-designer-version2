@@ -17,6 +17,7 @@ import service.chart.ChartOption;
 import service.chart.bar.echarts.Bar;
 import service.chart.line.echarts.Line;
 import service.chart.pie.echarts.Pie;
+import service.chart.pie.echarts.Ring;
 import service.myPanel.MyChartsService;
 import service.myPanel.MyPanelService;
 
@@ -234,6 +235,8 @@ public class DefaultController {
             chartOption = context.getBean(Line.class);
         } else if (chartBuilderParams.getChartType() == ChartBuilderParams.ChartType.bar) {
             chartOption = context.getBean(Bar.class);
+        } else if (chartBuilderParams.getChartType() == ChartBuilderParams.ChartType.ring) {
+            chartOption = context.getBean(Ring.class);
         }
 
         return TemplateUtil.genJsonStr4Obj(chartOption.transform(chartBuilderParams), true);

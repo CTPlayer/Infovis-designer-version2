@@ -59,6 +59,6 @@ public class ChartBuilderParams {
     }
 
     public enum ChartType {
-        pie, line, bar
+        pie, line, bar, ring
     }
 }

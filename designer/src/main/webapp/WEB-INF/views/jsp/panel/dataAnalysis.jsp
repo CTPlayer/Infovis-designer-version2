@@ -153,6 +153,9 @@
                                 <span class="pie">
                                     <img src="resources/img/pie_chart.png">
                                 </span>
+                                <span class="ring">
+                                    <img src="resources/img/ring_chart.png">
+                                </span>
                             </div>
                             <div class="drag-tips">
                                 <div class="tips-bar" style="display: none">
@@ -167,6 +170,11 @@
                                 </div>
                                 <div class="tips-pie" style="display: none">
                                     <p><b>饼图</b></p>
+                                    <p><b>维度</b> 拖入颜色</p>
+                                    <p><b>度量</b> 拖入角度</p>
+                                </div>
+                                <div class="tips-ring" style="display: none">
+                                    <p><b>环形图</b></p>
                                     <p><b>维度</b> 拖入颜色</p>
                                     <p><b>度量</b> 拖入角度</p>
                                 </div>

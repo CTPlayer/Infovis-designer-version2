@@ -139,6 +139,9 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                        }else if(response.data[i].chartType == 'bar'){
                            $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/bar_chart.png" alt="...">' +
                                '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
+                       }else if(response.data[i].chartType == 'ring'){
+                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/ring_chart.png" alt="...">' +
+                               '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
                        }
                        if(parseInt(response.data[i].isRealTime) == 0){
                             $(".dataType").text("引用当前数据库");

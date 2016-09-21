@@ -12,7 +12,7 @@ define(['jquery'], function($){
         xAxis.push($(".xAxis").find("span").text().trim());
         yAxis.push($(".yAxis").find("span").text().trim());
 
-        if(chartType == 'pie'){
+        if(chartType == 'pie' || chartType == 'ring'){
             var builderModel = {
                 'mark': {
                     'color': color,

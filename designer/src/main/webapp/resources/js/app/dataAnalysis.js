@@ -105,7 +105,7 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                         type: 'POST',
                         url: 'addCharts',
                         data : {
-                            'chartType': engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption().series[0].type,
+                            'chartType': window.cType,
                             'sqlRecordingId': window.sqlRecordingId,
                             'buildModel': JSON.stringify(window.bmodel),
                             'jsCode': JSON.stringify(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption()),
@@ -124,7 +124,7 @@ require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, i
                         url: 'updateChartInfo',
                         data : {
                             'id': chartId,
-                            'chartType': engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption().series[0].type,
+                            'chartType': window.cType,
                             'sqlRecordingId': window.sqlRecordingId,
                             'buildModel': JSON.stringify(window.bmodel),
                             'jsCode': JSON.stringify(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption()),
@@ -161,6 +161,7 @@ require(['jquery','bootstrap','metisMenu'], function($){
 require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scrollbar','jqueryCookie','jqueryMd5','bootstrap','jquery-ui'],
     function($,ztree,infovis,baseOptions,commonModule){
     var chartType = 'bar';      //图表类型,默认为柱状图
+    window.cType = chartType;
     var engine = infovis.init(baseOptions.makeAllOptions() || {});
 
     /**
@@ -179,8 +180,11 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
         }else if(target.hasClass("pie")){
             $('.chart-type-select-panel .drag-tips .tips-pie').show();
             $('.chart-type-select-panel .drag-tips .tips-pie').siblings().hide();
+        }else if(target.hasClass("ring")){
+            $('.chart-type-select-panel .drag-tips .tips-ring').show();
+            $('.chart-type-select-panel .drag-tips .tips-ring').siblings().hide();
         }
-    }
+    };
 
 
     $(".chart-type").find("span").click(function(){
@@ -190,9 +194,12 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
             chartType = 'line';
         }else if($(this).hasClass("pie")){
             chartType = 'pie';
+        }else if($(this).hasClass("ring")){
+            chartType = 'ring';
         }
         chartTypeSpanRegistry($(this));
         chartTypeChangeTag(chartType);
+        window.cType = chartType;
     });
 
 
@@ -214,7 +221,7 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
         var yAxisText = $('.yAxis span').text().trim() || '';
         var colorText = $('form.make-model-region .mark-item-color span').text().trim() || '';
         var cornerText = $('form.make-model-region .mark-item-corner span').text().trim() || '';
-        if(chartType == 'pie'){
+        if(chartType == 'pie' || chartType == 'ring'){
             if(xAxisText != ''){
                 tagDropRender(xAxisText,'color',$("form.make-model-region .mark-down-column .mark-item-color"),'text',chartType);
                 $('.xAxis').html('');
@@ -238,7 +245,7 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
         if(window.sqlRecordingId){
             commonModule.renderChart(engine,chartType,window.sqlRecordingId);
         }
-    }
+    };
 
     /**标记可接受数据类型(维度、度量)以及图表类型**/
     var axisTagMap = {
@@ -246,37 +253,43 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
             "dataType": "text",
             "line":true,
             "bar":true,
-            "pie":false
+            "pie":false,
+            "ring":false
         },
         "yAxis":{
             "dataType": "number",
             "line":true,
             "bar":true,
-            "pie":false
+            "pie":false,
+            "ring":false
         },
         "filter":{
             "dataType": "",
             "line":false,
             "bar":false,
-            "pie":false
+            "pie":false,
+            "ring":false
         },
         "color" :{
             "dataType": "text",
             "line":false,
             "bar":false,
-            "pie":true
+            "pie":true,
+            "ring":true
         },
         "corner" :{
             "dataType": "number",
             "line":false,
             "bar":false,
-            "pie":true
+            "pie":true,
+            "ring":true
         },
         "tag" : {
             "dataType": "",
             "line":false,
             "bar":false,
-            "pie":false
+            "pie":false,
+            "ring":false
         }
     }
 
