@@ -59,7 +59,7 @@ public class Ring implements ChartOption{
                 return transformData;
             }
         });
-        p.radius(50,70);
+        p.radius("50%","70%");
         p.data().addAll(seriesData);
         option.series(p);
         return option;
