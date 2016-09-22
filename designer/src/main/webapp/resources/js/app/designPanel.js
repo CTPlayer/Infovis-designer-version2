@@ -302,6 +302,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                 $("#"+order).find("#chartTitle").text(data.chartName);
                             }else if(parseInt(data.isRealTime) == 1){
                                 $.ajax({
+                                    async: false,
                                     type: 'POST',
                                     contentType: "application/json; charset=utf-8",
                                     url: 'render',
