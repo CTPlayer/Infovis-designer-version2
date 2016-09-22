@@ -141,7 +141,7 @@
                         </div>
                     </div>
                     <div class="col-lg-2 col-xs-2 col-sm-2">
-                        <div class="panel fresh-color panel-default chart-type-select-panel" style="width:100px;float: right;margin-top:40px;">
+                        <div class="panel fresh-color panel-default chart-type-select-panel" style="width:100px;top:300px;position: fixed">
                             <div class="panel-heading">图表类型</div>
                             <div class="chart-type">
                                 <span class="bar">
