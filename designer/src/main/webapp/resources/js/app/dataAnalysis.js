@@ -799,6 +799,9 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
                 case 'line':
                     chartTypeSpanRegistry($('.chart-type .line'));
                     break;
+                case 'ring':
+                    chartTypeSpanRegistry($('.chart-type .ring'));
+                    break;
                 default:
                     break;
             };
