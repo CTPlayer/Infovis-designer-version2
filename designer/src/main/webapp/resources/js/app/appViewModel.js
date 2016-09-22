@@ -76,11 +76,18 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 }
             });
 
+            //other
             if(JSON.stringify(option.backgroundColor).split(",").length<4){
                 option.backgroundColor = 'rgba(255,255,255,1)';
             }
             var opacity = JSON.stringify(option.backgroundColor).split(",")[3].replace(')"','');
             self.backgroundOpacity = ko.observable(opacity*100);
+            if(option.xAxis[0].axisLabel.rotate){
+                console.log(option.xAxis[0].axisLabel.rotate);
+                self.xRotate = ko.observable(option.xAxis[0].axisLabel.rotate);
+            }else{
+                self.xRotate = ko.observable(0);
+            }
 
             var optionChart = engine.chart.init(document.getElementById("optionContainer"));
             //每次被观察的数据变动后调用下列方法
@@ -120,6 +127,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 option.tooltip[0].textStyle.color = self.tooltipFontColor();
 
                 option.backgroundColor = "rgba(255,255,255,"+self.backgroundOpacity()*0.01+")";
+                option.xAxis[0].axisLabel.rotate = self.xRotate();
 
                 optionChart.setOption(option,true);
             }, this);
