@@ -208,13 +208,13 @@
                             <div class="radio3 radio-check radio-inline">
                                 <input type="radio" id="radio4" name="radio2" value="0" checked="">
                                 <label for="radio4">
-                                    引用当前库数据
+                                    镜像
                                 </label>
                             </div>
                             <div class="radio3 radio-check radio-success radio-inline">
                                 <input type="radio" id="radio5" name="radio2" value="1">
                                 <label for="radio5">
-                                    实时获取
+                                    实时
                                 </label>
                             </div>
                         </div>

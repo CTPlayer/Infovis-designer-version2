@@ -7,7 +7,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             self.titleTop = ko.observable(title.top);
             // self.titleLeft = ko.observableArray(["left","center","right"]);
             // self.selectedLeft = ko.observable(title.left);
-            self.titleLeft = ko.observable(title.left);
+            self.titleX = ko.observableArray(["left","center","right"]);
+            self.selectedX = ko.observable(title.left);
             self.titleFontFamily = ko.observableArray(["SimSun","Microsoft YaHei","sans-serif","SimHei","KaiTi"]);
             self.selectedFontFamily = ko.observable(title.textStyle.fontFamily);
             self.titleFontSize = ko.observable(title.textStyle.fontSize);
@@ -24,8 +25,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             });
 
             self.subtitleContent = ko.observable(title.subtext);
-            self.subtitleLocation = ko.observableArray(["left","center","right"]);
-            self.subselectedLocation = ko.observable(title.textAlign);
+            // self.subtitleLocation = ko.observableArray(["left","center","right"]);
+            // self.subselectedLocation = ko.observable(title.textAlign);
             self.subtitleFontFamily = ko.observableArray(["SimSun","Microsoft YaHei","sans-serif","SimHei","KaiTi"]);
             self.subselectedFontFamily = ko.observable(title.subtextStyle.fontFamily);
             self.subtitleFontSize = ko.observable(title.subtextStyle.fontSize);
@@ -96,7 +97,9 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 //title
                 option.title[0].text = self.titleContent();
                 option.title[0].top = self.titleTop();
-                option.title[0].left = self.titleLeft();
+                // option.title[0].left = self.selectedLeft();
+                option.title[0].left = self.selectedX();
+                option.title[0].x = self.selectedX();
                 option.title[0].textStyle.fontFamily = self.selectedFontFamily();
                 option.title[0].textStyle.fontSize = self.titleFontSize();
                 option.title[0].textStyle.fontWeight = self.selectedFontWeight();
@@ -105,7 +108,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
 
                 //subtitle
                 option.title[0].subtext = self.subtitleContent();
-                option.title[0].textAlign = self.subselectedLocation();
+                // option.title[0].textAlign = self.subselectedLocation();
                 option.title[0].subtextStyle.fontFamily = self.subselectedFontFamily();
                 option.title[0].subtextStyle.fontSize = self.subtitleFontSize();
                 option.title[0].subtextStyle.fontWeight = self.subselectedFontWeight();
@@ -142,7 +145,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             self.titleTop = ko.observable(title.top);
             // self.titleLeft = ko.observableArray(["left","center","right"]);
             // self.selectedLeft = ko.observable(title.left);
-            self.titleLeft = ko.observable(title.left);
+            self.titleX = ko.observableArray(["left","center","right"]);
+            self.selectedX = ko.observable(title.left);
             self.titleFontFamily = ko.observableArray(["SimSun","Microsoft YaHei","sans-serif","SimHei","KaiTi"]);
             self.selectedFontFamily = ko.observable(title.textStyle.fontFamily);
             self.titleFontSize = ko.observable(title.textStyle.fontSize);
@@ -159,8 +163,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             });
 
             self.subtitleContent = ko.observable(title.subtext);
-            self.subtitleLocation = ko.observableArray(["left","center","right"]);
-            self.subselectedLocation = ko.observable(title.textAlign);
+            // self.subtitleLocation = ko.observableArray(["left","center","right"]);
+            // self.subselectedLocation = ko.observable(title.textAlign);
             self.subtitleFontFamily = ko.observableArray(["SimSun","Microsoft YaHei","sans-serif","SimHei","KaiTi"]);
             self.subselectedFontFamily = ko.observable(title.subtextStyle.fontFamily);
             self.subtitleFontSize = ko.observable(title.subtextStyle.fontSize);
@@ -254,7 +258,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 //title
                 option.title[0].text = self.titleContent();
                 option.title[0].top = self.titleTop();
-                option.title[0].left = self.titleLeft();
+                option.title[0].left = self.selectedX();
+                option.title[0].x = self.selectedX();
                 option.title[0].textStyle.fontFamily = self.selectedFontFamily();
                 option.title[0].textStyle.fontSize = self.titleFontSize();
                 option.title[0].textStyle.fontWeight = self.selectedFontWeight();
@@ -263,7 +268,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
 
                 //subtitle
                 option.title[0].subtext = self.subtitleContent();
-                option.title[0].textAlign = self.subselectedLocation();
+                // option.title[0].textAlign = self.subselectedLocation();
                 option.title[0].subtextStyle.fontFamily = self.subselectedFontFamily();
                 option.title[0].subtextStyle.fontSize = self.subtitleFontSize();
                 option.title[0].subtextStyle.fontWeight = self.subselectedFontWeight();
