@@ -357,10 +357,10 @@
                             </div>
                         </li>
                         <li>
-                            <a href="#" data-toggle="modal" data-target="#subGroupModal"><span class="icon fa fa-cog"></span><span class="title">自定义组件</span></a>
+                            <a href="#" data-toggle="modal" data-target="#subGroupModal"><span class="icon fa fa-cog"></span><span class="title">新建标题框</span></a>
                         </li>
                         <li>
-                            <a href="#" data-toggle="modal" data-target="#mySubGroup"><span class="icon fa fa-archive"></span><span class="title">我的组件</span></a>
+                            <a href="#" data-toggle="modal" data-target="#mySubGroup"><span class="icon fa fa-archive"></span><span class="title">我的标题框</span></a>
                         </li>
                     </ul>
                 </div>

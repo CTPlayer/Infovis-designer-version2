@@ -150,7 +150,7 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
                             ko.applyBindings(appViewModel.bindTableAndConfigOfText(option, canvasTag), $("#textOptionPanel").children()[1]);  //开启双向绑定监听
                         }else{
                             $("#textOptionPanel").find("#chartConfig").html(formatData.tableAndConfigOfSubGroup);
-                            option.image = target.parent().find("img")[0];
+                            option.image = target.parent().parent().find("img")[0];
                             var canvasTagOfImage = CanvasTagOfImage().render("textOptionContainer","",option);
                             ko.applyBindings(appViewModel.bindTableAndConfigOfSubGroup("textOptionContainer",option,canvasTagOfImage),$("#textOptionPanel").children()[1]);
                         }

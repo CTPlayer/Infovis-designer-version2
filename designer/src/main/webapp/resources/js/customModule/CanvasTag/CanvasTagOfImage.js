@@ -23,7 +23,8 @@ define(['jquery', 'zrender', 'zrender/shape/Image'], function($, zrender, imageS
                                 height: pageY - (pageY / 4),
                                 textColor: 'black'
                             },
-                            draggable : false
+                            draggable : false,
+                            hoverable: false
                         })
                     );
                 }else {
@@ -32,7 +33,8 @@ define(['jquery', 'zrender', 'zrender/shape/Image'], function($, zrender, imageS
                     zr.addShape(
                         new imageShape({
                             style: option,
-                            draggable : false
+                            draggable : false,
+                            hoverable: false
                         })
                     );
                 }

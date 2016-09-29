@@ -148,14 +148,17 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                 $(".help-block").text("请上传图片类型文件");
                                 $("#subGroupContainer").find(".loader-container").css("display", "none");
                             }else{
-                                $("#subGroupContainer").append([
+                                $("#subGroupContainer").parent().prepend([
                                     '<img style="display: none" src=\'data:image/jpg;base64,'+data.imgBase64+'\' onerror="this.src=\'resources/img/white.jpg\'">'
                                 ].join(""));
-                                $("#subGroupContainer").find(".loader-container").css("display", "none");
-                                var canvasTagOfImage = CanvasTagOfImage().render("subGroupContainer",$("#subGroupContainer").find("img")[0]);
-                                $("#subGroupConfig").children().eq(1).html(formatData.tableAndConfigOfSubGroup());
-                                ko.cleanNode($("#subGroupConfig").children()[1]);     //解除之前的绑定
-                                ko.applyBindings(appViewModel.bindTableAndConfigOfSubGroup("subGroupContainer",canvasTagOfImage.getOption(),canvasTagOfImage),$("#subGroupConfig").children()[1]);
+                                var canvasTagOfImage;
+                                setTimeout(function(){                   //等待一秒保证新的节点已加入
+                                    $("#subGroupContainer").find(".loader-container").css("display", "none");
+                                    canvasTagOfImage = CanvasTagOfImage().render("subGroupContainer",$("#subGroupContainer").parent().find("img")[0]);
+                                    $("#subGroupConfig").children().eq(1).html(formatData.tableAndConfigOfSubGroup());
+                                    ko.cleanNode($("#subGroupConfig").children()[1]);     //解除之前的绑定
+                                    ko.applyBindings(appViewModel.bindTableAndConfigOfSubGroup("subGroupContainer",canvasTagOfImage.getOption(),canvasTagOfImage),$("#subGroupConfig").children()[1]);
+                                },1000);
                                 window.subGroupBase64 = data.imgBase64;
                             }
                         },
@@ -273,9 +276,10 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             var options = {
                 float: true,
                 auto: false,
-                vertical_margin: 10
+                vertical_margin: 0
             };
             $('.grid-stack').gridstack(options);
+            $(".grid-stack").resize(10);
 
             var grid = $('.grid-stack').data('gridstack');
 
