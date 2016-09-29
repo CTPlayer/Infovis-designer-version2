@@ -116,7 +116,21 @@
             display: none;
         }
 
+        #mySubGroup .thumbnail .glyphicon-ok{
+            display: none;
+        }
+
         #myChart .selected .glyphicon-ok{
+             position: absolute;
+             right: 5px;
+             top:130px;
+             color:white;
+             display: block;
+             height: 10px;
+             width: 10px;
+         }
+
+        #mySubGroup .selected .glyphicon-ok{
             position: absolute;
             right: 5px;
             top:130px;
@@ -136,7 +150,31 @@
             width: 10px;
         }
 
+        #mySubGroup .thumbnail .glyphicon-remove{
+            position: absolute;
+            right: 5px;
+            top:5px;
+            color:white;
+            display: block;
+            height: 10px;
+            width: 10px;
+        }
+
         #myChart .selected .arrow_left{
+            border-color: transparent #3ac34f #3ac34f transparent;
+            border-style: solid;
+            border-width: 18px;
+            font-size: 0;
+            display: block;
+            height: 0;
+            line-height: 0;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 0;
+        }
+
+        #mySubGroup .selected .arrow_left{
             border-color: transparent #3ac34f #3ac34f transparent;
             border-style: solid;
             border-width: 18px;
@@ -165,6 +203,10 @@
         }
 
         #myChart .thumbnail{
+            cursor: pointer;
+        }
+
+        #mySubGroup .thumbnail{
             cursor: pointer;
         }
 
@@ -314,6 +356,12 @@
                                 </div>
                             </div>
                         </li>
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#subGroupModal"><span class="icon fa fa-cog"></span><span class="title">自定义组件</span></a>
+                        </li>
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mySubGroup"><span class="icon fa fa-archive"></span><span class="title">我的组件</span></a>
+                        </li>
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->
@@ -394,6 +442,61 @@
     </div>
 </div>
 
+<div class="modal fade bs-option-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="subGroupModal">
+    <div class="modal-dialog modal-lg" style="width: 90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">自定义组件</h4>
+            </div>
+            <div class="modal-body">
+                <div id="subGroupContainer" style="width:40%;height:410px;float:left;background-color: rgb(238,238,238);overflow: auto">
+                    <div id="subGroupLoading" class="loader-container text-center color-black" style="display: none;">
+                        <div><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
+                        <div>正在加载图片...</div>
+                    </div>
+                </div>
+                <div id="subGroupOptionPanel" style="width:50%;height:410px;float:left;margin-left:50px;">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#param" data-toggle="tab">配置项</a></li>
+                    </ul>
+                    <div class="col-xs-11" style="height:350px;overflow:auto;margin-top: 10px;" id="subGroupConfig">
+                        <div>
+                        <form enctype="multipart/form-data" id="imgFile">
+                            <input name="imgFile" type="file" />
+                            <button type="reset" class="btn btn-sm btn-warning" style="margin-left: 10px;float: right">重置</button>
+                            <button type="button" class="btn btn-sm btn-success" style="float: right">上传</button>
+                            <p class="help-block">请上传组件图片.</p>
+                        </form>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="clear:both">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mySubGroup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 70%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">我的组件</h4>
+            </div>
+            <div class="modal-body" style="height: 386px;overflow-y: scroll">
+                <div class="row"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="resources/js/lib/require.js" defer async="true" data-main="resources/js/app/designPanel"></script>
 </body>
 

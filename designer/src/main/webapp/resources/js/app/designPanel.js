@@ -21,9 +21,11 @@ require.config({
         "domReady" : 'lib/domReady',
         "zrender": "lib/zrender/zrender",
         "zrender/shape/Rectangle": "lib/zrender/zrender",
+        "zrender/shape/Image": "lib/zrender/zrender",
         "zrender/tool/color": "lib/zrender/zrender",
         "zrender/Storage" : "lib/zrender/zrender",
         "CanvasTag" : "customModule/CanvasTag/CanvasTag",
+        "CanvasTagOfImage" : "customModule/CanvasTag/CanvasTagOfImage",
         "confirmModal": "lib/confirm/confirm-bootstrap"
     },
     shim : {
@@ -83,9 +85,9 @@ require(['jquery','domReady'], function ($,domReady) {
     });
 });
 
-require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu','CanvasTag','confirmModal','zrender',
+require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel', 'renderMenu','CanvasTag','confirmModal','zrender','CanvasTagOfImage',
         'bootstrap', 'gridstack', 'spectrum'],
-    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu,CanvasTag,confirmModal,zrender){
+    function($, infovis, ko, kb, baseOptions, formatData, appViewModel, renderMenu,CanvasTag,confirmModal,zrender,CanvasTagOfImage){
         $(function() {
             $(".navbar-expand-toggle").click(function() {
                 $(".app-container").toggleClass("expanded");
@@ -125,82 +127,132 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
         });
 
         $(function(){
-            $.ajax({
-               type: 'POST',
-               url: 'selectChartInfo',
-               success: function(response){
-                   for(var i=0;i<response.data.length;i++){
-                       if(response.data[i].chartType == 'pie'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/pie_chart.png" alt="...">' +
-                               '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
-                       }else if(response.data[i].chartType == 'line'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/line_chart.png" alt="...">' +
-                               '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
-                       }else if(response.data[i].chartType == 'bar'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/bar_chart.png" alt="...">' +
-                               '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
-                       }else if(response.data[i].chartType == 'ring'){
-                           $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/ring_chart.png" alt="...">' +
-                               '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
-                       }
-                       if(parseInt(response.data[i].isRealTime) == 0){
-                            $(".dataType").text("引用当前数据库");
-                       }else if(parseInt(response.data[i].isRealTime) == 1){
-                            $(".dataType").text("实时获取");
-                       }
-                   }
-                   $(".thumbnail").click(function(){
-                       if($(this).hasClass("selected")){
-                           $(this).removeClass("selected");
-                       }else{
-                           $(this).addClass("selected");
-                       }
-                   });
-
-                   /**
-                    * 注册图表删除事件
-                    */
-                   $('.deleteOneChart').click(function (event) {
-                       event.stopPropagation();//屏蔽父元素select样式选择
-                   });
-                   $('.deleteOneChart').confirmModal({
-                       confirmTitle     : '提示',
-                       confirmMessage   : '你确定删除该图表？',
-                       confirmOk        : '是的',
-                       confirmCancel    : '取消',
-                       confirmDirection : 'rtl',
-                       confirmStyle     : 'primary',
-                       confirmCallback  : function (target) {
-                           var cid = target.parent().attr('data-cid');
-                           var deferred = $.ajax({
-                               type: 'POST',
-                               dataType: 'json',
-                               url: 'myChart/deleteOneChart',
-                               data : {
-                                   "chartId": cid
-                               },
-                               headers :{
-                                   oper : 'delete'
-                               }
-                           });
-                           deferred.done(function(data){
-                               if(data.isDelete == true){
-                                   target.parent().parent().remove();//当前面板的图表类型选择框删除
-                                   $.each($('.grid-stack-item-content'),function (index,target) {//删除htmlcode中该图表的div元素
-                                       if(cid == $(target).attr("chartid")){
-                                           $(target).parent().remove();
-                                       }
-                                   });
-                               }else{
-                                   alert("部分设计面板中使用了本图表，暂不可删除");
-                               }
-                           })
-                       },
-                       confirmDismiss   : true,
-                       confirmAutoOpen  : false
-                   });
-               }
+            $("#subGroupModal").find(".btn-success").click(function(){
+                if($("[name='imgFile']").val() == ""){
+                    $(".help-block").text("请先选择您要上传的控件背景图");
+                }else{
+                    $("#subGroupContainer").find(".loader-container").css("display", "block");
+                    $.ajax({
+                        type: 'POST',
+                        url: 'imgToBase64',
+                        data: new FormData($("#imgFile")[0]),
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(data){
+                            if(data.imgBase64 == "noFile"){
+                                $(".help-block").text("请先选择您要上传的控件背景图");
+                                $("#subGroupContainer").find(".loader-container").css("display", "none");
+                            }else if(data.imgBase64 == "noImage"){
+                                $(".help-block").text("请上传图片类型文件");
+                                $("#subGroupContainer").find(".loader-container").css("display", "none");
+                            }else{
+                                $("#subGroupContainer").append([
+                                    '<img style="display: none" src=\'data:image/jpg;base64,'+data.imgBase64+'\' onerror="this.src=\'resources/img/white.jpg\'">'
+                                ].join(""));
+                                $("#subGroupContainer").find(".loader-container").css("display", "none");
+                                var canvasTagOfImage = CanvasTagOfImage().render("subGroupContainer",$("#subGroupContainer").find("img")[0]);
+                                $("#subGroupConfig").children().eq(1).html(formatData.tableAndConfigOfSubGroup());
+                                ko.cleanNode($("#subGroupConfig").children()[1]);     //解除之前的绑定
+                                ko.applyBindings(appViewModel.bindTableAndConfigOfSubGroup("subGroupContainer",canvasTagOfImage.getOption(),canvasTagOfImage),$("#subGroupConfig").children()[1]);
+                                window.subGroupBase64 = data.imgBase64;
+                            }
+                        },
+                        error: function(){
+                            alert("上传失败，请重试！");
+                        }
+                    });
+                }
             });
+        });
+
+        $(function(){
+            window.getAllCharts = function(){
+                $("#myChart").find(".row").html("");
+                $("#mySubGroup").find(".row").html("");
+                $.ajax({
+                   type: 'POST',
+                   url: 'selectChartInfo',
+                   success: function(response){
+                       for(var i=0;i<response.data.length;i++){
+                           if(response.data[i].chartType == 'pie'){
+                               $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/pie_chart.png" alt="...">' +
+                                   '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
+                           }else if(response.data[i].chartType == 'line'){
+                               $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/line_chart.png" alt="...">' +
+                                   '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
+                           }else if(response.data[i].chartType == 'bar'){
+                               $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/bar_chart.png" alt="...">' +
+                                   '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
+                           }else if(response.data[i].chartType == 'ring'){
+                               $("#myChart").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src="resources/img/ring_chart.png" alt="...">' +
+                                   '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p title="'+response.data[i].chartName+'">'+response.data[i].chartName+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="dataType"></span></p></div>');
+                           }else if(response.data[i].chartType == 'text:subGroupOfImage'){
+                               var imgBase64 = JSON.parse(response.data[i].jsCode).image;
+                               $("#mySubGroup").find(".row").append('<div class="thumbnail" data-cid="'+response.data[i].id+'" style="width: 200px;height:150px;margin-left: 10px;float: left;position: relative"><img style="height: 100px" src=\'data:image/jpg;base64,'+imgBase64+'\' alt="...">' +
+                                   '<div class="arrow_top"></div><div class="glyphicon glyphicon-remove deleteOneChart"></div><div class="arrow_left"></div><div class="glyphicon glyphicon-ok"></div><p><span class="dataType"></span></p></div>');
+                           }
+                           if(parseInt(response.data[i].isRealTime) == 0){
+                                $(".dataType").text("引用当前数据库");
+                           }else if(parseInt(response.data[i].isRealTime) == 1){
+                                $(".dataType").text("实时获取");
+                           }
+                       }
+                       $(".thumbnail").click(function(){
+                           if($(this).hasClass("selected")){
+                               $(this).removeClass("selected");
+                           }else{
+                               $(this).addClass("selected");
+                           }
+                       });
+
+                       /**
+                        * 注册图表删除事件
+                        */
+                       $('.deleteOneChart').click(function (event) {
+                           event.stopPropagation();//屏蔽父元素select样式选择
+                       });
+                       $('.deleteOneChart').confirmModal({
+                           confirmTitle     : '提示',
+                           confirmMessage   : '你确定删除该图表？',
+                           confirmOk        : '是的',
+                           confirmCancel    : '取消',
+                           confirmDirection : 'rtl',
+                           confirmStyle     : 'primary',
+                           confirmCallback  : function (target) {
+                               var cid = target.parent().attr('data-cid');
+                               var deferred = $.ajax({
+                                   type: 'POST',
+                                   dataType: 'json',
+                                   url: 'myChart/deleteOneChart',
+                                   data : {
+                                       "chartId": cid
+                                   },
+                                   headers :{
+                                       oper : 'delete'
+                                   }
+                               });
+                               deferred.done(function(data){
+                                   if(data.isDelete == true){
+                                       target.parent().remove();//当前面板的图表类型选择框删除
+                                       $.each($('.grid-stack-item-content'),function (index,target) {//删除htmlcode中该图表的div元素
+                                           if(cid == $(target).attr("chartid")){
+                                               $(target).parent().remove();
+                                           }
+                                       });
+                                   }else{
+                                       alert("部分设计面板中使用了本图表，暂不可删除");
+                                   }
+                               })
+                           },
+                           confirmDismiss   : true,
+                           confirmAutoOpen  : false
+                       });
+                   }
+                });
+            };
+            window.getAllCharts();
         });
 
         $(function(){
@@ -282,19 +334,37 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 });
             }
 
-            $("#myChart").find(".btn-primary").click(function(){
-                $(".thumbnail").each(function(){
-                    if($(this).hasClass("selected")){
-                        var cid = $(this).attr("data-cid");
-                        var defer02 = $.ajax({
-                            type: 'POST',
-                            url: 'selectOneChartInfo',
-                            data: "id=" + cid
-                        });
-                        defer02.done(function(data){
-                            $("title").html("*Infovis-Designer");                                     //改动标记
-                            window.isSave = false;
-
+            /**
+             *
+             * 图表，组件选中渲染方法
+             * @param selects
+             */
+            var renderSelected = function(selects){
+                if($(selects).hasClass("selected")){
+                    var cid = $(selects).attr("data-cid");
+                    var defer02 = $.ajax({
+                        type: 'POST',
+                        url: 'selectOneChartInfo',
+                        data: "id=" + cid
+                    });
+                    defer02.done(function(data){
+                        $("title").html("*Infovis-Designer");                                     //改动标记
+                        window.isSave = false;
+                        if(data.chartType.indexOf("subGroupOfImage") >= 0){
+                            var imgBase64 = JSON.parse(data.jsCode).image;
+                            var option = JSON.parse(data.jsCode);
+                            order++;
+                            grid.add_widget($('<div>'+
+                                '<div class="grid-stack-item-content" chartType="text:subGroupOfImage" ' + 'id="'+ order + '"chartId="' + data.id+ '">'+
+                                '</div>'+
+                                '</div>'),0, 0,Math.ceil(option.width / 100), Math.ceil(option.height / 65));
+                            $("#"+order).parent().append([
+                                '<img style="display: none" src=\'data:image/jpg;base64,'+imgBase64+'\' >'
+                            ].join(""));
+                            option.image = $("#"+order).parent().find("img")[0];
+                            CanvasTagOfImage().render(order,"",option);
+                            renderMenu.renderMenu($("#"+order));
+                        }else{
                             add_new_widget(0,0,data.id);
                             if(parseInt(data.isRealTime) == 0){
                                 engine.chart.init($("#"+order)[0]).setOption(JSON.parse(data.jsCode));
@@ -323,10 +393,61 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                     }
                                 });
                             }
-                        });
-                    }
+                        }
+                    });
+                }
+            };
+
+            $("#myChart").find(".btn-primary").click(function(){
+                $("#myChart").find(".thumbnail").each(function(){
+                    renderSelected(this);
                 });
                 $("#myChart").modal('toggle');
+            });
+
+            $("#mySubGroup").find(".btn-primary").click(function(){
+                $("#mySubGroup").find(".thumbnail").each(function(){
+                    renderSelected(this);
+                });
+                $("#mySubGroup").modal('toggle');
+            });
+
+            /**
+             *
+             * 保存并渲染自定义组建件到设计面板
+             */
+            $("#subGroupModal").find(".btn-primary").click(function(){
+                if($("#subGroupContainer").attr("zid")){
+                    var pzr = zrender.getInstance($("#subGroupContainer").attr("zid"));//原控件
+                    var option = $.extend(true, {}, pzr.storage.getShapeList()[0].style);
+                    option.image = window.subGroupBase64;
+                    var deffer = $.ajax({
+                        type: 'POST',
+                        url: 'addCharts',
+                        data : {
+                            'chartType': "text:subGroupOfImage",
+                            'sqlRecordingId': "0",
+                            'buildModel': "",
+                            'jsCode': JSON.stringify(option),
+                            'chartName': "自定义组件"
+                        }
+                    });
+                    deffer.done(function(result){
+                        window.getAllCharts();      //自定义组件完成后需要即时更新已有组件库
+                        order++;
+                        grid.add_widget($('<div>'+
+                            '<div class="grid-stack-item-content" chartType="text:subGroupOfImage" ' + 'id="'+ order + '"chartId="' + result+ '">'+
+                            '</div>'+
+                            '</div>'),0, 0,Math.ceil(option.width / 100), Math.ceil(option.height / 65));
+                        $("#"+order).parent().append([
+                            '<img style="display: none" src=\'data:image/jpg;base64,'+option.image+'\' >'
+                        ].join(""));
+                        option.image = $("#"+order).parent().find("img")[0];
+                        CanvasTagOfImage().render(order,"",option);
+                        renderMenu.renderMenu($("#"+order));
+                    });
+                }
+                $("#subGroupModal").modal('toggle');
             });
 
             $(".grid-stack").on("resizestop",function(event,ui){
@@ -334,10 +455,13 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 window.isSave = false;
                 //判断chart类型
                 if(ui.element.find("div:eq(0)").attr("chartType").indexOf("text") >= 0){
-                    var pzr = zrender.getInstance(ui.element.find("div:eq(0)").attr("zid"));//原控件
-                    var option = $.extend(true, {}, pzr.storage.getShapeList()[0].style);
-                    CanvasTag().render(ui.element.find("div:eq(0)").attr("id"),option);
-                    renderMenu.renderMenu($("#" + ui.element.find("div:eq(0)").attr("id")));
+                    if(ui.element.find("div:eq(0)").attr("chartType").indexOf("subGroup") <= 0){
+                        var pzr = zrender.getInstance(ui.element.find("div:eq(0)").attr("zid"));//原控件
+                        var option = $.extend(true, {}, pzr.storage.getShapeList()[0].style);
+                        CanvasTag().render(ui.element.find("div:eq(0)").attr("id"),option);
+                        renderMenu.renderMenu($("#" + ui.element.find("div:eq(0)").attr("id")));
+                    }
+
                 }else {
                     var id = ui.element[0].firstChild.getAttribute("id");
                     engine.chart.getInstanceByDom(document.getElementById(id)).resize();
@@ -477,7 +601,18 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                             });
                         }
                     }else{
-                        CanvasTag().render(ids[i],JSON.parse(data[i].jsCode));
+                        if(data[i].chartType.indexOf("subGroupOfImage") < 0) {
+                            CanvasTag().render(ids[i],JSON.parse(data[i].jsCode));
+                        }else{
+                            var imgBase64 = JSON.parse(data[i].jsCode).image;
+                            var option = JSON.parse(data[i].jsCode);
+                            $("#"+ids[i]).parent().append([
+                                '<img style="display: none" src=\'data:image/jpg;base64,'+imgBase64+'\' >'
+                            ].join(""));
+                            option.image = $("#"+ids[i]).parent().find("img")[0];
+                            CanvasTagOfImage().render(ids[i],"",option);
+                            renderMenu.renderMenu($("#"+ids[i]));
+                        }
                     }
                 }
             });

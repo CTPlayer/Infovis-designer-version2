@@ -5,14 +5,15 @@ import common.util.WebUtil;
 import model.chart.ChartBuilderParams;
 import model.myPanel.MyCharts;
 import model.myPanel.MyPanel;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import service.chart.ChartOption;
 import service.chart.bar.echarts.Bar;
 import service.chart.line.echarts.Line;
@@ -22,7 +23,9 @@ import service.myPanel.MyChartsService;
 import service.myPanel.MyPanelService;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -210,6 +213,31 @@ public class DefaultController {
         myCharts.setPaging(false);
         Map<String, Object> respMap = new HashMap<>();
         respMap.put("data",myChartsService.selectChartInfo(myCharts));
+        return respMap;
+    }
+
+    /**
+     *
+     * @param imgFile
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/imgToBase64")
+    @ResponseBody
+    public Object imgToBase64(@RequestParam MultipartFile[] imgFile) throws Exception {
+        Map<String, Object> respMap = new HashMap<>();
+        String imgBase64 = "";
+        if(imgFile.length > 0){
+            if(ImageIO.read(imgFile[0].getInputStream()) != null){
+                byte[] content = imgFile[0].getBytes();
+                imgBase64 = Base64.encodeBase64String(content);
+                respMap.put("imgBase64",imgBase64);
+            }else{
+                respMap.put("imgBase64","noImage");
+            }
+        }else{
+            respMap.put("imgBase64","noFile");
+        }
         return respMap;
     }
 

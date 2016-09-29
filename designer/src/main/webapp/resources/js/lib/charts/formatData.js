@@ -389,11 +389,41 @@ define(function(){
             ].join("");
 
         return table;
-    }
+    };
+
+    var tableAndConfigOfSubGroup = function(){
+        var table = [
+            '<form role="form">',
+            '<div class="form-group form-group-sm">',
+            '<label >文字内容&nbsp;&nbsp;</label>',
+            '<input class="form-control" data-bind="value: subGroupText, valueUpdate: \'keyup\'">',
+            '</div>',
+            '<div class="form-group form-group-sm">',
+            '<label >文字颜色&nbsp;&nbsp;</label>',
+            '<input id="subGroupTextColor" class="form-control" data-bind="value: subGroupTextColor, valueUpdate: \'input\'">',
+            '</div>',
+            '<div class="form-group form-group-sm">',
+            '<label >文字大小&nbsp;&nbsp;</label>',
+            '<input type="range" class="form-control" data-bind="value: subGroupFontSize, valueUpdate: \'keyup\'">',
+            '</div>',
+            '<div class="form-group form-group-sm">',
+            '<label >图片宽度&nbsp;&nbsp;</label>',
+            '<input type="range" min="0" max="448" class="form-control" data-bind="value: subGroupImageWidth, valueUpdate: \'keyup\'">',
+            '</div>',
+            '<div class="form-group form-group-sm">',
+            '<label >图片高度&nbsp;&nbsp;</label>',
+            '<input type="range" min="0" max="410" class="form-control" data-bind="value: subGroupImageHeight, valueUpdate: \'keyup\'">',
+            '</div>',
+            '</form>'
+        ].join("");
+
+        return table;
+    };
                     
 	return {
         tableAndConfigOfBarAndLine : tableAndConfigOfBarAndLine,
         tableAndConfigOfPie : tableAndConfigOfPie,
-        tableAndConfigOfText : tableAndConfigOfText
+        tableAndConfigOfText : tableAndConfigOfText,
+        tableAndConfigOfSubGroup : tableAndConfigOfSubGroup
 	};
 });

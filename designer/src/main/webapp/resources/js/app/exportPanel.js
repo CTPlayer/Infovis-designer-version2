@@ -11,9 +11,11 @@ require.config({
         "domReady" : 'lib/domReady',
         "zrender": "lib/zrender/zrender",
         "zrender/shape/Rectangle": "lib/zrender/zrender",
+        "zrender/shape/Image": "lib/zrender/zrender",
         "zrender/tool/color": "lib/zrender/zrender",
         "zrender/Storage" : "lib/zrender/zrender",
-        "CanvasTag" : "customModule/CanvasTag/CanvasTag"
+        "CanvasTag" : "customModule/CanvasTag/CanvasTag",
+        "CanvasTagOfImage" : "customModule/CanvasTag/CanvasTagOfImage"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -22,7 +24,7 @@ require.config({
     waitSeconds: 30
 });
 
-require(['jquery', 'infovis', 'options','CanvasTag', 'gridstack', 'bootstrap'],function($, infovis, baseOptions,CanvasTag){
+require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'gridstack', 'bootstrap'],function($, infovis, baseOptions,CanvasTag,CanvasTagOfImage){
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
 
@@ -76,7 +78,17 @@ require(['jquery', 'infovis', 'options','CanvasTag', 'gridstack', 'bootstrap'],f
                                 exportChart.resize();                                            //自适应窗口
                             });
                         }else{
-                            CanvasTag().render(ids[i],JSON.parse(data[i].jsCode));
+                            if(data[i].chartType.indexOf("subGroupOfImage") < 0){
+                                CanvasTag().render(ids[i],JSON.parse(data[i].jsCode));
+                            }else{
+                                var imgBase64 = JSON.parse(data[i].jsCode).image;
+                                var option = JSON.parse(data[i].jsCode);
+                                $("#"+ids[i]).parent().append([
+                                    '<img style="display: none" src=\'data:image/jpg;base64,'+imgBase64+'\' >'
+                                ].join(""));
+                                option.image = $("#"+ids[i]).parent().find("img")[0];
+                                CanvasTagOfImage().render(ids[i],"",option);
+                            }
                         }
                     }
                 }

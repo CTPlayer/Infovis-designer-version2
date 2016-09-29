@@ -362,11 +362,39 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 engine.render("textOptionContainer",option);
             },this);
         };
-    }
+    };
+    
+    var bindTableAndConfigOfSubGroup = function(id,option,engine){
+        return new function(){
+            var self = this;
+            self.subGroupText = ko.observable(option.text);
+            self.subGroupTextColor = ko.observable(option.textColor);
+            $("#subGroupTextColor").spectrum({
+               color: option.textColor,
+               change: function(color){
+                   self.subGroupTextColor(color.toHexString());
+               }
+            });
+            self.subGroupFontSize = ko.observable(option.textFont.split(" ")[1].replace("px",""));
+            self.subGroupImageWidth = ko.observable(option.width);
+            self.subGroupImageHeight = ko.observable(option.height);
+
+            ko.computed(function(){
+                option.text = self.subGroupText();
+                option.textColor = self.subGroupTextColor();
+                option.textFont = option.textFont.split(" ")[0] + " " +self.subGroupFontSize()+ "px " + option.textFont.split(" ")[2];
+                option.width = self.subGroupImageWidth();
+                option.height = self.subGroupImageHeight();
+
+                engine.render(id,"",option);
+            },this);
+        };
+    };
 
     return {
         bindTableAndConfigOfBarAndLine : bindTableAndConfigOfBarAndLine,
         bindTableAndConfigOfPie : bindTableAndConfigOfPie,
-        bindTableAndConfigOfText : bindTableAndConfigOfText
+        bindTableAndConfigOfText : bindTableAndConfigOfText,
+        bindTableAndConfigOfSubGroup : bindTableAndConfigOfSubGroup
     }
 });

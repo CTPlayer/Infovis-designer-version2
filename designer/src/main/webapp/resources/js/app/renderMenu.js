@@ -1,9 +1,9 @@
 /**
  * Created by ct on 2016/9/7.
  */
-define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel','zrender','CanvasTag',
+define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 'app/appViewModel','zrender','CanvasTag','CanvasTagOfImage',
     'bootstrap', 'gridstack', 'spectrum'],
-    function($, infovis, ko, kb, baseOptions, formatData, appViewModel,zrender,CanvasTag){
+    function($, infovis, ko, kb, baseOptions, formatData, appViewModel,zrender,CanvasTag,CanvasTagOfImage){
     /**
      * 渲染设计面板图表菜单
      * @param target
@@ -135,34 +135,47 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
             });
         }else{
             target.find('a').eq(1).click(function () {
-                $("#textOptionContainer").empty();
-                $("#textOptionPanel").empty();
+                    $("#textOptionContainer").empty();
+                    $("#textOptionPanel").empty();
 
-                var pzr = zrender.getInstance(target.attr("zid"));//原控件
-                var option = $.extend(true, {}, pzr.storage.getShapeList()[0].style);
+                    var pzr = zrender.getInstance(target.attr("zid"));//原控件
+                    var option = $.extend(true, {}, pzr.storage.getShapeList()[0].style);
 
-                $("#textOptionModal").unbind("shown.bs.modal");
-                $("#textOptionModal .btn-primary").unbind("click");
-                $("#textOptionModal").on("shown.bs.modal", function (e) {
-                    $("#textOptionPanel").html(formatData.tableAndConfigOfText);
-                    var canvasTag = CanvasTag().render("textOptionContainer",option);
-                    ko.applyBindings(appViewModel.bindTableAndConfigOfText(option, canvasTag), $("#textOptionPanel").children()[1]);  //开启双向绑定监听
-                });
-                $("#textOptionModal .btn-primary").on("click",function () {
-                    CanvasTag().render(target.attr("id"),option);
-                    $.ajax({
-                        type: 'POST',
-                        url: 'updateChartInfo',
-                        data: {
-                            'id': target.attr("chartId"),
-                            'jsCode': JSON.stringify(option)
-                        },
-                        error: function(){
-                            alert("保存时失败，请重试!");
+                    $("#textOptionModal").unbind("shown.bs.modal");
+                    $("#textOptionModal .btn-primary").unbind("click");
+                    $("#textOptionModal").on("shown.bs.modal", function (e) {
+                        $("#textOptionPanel").html(formatData.tableAndConfigOfText);
+                        if(charttype.indexOf("subGroupOfImage") < 0){
+                            var canvasTag = CanvasTag().render("textOptionContainer",option);
+                            ko.applyBindings(appViewModel.bindTableAndConfigOfText(option, canvasTag), $("#textOptionPanel").children()[1]);  //开启双向绑定监听
+                        }else{
+                            $("#textOptionPanel").find("#chartConfig").html(formatData.tableAndConfigOfSubGroup);
+                            option.image = target.parent().find("img")[0];
+                            var canvasTagOfImage = CanvasTagOfImage().render("textOptionContainer","",option);
+                            ko.applyBindings(appViewModel.bindTableAndConfigOfSubGroup("textOptionContainer",option,canvasTagOfImage),$("#textOptionPanel").children()[1]);
                         }
                     });
-                    renderMenu(target);
-                });
+                    $("#textOptionModal .btn-primary").on("click",function () {
+                        if(charttype.indexOf("subGroupOfImage") < 0){
+                            CanvasTag().render(target.attr("id"),option);
+                        }else{
+                            CanvasTagOfImage().render(target.attr("id"),"",option);
+                        }
+
+                        option.image = target.parent().find("img").attr("src").split(",")[1].replace('"','');
+                        $.ajax({
+                            type: 'POST',
+                            url: 'updateChartInfo',
+                            data: {
+                                'id': target.attr("chartId"),
+                                'jsCode': JSON.stringify(option)
+                            },
+                            error: function(){
+                                alert("保存时失败，请重试!");
+                            }
+                        });
+                        renderMenu(target);
+                    });
             });
         }
     };
