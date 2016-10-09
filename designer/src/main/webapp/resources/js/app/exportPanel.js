@@ -37,7 +37,8 @@ require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'gridsta
                 ids.push($(containers[i]).children().first().attr("id"));
             }
             var options = {
-                float: true
+                float: true,
+                vertical_margin: 0
             };
             $('.grid-stack').gridstack(options);
             

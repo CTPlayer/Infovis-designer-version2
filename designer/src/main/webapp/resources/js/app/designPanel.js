@@ -279,7 +279,6 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 vertical_margin: 0
             };
             $('.grid-stack').gridstack(options);
-            $(".grid-stack").resize(10);
 
             var grid = $('.grid-stack').data('gridstack');
 

@@ -285,13 +285,13 @@
                         </button>
                     </div>
                     <ul class="nav navbar-nav">
-                        <li>
+                        <li class="panel-default">
                             <a href="dataAnalysis.page?exportId=${exportId}"><span class="icon fa fa-plus"></span><span class="title">新建图表</span></a>
                         </li>
-                        <li>
+                        <li class="panel-default">
                             <a href="#" data-toggle="modal" data-target="#myChart"><span class="icon fa fa-area-chart"></span><span class="title">添加已有图表</span></a>
                         </li>
-                        <li>
+                        <li class="panel-default">
                             <a href="#"><span class="icon fa fa-magic"></span><span class="title">配色设置</span></a>
                         </li>
                         <li class="panel panel-default dropdown">
@@ -356,10 +356,10 @@
                                 </div>
                             </div>
                         </li>
-                        <li>
+                        <li class="panel-default">
                             <a href="#" data-toggle="modal" data-target="#subGroupModal"><span class="icon fa fa-cog"></span><span class="title">新建标题框</span></a>
                         </li>
-                        <li>
+                        <li class="panel-default">
                             <a href="#" data-toggle="modal" data-target="#mySubGroup"><span class="icon fa fa-archive"></span><span class="title">我的标题框</span></a>
                         </li>
                     </ul>
