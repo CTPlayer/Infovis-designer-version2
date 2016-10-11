@@ -160,9 +160,9 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
                             CanvasTag().render(target.attr("id"),option);
                         }else{
                             CanvasTagOfImage().render(target.attr("id"),"",option);
+                            option.image = target.parent().find("img").attr("src").split(",")[1].replace('"','');
                         }
 
-                        option.image = target.parent().find("img").attr("src").split(",")[1].replace('"','');
                         $.ajax({
                             type: 'POST',
                             url: 'updateChartInfo',

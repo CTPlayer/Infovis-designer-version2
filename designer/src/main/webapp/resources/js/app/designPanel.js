@@ -607,6 +607,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     }else{
                         if(data[i].chartType.indexOf("subGroupOfImage") < 0) {
                             CanvasTag().render(ids[i],JSON.parse(data[i].jsCode));
+                            renderMenu.renderMenu($("#"+ids[i]));
                         }else{
                             var imgBase64 = JSON.parse(data[i].jsCode).image;
                             var option = JSON.parse(data[i].jsCode);
