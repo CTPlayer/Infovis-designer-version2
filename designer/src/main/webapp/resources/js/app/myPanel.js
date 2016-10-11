@@ -45,6 +45,7 @@ require(['jquery'], function ($) {
                 $.ajax({
                     type: 'POST',
                     url: 'selectList',
+                    timeout: 30000,
                     data: {pageSize: 10,page: currentPage},
                     success: function(response){
                         $(document).bind('scroll', onScroll);
@@ -87,6 +88,9 @@ require(['jquery'], function ($) {
                                 }
                             }
                         });
+                    },
+                    error: function(){
+                        alert("数据获取超时，请重试。");
                     }
                 })
             },1000);
