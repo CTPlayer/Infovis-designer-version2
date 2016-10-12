@@ -18,6 +18,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             self.selectedFontStyle = ko.observable(title.textStyle.fontStyle);
             self.titleFontColor = ko.observable(title.textStyle.color);
             $("#titleFontColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: title.textStyle.color,
                 change: function(color) {
                     self.titleFontColor(color.toHexString());
@@ -36,6 +38,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             self.subselectedFontStyle = ko.observable(title.subtextStyle.fontStyle);
             self.subtitleFontColor = ko.observable(title.subtextStyle.color);
             $("#subtitleFontColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: title.subtextStyle.color,
                 change: function(color) {
                     self.subtitleFontColor(color.toHexString());
@@ -57,6 +61,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             self.selectedToolTipFontWeight = ko.observable(tooltip.textStyle.fontWeight);
             self.tooltipBorderColor = ko.observable(tooltip.borderColor);
             $("#tooltipBorderColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: tooltip.borderColor,
                 change: function(color) {
                     self.tooltipBorderColor(color.toHexString());
@@ -64,6 +70,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             });
             self.tooltipBackgroundColor = ko.observable(tooltip.backgroundColor);
             $("#tooltipBackgroundColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: tooltip.backgroundColor,
                 change: function(color) {
                     self.tooltipBackgroundColor(color.toHexString());
@@ -71,6 +79,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             });
             self.tooltipFontColor = ko.observable(tooltip.textStyle.color);
             $("#tooltipFontColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: tooltip.textStyle.color,
                 change: function(color) {
                     self.tooltipFontColor(color.toHexString());
@@ -156,6 +166,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             self.selectedFontStyle = ko.observable(title.textStyle.fontStyle);
             self.titleFontColor = ko.observable(title.textStyle.color);
             $("#titleFontColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: title.textStyle.color,
                 change: function(color) {
                     self.titleFontColor(color.toHexString());
@@ -174,6 +186,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             self.subselectedFontStyle = ko.observable(title.subtextStyle.fontStyle);
             self.subtitleFontColor = ko.observable(title.subtextStyle.color);
             $("#subtitleFontColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: title.subtextStyle.color,
                 change: function(color) {
                     self.subtitleFontColor(color.toHexString());
@@ -195,6 +209,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             self.selectedToolTipFontWeight = ko.observable(tooltip.textStyle.fontWeight);
             self.tooltipBorderColor = ko.observable(tooltip.borderColor);
             $("#tooltipBorderColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: tooltip.borderColor,
                 change: function(color) {
                     self.tooltipBorderColor(color.toHexString());
@@ -202,6 +218,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             });
             self.tooltipBackgroundColor = ko.observable(tooltip.backgroundColor);
             $("#tooltipBackgroundColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: tooltip.backgroundColor,
                 change: function(color) {
                     self.tooltipBackgroundColor(color.toHexString());
@@ -209,6 +227,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             });
             self.tooltipFontColor = ko.observable(tooltip.textStyle.color);
             $("#tooltipFontColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: tooltip.textStyle.color,
                 change: function(color) {
                     self.tooltipFontColor(color.toHexString());
@@ -240,6 +260,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             self.selectedLegendFontWeight = ko.observable(legend.textStyle.fontWeight);
             self.legendFontColor = ko.observable(legend.textStyle.color);
             $("#legendFontColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: legend.textStyle.color,
                 change: function(color) {
                     self.legendFontColor(color.toHexString());
@@ -326,6 +348,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             this.fontSize = ko.observable(option.textFont.split(" ")[1].replace("px",""));
 
             $("#textColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: option.textColor,
                 change: function(color) {
                     that.textColor(color.toHexString());
@@ -333,6 +357,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
             });
 
             $("#tagColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: option.color,
                 showAlpha: true,
                 change: function(color) {
@@ -343,6 +369,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
 
 
             $("#tagStrokeColor").spectrum({
+                showInput: true,
+                allowEmpty:true,
                 color: option.strokeColor,
                 showAlpha: true,
                 change: function(color) {
@@ -359,6 +387,8 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 option.textFont = option.textFont.split(" ")[0] + " " +this.fontSize() + "px " + option.textFont.split(" ")[2];
                 option.color = this.color();
                 option.strokeColor = this.strokeColor();
+                $("#textFontSize").text(this.fontSize());
+
                 engine.render("textOptionContainer",option);
             },this);
         };
@@ -370,10 +400,12 @@ define(['knockout', 'infovis'],function(ko, infovis){
             self.subGroupText = ko.observable(option.text);
             self.subGroupTextColor = ko.observable(option.textColor);
             $("#subGroupTextColor").spectrum({
-               color: option.textColor,
-               change: function(color){
+                showInput: true,
+                allowEmpty:true,
+                color: option.textColor,
+                change: function(color){
                    self.subGroupTextColor(color.toHexString());
-               }
+                }
             });
             self.subGroupFontSize = ko.observable(option.textFont.split(" ")[1].replace("px",""));
             self.subGroupImageWidth = ko.observable(option.width);
@@ -385,6 +417,7 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 option.textFont = option.textFont.split(" ")[0] + " " +self.subGroupFontSize()+ "px " + option.textFont.split(" ")[2];
                 option.width = self.subGroupImageWidth();
                 option.height = self.subGroupImageHeight();
+                $("#subGroupFontSize").text(self.subGroupFontSize());
 
                 engine.render(id,"",option);
             },this);
