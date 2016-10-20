@@ -32,6 +32,8 @@
     <link href="resources/css/dataAnalysis.css" rel="stylesheet">
 
     <link href="resources/css/customZtreeStyle.css" rel="stylesheet">
+    <!--jRange CSS-->
+    <link href="resources/js/lib/jRange/jquery.range.css" rel="stylesheet">
     <![endif]-->
 </head>
 
@@ -124,7 +126,7 @@
                             </div>
                             <div class="col-lg-6">
                                 <label class="col-sm-1 control-label">筛选</label>
-                                <div class="col-sm-11 labelDiv trigger-column column-filter" style="overflow: hidden;z-index:0"></div>
+                                <div class="col-sm-11 labelDiv column-filter" style="overflow: hidden;z-index:0"></div>
                             </div>
                         </div>
                     </form>

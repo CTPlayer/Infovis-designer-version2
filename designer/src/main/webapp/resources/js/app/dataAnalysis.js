@@ -13,7 +13,9 @@ require.config({
         "jqueryMd5": "lib/jquery.md5",
         "mousewheel": 'lib/mCustomScrollbar/jquery.mousewheel.min',
         "scrollbar" : 'lib/mCustomScrollbar/jquery.mCustomScrollbar.min',
-        "commonModule" : 'app/commonModule'
+        "commonModule" : 'app/commonModule',
+        "jrange" : 'lib/jRange/jquery.range',
+        "knockout": "lib/knockout/knockout-3.4.0",
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
@@ -25,7 +27,7 @@ require.config({
     waitSeconds: 30
 });
 
-require(['jquery', 'options', 'infovis', 'validate'], function($, baseOptions, infovis, validate){
+require(['jquery', 'options', 'infovis', 'validate', 'knockout'], function($, baseOptions, infovis, validate, ko){
     $(function(){
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
         var chartId = 0;              //chartId 对应myCharts表的主键，默认是0，即新建图表时，查询参数为0
@@ -264,11 +266,11 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
             "ring":false
         },
         "filter":{
-            "dataType": "",
-            "line":false,
-            "bar":false,
-            "pie":false,
-            "ring":false
+            "dataType": "all",
+            "line":true,
+            "bar":true,
+            "pie":true,
+            "ring":true
         },
         "color" :{
             "dataType": "text",
@@ -344,9 +346,46 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
     };
 
     /**
+     * 渲染过滤面板
+     * @param filterPanel  过滤面板
+     * @param targetText   当前过滤项的名字
+     */
+    var renderFilter = function(filterPanel,targetText,dragDataType){
+        filterPanel.find(".panel-heading").text(targetText);
+
+        commonModule.getFilterResult(chartType,window.sqlRecordingId,targetText,dragDataType,filterPanel);
+        $(".doFilter").unbind("click");
+        $(".doFilter").click(function(){
+            var filterContent = [];  //经过过滤的内容
+            /**
+             * 根据过滤栏中的所有过滤项组合过滤之后的内容
+             */
+            $(".column-filter").find("span").each(function(i){
+                var currentText = $(".column-filter").find("span").eq(i).text().trim();
+                var currentClass = $(".column-filter").children().eq(i).attr("class").toString();
+                if(currentClass.indexOf("trigger-column-tag-text") > 0){
+                    var filterParam = {};
+                    var checkedOptions = [];
+                    $("#"+currentText).find("input:checkbox:checked").each(function(){
+                        checkedOptions.push($(this).parent().text());
+                    });
+                    filterParam[currentText] = checkedOptions;
+                    filterContent.push(JSON.stringify(filterParam));
+                }else if(currentClass.indexOf("trigger-column-tag-number") > 0){
+                    var filterParam = {};
+                    filterParam[currentText] = $("#"+currentText).find(".slider-input").attr("value");
+                    filterContent.push(JSON.stringify(filterParam));
+                }
+            });
+
+            commonModule.renderChart(engine,chartType,window.sqlRecordingId,filterContent);
+        });
+    };
+
+    /**
      * 行、列数据渲染以及注册删除事件
      */
-    var appendRowColCellRender = function(tagType,target,targetText){
+    var appendRowColCellRender = function(tagType,target,targetText,dragDataType){
         var dataType = axisTagMap[tagType].dataType;
         var textContent = '<div class="trigger-column-tag trigger-column-tag-text">'+
             '<a><i class="glyphicon glyphicon-text-color" style="display: none;"></i>'+
@@ -356,11 +395,40 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
             '<a><i class="fa fa-sort-numeric-asc" style="display: none;"></i>'+
             '<span class="dragName">'+targetText+'</span><button type="button" class="close trigger-column-tag-close">&times;</button></a>'+
             '</div>';
+        var filterContent = '<div class="panel fresh-color panel-info col-sm-11" style="position: absolute;right:0px;z-index: 9999999" id='+targetText+'>'+
+            '<div class="panel-heading"></div>'+
+            '<div class="panel-body">'+
+            '</div>'+
+            '<button type="button" class="btn btn-info col-md-offset-10 doFilter">确认</button>'+
+            '</div>';
+        var filter = [];
+        for(var i=0;i<target.find("span").length;i++){
+            filter.push(target.find("span").eq(i).text().trim());
+        }
         if(dataType == 'number'){
             target.html(numberContent);
-        }
-        if(dataType == 'text'){
+        }else if(dataType == 'text'){
             target.html(textContent);
+        }else if(dataType == "all"){
+            if($.inArray(targetText,filter) == -1){
+                if(dragDataType == "text"){
+                    target.append(textContent);
+                }else if(dragDataType == "number"){
+                    target.append(numberContent);
+                }
+                var height = target.height();
+                $(".column-filter").parent().append(filterContent);
+                $("#"+targetText).css("top",height);
+
+                renderFilter($("#"+targetText),targetText,dragDataType);
+
+                $(document).mousedown(function(){
+                    $("#"+targetText).css("display","none");
+                });
+                $("#"+targetText).mousedown(function(event){
+                    event.stopPropagation();
+                });
+            }
         }
 
         /**
@@ -369,12 +437,36 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
         $('.trigger-column-tag .trigger-column-tag-close').click(function(){
             var target = $(this).parent().parent();
             target.remove();
+            $("#"+target.find("span").text().trim()).remove();
             if(window.sqlRecordingId){
-                commonModule.renderChart(engine,chartType,window.sqlRecordingId);
+                if(tagType == 'filter'){
+                    commonModule.getFilterResult(chartType,window.sqlRecordingId);
+                }else {
+                    commonModule.renderChart(engine,chartType,window.sqlRecordingId);
+                }
             }
         });
 
-    }
+        /**
+         * 点击显示过滤内容
+         */
+        $('.trigger-column-tag').unbind("click");
+        $('.trigger-column-tag').click(function(){
+            var currentText = $(this).find("span").text().trim();
+            if($("#"+currentText).css("display") == "block"){
+                $("#"+currentText).css("display","none");
+            }else if($("#"+currentText).css("display") == "none"){
+                $("#"+currentText).css("display","block");
+            }
+
+            $(document).mousedown(function(){
+                $("#"+currentText).css("display","none");
+            });
+            $("#"+currentText).mousedown(function(event){
+                event.stopPropagation();
+            });
+        });
+    };
 
     /**获取tag图标class**/
     var getTagIclassType = function(tagType) {
@@ -416,8 +508,8 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
                 restoreTagStyle(target);
             }
         }else{
-            if(chartType == '' || ((acceptDataType == dragDataType)&&isAcceptChartType)){
-                appendRowColCellRender(tagType,target,targetNodeText);
+            if(chartType == '' || ((acceptDataType == dragDataType)&&isAcceptChartType) || acceptDataType == "all"){
+                appendRowColCellRender(tagType,target,targetNodeText,dragDataType);
                 isRenderChart = true;
             }
         }
@@ -430,12 +522,12 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
     var tagDropOverRender = function(chartType,tagType,target,dataType) {
         var acceptdataType = axisTagMap[tagType].dataType;
         var isAcceptChartType = axisTagMap[tagType][chartType];
-        if(!isAcceptChartType || acceptdataType!= dataType){
-            target.css("border","1px dashed #ff2828");
-            target.css("background-color","#ffeeee");
-        }else if(acceptdataType == dataType && isAcceptChartType){
+        if((acceptdataType == dataType && isAcceptChartType) || acceptdataType == "all"){
             target.css("border","1px dashed #22a7f0");
             target.css("background-color","#cfe9f7");
+        }else if(!isAcceptChartType || acceptdataType!= dataType){
+            target.css("border","1px dashed #ff2828");
+            target.css("background-color","#ffeeee");
         }
     };
 
@@ -697,6 +789,26 @@ require(['jquery','ztree','infovis','options', 'commonModule', 'mousewheel','scr
                             }
                         });
 
+                        /**
+                         * 筛选tag
+                         */
+                        $("form.make-model-region .column-filter").droppable({
+                            drop: function (event, ui) {
+                                var tagType = axisTagType($(this));
+                                var targetNodeText = $(ui.draggable).find("a").find("span").html();
+                                var isRenderChart = tagDropRender(targetNodeText,tagType,$(this),dragUIDataType(ui),chartType);
+                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("background-color","white");
+                            },
+                            over: function (event, ui) {
+                                var dragTextType = dragUIDataType(ui);
+                                tagDropOverRender(chartType,axisTagType($(this)),$(this),dragTextType);
+                            },
+                            out:function (event,ui) {
+                                $(this).css("border","1px dashed #ccc");
+                                $(this).css("background-color","white");
+                            }
+                        });
                     });
                 }
             }

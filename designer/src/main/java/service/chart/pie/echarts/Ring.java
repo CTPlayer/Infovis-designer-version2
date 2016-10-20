@@ -2,12 +2,14 @@ package service.chart.pie.echarts;
 
 import com.github.abel533.echarts.Option;
 import com.github.abel533.echarts.code.Trigger;
+import common.util.TemplateUtil;
 import model.chart.ChartBuilderParams;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import service.chart.ChartOption;
+import service.chart.ChartsUtil;
 import service.system.helper.DataSetProvider;
 
 import javax.annotation.Resource;
@@ -22,9 +24,14 @@ public class Ring implements ChartOption{
     @Resource
     private DataSetProvider dataSetProvider;
 
+    @Resource
+    private ChartsUtil chartsUtil;
+
     @Override
     public Option transform(final ChartBuilderParams chartBuilderParams) throws Exception {
         List<Map<String, Object>> dataSet = dataSetProvider.prepareDataSet(chartBuilderParams);
+
+        chartsUtil.dataFilter(dataSet,chartBuilderParams,"ring");
 
         // 拆分数据, 结构化
         Option option = new Option();

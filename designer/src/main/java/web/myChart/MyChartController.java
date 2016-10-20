@@ -1,11 +1,14 @@
 package web.myChart;
 
+import model.chart.ChartBuilderParams;
 import model.myPanel.MyCharts;
 import model.myPanel.PanelChartsWrapper;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import service.chart.ChartsUtil;
 import service.myPanel.MyChartsService;
 import service.myPanel.PanelChartsWrapperService;
 
@@ -26,6 +29,9 @@ public class MyChartController {
 
     @Resource
     private PanelChartsWrapperService panelChartsWrapperService;
+
+    @Resource
+    private ChartsUtil chartsUtil;
 
     @RequestMapping("/crud")
     @ResponseBody
@@ -69,5 +75,20 @@ public class MyChartController {
             resMap.put("isDelete",true);
         }
         return resMap;
+    }
+
+    /**
+     * 获取筛选字段的信息
+     *
+     * @param chartBuilderParams
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/getFilterResult")
+    @ResponseBody
+    public Object getFilterResult(@RequestBody ChartBuilderParams chartBuilderParams) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("filterResult",chartsUtil.getFilterResult(chartBuilderParams));
+        return map;
     }
 }

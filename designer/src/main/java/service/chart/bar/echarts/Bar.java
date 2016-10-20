@@ -22,6 +22,7 @@ import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import service.chart.ChartOption;
+import service.chart.ChartsUtil;
 import service.system.helper.DataSetProvider;
 
 import javax.annotation.Resource;
@@ -41,10 +42,15 @@ public class Bar implements ChartOption {
     @Resource
     private DataSetProvider dataSetProvider;
 
+    @Resource
+    private ChartsUtil chartsUtil;
+
     @Override
     public Option transform(final ChartBuilderParams chartBuilderParams) throws Exception {
 
         List<Map<String, Object>> dataSet = dataSetProvider.prepareDataSet(chartBuilderParams);
+
+        chartsUtil.dataFilter(dataSet,chartBuilderParams,"bar");
 
         // 拆分数据, 结构化
         Option option = new Option();

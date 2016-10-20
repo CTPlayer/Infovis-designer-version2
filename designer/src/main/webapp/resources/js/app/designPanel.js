@@ -158,7 +158,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                     $("#subGroupConfig").children().eq(1).html(formatData.tableAndConfigOfSubGroup());
                                     ko.cleanNode($("#subGroupConfig").children()[1]);     //解除之前的绑定
                                     ko.applyBindings(appViewModel.bindTableAndConfigOfSubGroup("subGroupContainer",canvasTagOfImage.getOption(),canvasTagOfImage),$("#subGroupConfig").children()[1]);
-                                },1000);
+                                },500);
                                 window.subGroupBase64 = data.imgBase64;
                             }
                         },
