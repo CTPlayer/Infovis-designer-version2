@@ -180,7 +180,40 @@ define(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', '
         }
     };
 
+    var renderFailMenu = function(target){
+        target.append('<div id="operate" style="width:100%;height:0px;background-color:rgb(53,61,71);position:absolute;top:0px;opacity:0.8">' +
+            '<span style="display:none;">' +
+            '<span id="chartTitle"></span>' +
+            '<a href="#"><i class="glyphicon glyphicon-remove" style="color: white"></i></a>' +
+            '</span>' +
+            '</div>');
+
+        target.on('mouseenter mouseleave',function(e){
+            var target = $("#operate",$(this));
+            if(e.type == 'mouseenter'){
+                target.stop();
+                target.children().css("display","block");
+                target.animate({height:'40px'});
+            }else if(e.type == 'mouseleave'){
+                target.stop();
+                target.children().css("display","none");
+                if(target.css('height') != '0px') {
+                    target.animate({height: "0"});
+                }
+            }
+        });
+
+        //删除当前容器
+        target.find('a').eq(0).click(function(){
+            $("title").html("*Infovis-Designer");                                     //改动标记
+            window.isSave = false;
+            var area = $(this).parent().parent().parent();
+            $(area).parent().remove();
+        });
+    };
+
     return {
-        renderMenu : renderMenu
+        renderMenu : renderMenu,
+        renderFailMenu : renderFailMenu
     }
 });

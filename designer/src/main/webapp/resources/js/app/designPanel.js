@@ -331,6 +331,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                 },
                                 error: function(){
                                     $("#"+order).text("当前图表渲染失败，请检查数据库连接是否正常。");
+                                    renderMenu.renderFailMenu($("#"+order));
                                 }
                             });
                         }
@@ -394,6 +395,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                     },
                                     error: function(){
                                         $("#"+order).text("当前图表渲染失败，请检查数据库连接是否正常。");
+                                        renderMenu.renderFailMenu($("#"+order));
                                     }
                                 });
                             }
@@ -454,6 +456,9 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 $("#subGroupModal").modal('toggle');
             });
 
+            /**
+             * 自适应容器变化
+             */
             $(".grid-stack").on("resizestop",function(event,ui){
                 $("title").html("*Infovis-Designer");                                     //改动标记
                 window.isSave = false;
@@ -469,10 +474,18 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 }else {
                     var id = ui.element[0].firstChild.getAttribute("id");
                     engine.chart.getInstanceByDom(document.getElementById(id)).resize();
-                    window.addEventListener("resize", function () {
-                        engine.chart.getInstanceByDom(document.getElementById(id)).resize();
-                    });
                 }
+            });
+
+            /**
+             * 自适应窗口变化
+             */
+            window.addEventListener("resize", function () {
+                $(".grid-stack-item-content").each(function(index,item){
+                    if($(item).attr("chartType").indexOf("text") < 0){
+                        engine.chart.getInstanceByDom(item).resize();
+                    }
+                });
             });
 
             $(".grid-stack").on("dragstop",function(event,ui){
@@ -601,6 +614,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                 },
                                 error: function(){
                                     $("#" + ids[i]).text("当前图表渲染失败，请检查数据库连接是否正常。");
+                                    renderMenu.renderFailMenu($("#" + ids[i]));
                                 }
                             });
                         }
