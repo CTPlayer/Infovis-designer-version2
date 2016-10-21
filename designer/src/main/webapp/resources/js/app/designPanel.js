@@ -416,6 +416,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     renderSelected(this);
                 });
                 $("#mySubGroup").modal('toggle');
+                $("#mySubGroup").find(".thumbnail").removeClass("selected");
             });
 
             /**
@@ -525,6 +526,8 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         $(".loader-container").css("display","none");
                     },
                     error : function(){
+                        $(".app-container").removeClass("loader");
+                        $(".loader-container").css("display","none");
                         alert("保存失败，请重试！");
                     }
                 });
