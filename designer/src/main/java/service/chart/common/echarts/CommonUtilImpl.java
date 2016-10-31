@@ -110,4 +110,37 @@ public class CommonUtilImpl implements ChartsUtil {
                 break;
         }
     }
+
+    @Override
+    public List<Map<String, Object>> getChartResult(final ChartBuilderParams chartBuilderParams) throws Exception {
+//        String chartType = chartBuilderParams.getChartType().toString();
+        List<Map<String, Object>> dataSet = dataSetProvider.prepareDataSet(chartBuilderParams);
+//        Collection<Object> chartData = null;
+//        if(chartType.equals("bar") || chartType.equals("line")){
+//            chartData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Object>() {
+//                @Override
+//                public Object transform(Map<String, Object> input) {
+//                    Map<String, Object> transformData = new HashMap<>();
+//                    Object v1 = input.get(chartBuilderParams.getBuilderModel().getxAxis().get(0));
+//                    Object v2 = input.get(chartBuilderParams.getBuilderModel().getyAxis().get(0));
+//                    transformData.put(chartBuilderParams.getBuilderModel().getxAxis().get(0), v1);
+//                    transformData.put(chartBuilderParams.getBuilderModel().getyAxis().get(0), v2);
+//                    return transformData;
+//                }
+//            });
+//        }else if(chartType.equals("pie") || chartType.equals("line")){
+//            chartData = CollectionUtils.collect(dataSet, new Transformer<Map<String, Object>, Object>() {
+//                @Override
+//                public Object transform(Map<String, Object> input) {
+//                    Map<String, Object> transformData = new HashMap<>();
+//                    Object v1 = input.get(chartBuilderParams.getBuilderModel().getMark().getColor());
+//                    Object v2 = input.get(chartBuilderParams.getBuilderModel().getMark().getAngle());
+//                    transformData.put(chartBuilderParams.getBuilderModel().getMark().getColor(), v1);
+//                    transformData.put(chartBuilderParams.getBuilderModel().getMark().getAngle(), v2);
+//                    return transformData;
+//                }
+//            });
+//        }
+        return dataSet;
+    }
 }

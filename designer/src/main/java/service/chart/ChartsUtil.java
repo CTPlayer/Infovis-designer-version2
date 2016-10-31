@@ -31,4 +31,12 @@ public interface ChartsUtil {
      * @throws Exception
      */
     void dataFilter(List<Map<String, Object>> dataSet, ChartBuilderParams chartBuilderParams, String chartType) throws Exception;
+
+    /**
+     * 获取图表构成数据
+     * @param chartBuilderParams
+     * @return
+     * @throws Exception
+     */
+    List<Map<String, Object>> getChartResult(ChartBuilderParams chartBuilderParams) throws Exception;
 }

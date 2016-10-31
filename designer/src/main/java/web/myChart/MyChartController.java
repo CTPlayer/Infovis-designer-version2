@@ -1,6 +1,7 @@
 package web.myChart;
 
 import model.chart.ChartBuilderParams;
+import model.connectionManage.SqlRecordingManage;
 import model.myPanel.MyCharts;
 import model.myPanel.PanelChartsWrapper;
 import org.springframework.stereotype.Controller;
@@ -9,13 +10,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import service.chart.ChartsUtil;
+import service.connectionManage.SqlRecordingManageService;
 import service.myPanel.MyChartsService;
 import service.myPanel.PanelChartsWrapperService;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Create time : 2016-09-09
@@ -32,6 +32,9 @@ public class MyChartController {
 
     @Resource
     private ChartsUtil chartsUtil;
+
+    @Resource
+    private SqlRecordingManageService sqlRecordingManageService;
 
     @RequestMapping("/crud")
     @ResponseBody
@@ -90,5 +93,29 @@ public class MyChartController {
         Map<String, Object> map = new HashMap<>();
         map.put("filterResult",chartsUtil.getFilterResult(chartBuilderParams));
         return map;
+    }
+
+    /**
+     * 多图表获取字段的信息
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/getFilterResults")
+    @ResponseBody
+    public Object getFilterResults(@RequestBody List<ChartBuilderParams> list) throws Exception{
+        Map<String, Object> map01 = new HashMap<>();
+        Map<String, Object> map02 = new HashMap<>();
+        for(int i=0;i<list.size();i++){
+            map01.put(list.get(i).getDataRecordId(), chartsUtil.getChartResult(list.get(i)));
+        }
+        Set<String> keySet = map01.keySet();
+        for(String s : keySet){
+            SqlRecordingManage sqlRecordingManage = new SqlRecordingManage();
+            sqlRecordingManage.setId(s);
+            String recordingName = sqlRecordingManageService.queryAsObject(sqlRecordingManage).getRecordingName().toString();
+            map02.put(recordingName, map01.get(s));
+        }
+        return map01;
     }
 }

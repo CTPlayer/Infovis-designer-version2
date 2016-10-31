@@ -61,10 +61,6 @@ define(function(){
                                 '<label >内容&nbsp;&nbsp;</label>',
                                 '<input class="form-control" data-bind="value: subtitleContent, valueUpdate: \'keyup\'">',
                                 '</div>',
-                                // '<div class="form-group form-group-sm">',
-                                // '<label >子标题相对于主标题位置&nbsp;&nbsp;</label>',
-                                // '<select class="form-control" data-bind="options: subtitleLocation, value: subselectedLocation, valueUpdate: \'keyup\'"></select>',
-                                // '</div>',
                                 '<div class="form-group form-group-sm">',
                                 '<label >字体&nbsp;&nbsp;</label>',
                                 '<select class="form-control" data-bind="options: subtitleFontFamily, value: subselectedFontFamily, valueUpdate: \'keyup\'"></select>',
@@ -146,6 +142,12 @@ define(function(){
                                 '<tr>',
                                 '<td class="col-md-3">轴标签旋转</td><td><input type="range" id="xRotate" min="-90" max="90" data-bind="value: xRotate, valueUpdate: \'input\'"/></td>',
                                 '</tr>',
+                                '<tr>',
+                                '<div class="form-group form-group-sm">',
+                                '<label >内容&nbsp;&nbsp;</label>',
+                                '<input class="form-control" data-bind="value: yAxisContent, valueUpdate: \'keyup\'">',
+                                '</div>',
+                                '</tr>',
                                 '</table>',
                                 '</div>',
                                 '</div>',
@@ -154,7 +156,6 @@ define(function(){
                         '</div>',
                         '</div>',
                         '</div>'].join("");
-
         return table;
     };
 

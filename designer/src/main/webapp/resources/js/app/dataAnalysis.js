@@ -126,7 +126,7 @@ require(['jquery', 'options', 'infovis', 'validate', 'knockout'], function($, ba
                         url: 'updateChartInfo',
                         data : {
                             'id': chartId,
-                            'chartType': window.cType,
+                            'chartType': engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption().series[0].type,
                             'sqlRecordingId': window.sqlRecordingId,
                             'buildModel': JSON.stringify(window.bmodel),
                             'jsCode': JSON.stringify(engine.chart.getInstanceByDom(document.getElementById("editArea")).getOption()),

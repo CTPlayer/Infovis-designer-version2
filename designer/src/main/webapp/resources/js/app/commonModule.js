@@ -83,10 +83,14 @@ define(['jquery','knockout','jrange'], function($,ko){
                         '<div class="row textContainer" style="margin-left:30px;height: 100px;overflow: auto">',
                         '</div>'
                     ].join(""));
-                    for(var i=0;i<data.filterResult.length;i++){
+                    var numberResult = [];
+                    for(var i=0;i<data.filterResult.length;i++) {
+                        numberResult.push(data.filterResult[i][targetText]);
+                    }
+                    for(var i=0;i<$.unique(numberResult).length;i++){
                         filterPanel.find(".textContainer").append('<div class="checkbox3 checkbox-inline checkbox-check checkbox-light">'+
                             '<input type="checkbox" id="checkbox-fa-light-'+i+targetText+'" checked="">'+
-                            '<label for="checkbox-fa-light-'+i+targetText+'" style="padding-left: 30px;line-height: 25px;">'+data.filterResult[i][targetText]+
+                            '<label for="checkbox-fa-light-'+i+targetText+'" style="padding-left: 30px;line-height: 25px;">'+$.unique(numberResult)[i]+
                             '</label>'+
                             '</div>');
                     }
