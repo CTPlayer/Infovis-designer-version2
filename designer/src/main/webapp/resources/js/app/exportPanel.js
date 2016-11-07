@@ -107,6 +107,7 @@ require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'jrange'
             });
 
             var chartBuilderParams = [];
+            var chartTitle = [];     // 保存每张图表option中的title
             $(".filterIcon").click(function(){
                 $(".loader-container").css("display","block");
                 var deffer01 = $.ajax({
@@ -118,6 +119,7 @@ require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'jrange'
                 deffer01.done(function(data){
                     for(var i=0;i<cids.length;i++){
                         if(data[i].chartType.indexOf("text") < 0) {
+                            chartTitle.push(JSON.parse(data[i].jsCode).title[0].text);
                             chartBuilderParams.push({chartType : data[i].chartType, dataRecordId : data[i].sqlRecordingId, builderModel : JSON.parse(data[i].buildModel)});
                         }
                     }
@@ -132,23 +134,24 @@ require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'jrange'
                 deffer02.done(function(data){
                     $(".loader-container").css("display","none");
                     var order = 0;                // checkbox id参数 slider-input id参数
+                    $("#accordion").append(['<div style="margin-bottom: 40px;"><span class="btn btn-success col-md-6">按数据集筛选</span><span class="btn btn-info col-md-6">按图表筛选</span></div><div id="dataSet"></div><div id="chartsInfo" style="display: none"></div>'].join(''));
                     for(var key in data){
-                        $("#accordion").append(['<div class="panel panel-default">',
+                        $("#dataSet").append([
+                            '<div class="panel panel-default">',
                             '<div class="panel-heading" role="tab" id="heading'+key+'">',
                             '<h4 class="panel-title">',
-                            '<a data-toggle="collapse" data-parent="#accordion" href="#collapse'+key+'" aria-expanded="true" aria-controls="collapseOne">数据集编号:',
-                            key,
+                            '<a data-toggle="collapse" data-parent="#dataSet" href="#collapse'+key+'" aria-expanded="true" aria-controls="#collapse'+key+'">',
                             '</a>',
                             '</h4>',
                             '</div>',
-                            '<div id="collapse'+key+'" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading'+key+'">',
+                            '<div id="collapse'+key+'" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading'+key+'">',
                             '<div class="panel-body">',
                             '</div>',
                             '<button type="button" class="btn btn-success">确认</button>',
                             '</div>',
                             '</div>'].join(''));
                         for(var item in data[key][0]) {
-                            if(currentField.indexOf(item) >= 0) {
+                            if($.inArray(item,currentField) >= 0) {
                                 var value = [];           // 保存数值项
                                 for (var i = 0; i < data[key].length; i++) {
                                     value.push(data[key][i][item]);
@@ -217,39 +220,152 @@ require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'jrange'
                             });
                             for(var i=0;i<containerAndModel.length;i++){
                                 if(containerAndModel[i].model.dataRecordId == sqlId){
-                                    if("filter" in containerAndModel[i].model.builderModel){
-                                        containerAndModel[i].model.builderModel.filter = filter[sqlId];
-                                        var id = containerAndModel[i].id;
-                                        $.ajax({
-                                            type: 'POST',
-                                            async: false,
-                                            contentType: "application/json; charset=utf-8",
-                                            url: 'render',
-                                            data: JSON.stringify(containerAndModel[i].model),
-                                            success: function(data){
-                                                var editChart = engine.chart.getInstanceByDom(document.getElementById(id));
-                                                editChart.setOption(data,true);
-                                            }
-                                        });
-                                    }else {
-                                        containerAndModel[i].model.builderModel.filter = filter[sqlId];
-                                        var id = containerAndModel[i].id;
-                                        $.ajax({
-                                            type: 'POST',
-                                            async: false,
-                                            contentType: "application/json; charset=utf-8",
-                                            url: 'render',
-                                            data: JSON.stringify(containerAndModel[i].model),
-                                            success: function(data){
-                                                var editChart = engine.chart.getInstanceByDom(document.getElementById(id));
-                                                editChart.setOption(data,true);
-                                            }
-                                        });
-                                    }
+                                    containerAndModel[i].model.builderModel.filter = filter[sqlId];
+                                    var id = containerAndModel[i].id;
+                                    $.ajax({
+                                        type: 'POST',
+                                        async: false,
+                                        contentType: "application/json; charset=utf-8",
+                                        url: 'render',
+                                        data: JSON.stringify(containerAndModel[i].model),
+                                        success: function(data){
+                                            var editChart = engine.chart.getInstanceByDom(document.getElementById(id));
+                                            editChart.setOption(data,true);
+                                        }
+                                    });
                                 }
                             }
                         });
                     }
+
+                    $("#accordion").find("span").eq(0).click(function(){
+                        $("#dataSet").css("display","block");
+                        $("#chartsInfo").css("display","none");
+                    });
+                    var isRender = false;    //每一个图表的可过滤项是否渲染完成
+                    $("#accordion").find("span").eq(1).click(function(){
+                        if(isRender == false){
+                            var deffer03 = $.ajax({
+                               type: 'POST',
+                               contentType: "application/json; charset=utf-8",
+                               url: 'myChart/getFilterResultOfList',
+                               data: JSON.stringify(chartBuilderParams)
+                            });
+                            deffer03.done(function(data){
+                                for(var i=0;i<data.length;i++){
+                                    $("#chartsInfo").append(
+                                        [
+                                            '<div class="panel panel-default">',
+                                            '<div class="panel-heading" role="tab" id="headingChart'+i+'">',
+                                            '<h4 class="panel-title">',
+                                            '<a data-toggle="collapse" data-parent="#chartsInfo" href="#collapseChart'+i+'" aria-expanded="true" aria-controls="#collapseChart'+i+'">',
+                                            chartTitle[i],
+                                            '</a>',
+                                            '</h4>',
+                                            '</div>',
+                                            '<div id="collapseChart'+i+'" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingChart'+i+'">',
+                                            '<div class="panel-body">',
+                                            '</div>',
+                                            '<button type="button" class="btn btn-success">确认</button>',
+                                            '</div>',
+                                            '</div>'
+                                        ].join('')
+                                    );
+                                    var usedField = [];   //每个图表用到的字段
+                                    if(chartBuilderParams[i].chartType == 'bar' || chartBuilderParams[i].chartType == 'line'){
+                                        usedField.push(chartBuilderParams[i].builderModel.xAxis[0]);
+                                        usedField.push(chartBuilderParams[i].builderModel.yAxis[0]);
+                                    }else if(chartBuilderParams[i].chartType == 'pie' || chartBuilderParams[i].chartType == 'ring'){
+                                        usedField.push(chartBuilderParams[i].builderModel.mark.angle);
+                                        usedField.push(chartBuilderParams[i].builderModel.mark.color);
+                                    }
+                                    for(var item in data[i][0]){
+                                        if($.inArray(item,usedField) >= 0){
+                                            var value = [];   // 保存数据项
+                                            for(var k=0;k<data[i].length;k++){
+                                                value.push(data[i][k][item]);
+                                            }
+                                            var hasText = false;     // 判断是否有文字
+                                            for (var j = 0; j < value.length; j++) {
+                                                if (isNaN(value[j])) {
+                                                    hasText = true;
+                                                }
+                                            }
+                                            if (hasText == false) {
+                                                $("#collapseChart" + i).find(".panel-body").append('<div class="row number" id=charts' + i + item + ' style="margin-top: 20px;margin-left: 5px;"><div style="margin-left: 5px;margin-bottom: 15px;"><div>' + item + '</div></div></div>');
+                                                var min = Math.min.apply(null, value);
+                                                var max = Math.max.apply(null, value);
+                                                $("#charts" + i + item).append('<input type="hidden" id="slider' + order + '" class="slider-input" value="' + min + "," + max + '"/>');
+                                                $('#slider' + order).jRange({
+                                                    from: min,
+                                                    to: max,
+                                                    scale: [min, max],
+                                                    step: 1,
+                                                    format: '%s',
+                                                    width: $("#accordion").width() - 55,
+                                                    showLabels: true,
+                                                    isRange: true
+                                                });
+                                                order++;
+                                            }else {
+                                                $("#collapseChart" + i).find(".panel-body").append('<div class="row text" id=charts' + i + item + ' style="margin-top: 20px;margin-left: 5px;"><div style="margin-left: 5px;margin-bottom: 15px;"><div>' + item + '</div></div></div>');
+                                                for (var j = 0; j < $.unique(value).length; j++) {
+                                                    $("#charts" + i + item).append([
+                                                        '<div class="checkbox3 checkbox-inline checkbox-check checkbox-light">',
+                                                        '<input type="checkbox" id="checkbox-fa-light-1' + order + '" checked="">',
+                                                        '<label for="checkbox-fa-light-1' + order + '">',
+                                                        $.unique(value)[j],
+                                                        '</label>',
+                                                        '</div>'
+                                                    ].join(''));
+                                                    order++;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    //为过滤项绑定事件
+                                    $("#collapseChart"+i).find(".btn-success").click(function(){
+                                        var chartId = $(this).parent().prev().attr("id").replace("headingChart","").trim();
+                                        filter[chartId] = [];
+                                        $(this).prev().find(".row").each(function(){
+                                            var fieldName = $(this).children().eq(0).text().trim();
+                                            var fieldFilter = [];
+                                            if($(this).hasClass("text")){
+                                                $(this).find("input:checkbox:checked").each(function(){
+                                                    fieldFilter.push($(this).next().text());
+                                                });
+                                                var filterParam = {};
+                                                filterParam[fieldName] = fieldFilter;
+                                                filter[chartId].push(JSON.stringify(filterParam));
+                                            }else if($(this).hasClass("number")){
+                                                var filterParam = {};
+                                                filterParam[fieldName] = $(this).find("input").val();
+                                                filter[chartId].push(JSON.stringify(filterParam));
+                                            }
+                                        });
+                                        containerAndModel[chartId].model.builderModel.filter = filter[chartId];
+                                        var id = containerAndModel[chartId].id;
+                                        $.ajax({
+                                            type: 'POST',
+                                            async: false,
+                                            contentType: "application/json; charset=utf-8",
+                                            url: 'render',
+                                            data: JSON.stringify(containerAndModel[chartId].model),
+                                            success: function(data){
+                                                var editChart = engine.chart.getInstanceByDom(document.getElementById(id));
+                                                data.title = editChart.getOption().title[0];
+                                                editChart.setOption(data,true);
+                                            }
+                                        });
+                                    });
+                                }
+                                isRender = true;
+                            });
+                        }
+                        $("#dataSet").css("display","none");
+                        $("#chartsInfo").css("display","block");
+                    });
                 }).fail(function(){
                     $(".loader-container").css("display","none");
                     $("#accordion").html("筛选控件加载失败请刷新网页重试！");

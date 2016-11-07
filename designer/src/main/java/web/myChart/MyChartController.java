@@ -96,6 +96,25 @@ public class MyChartController {
     }
 
     /**
+     * 接受一组ChartBuilderParams，并返回筛选过滤信息
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/getFilterResultOfList")
+    @ResponseBody
+    public Object getFilterResultOfList(@RequestBody List<ChartBuilderParams> list) throws Exception {
+        List result = new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("filterResult",chartsUtil.getChartResult(list.get(i)));
+//            maps.add(map);
+            result.add(chartsUtil.getChartResult(list.get(i)));
+        }
+        return result;
+    }
+
+    /**
      * 多图表获取字段的信息
      * @param list
      * @return
@@ -105,17 +124,17 @@ public class MyChartController {
     @ResponseBody
     public Object getFilterResults(@RequestBody List<ChartBuilderParams> list) throws Exception{
         Map<String, Object> map01 = new HashMap<>();
-        Map<String, Object> map02 = new HashMap<>();
+//        Map<String, Object> map02 = new HashMap<>();
         for(int i=0;i<list.size();i++){
             map01.put(list.get(i).getDataRecordId(), chartsUtil.getChartResult(list.get(i)));
         }
-        Set<String> keySet = map01.keySet();
-        for(String s : keySet){
-            SqlRecordingManage sqlRecordingManage = new SqlRecordingManage();
-            sqlRecordingManage.setId(s);
-            String recordingName = sqlRecordingManageService.queryAsObject(sqlRecordingManage).getRecordingName().toString();
-            map02.put(recordingName, map01.get(s));
-        }
+//        Set<String> keySet = map01.keySet();
+//        for(String s : keySet){
+//            SqlRecordingManage sqlRecordingManage = new SqlRecordingManage();
+//            sqlRecordingManage.setId(s);
+//            String recordingName = sqlRecordingManageService.queryAsObject(sqlRecordingManage).getRecordingName().toString();
+//            map02.put(recordingName, map01.get(s));
+//        }
         return map01;
     }
 }
