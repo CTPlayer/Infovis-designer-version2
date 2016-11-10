@@ -33,9 +33,6 @@ public class MyChartController {
     @Resource
     private ChartsUtil chartsUtil;
 
-    @Resource
-    private SqlRecordingManageService sqlRecordingManageService;
-
     @RequestMapping("/crud")
     @ResponseBody
     public Object crud(@RequestHeader(required = true) String oper, MyCharts myCharts) throws Exception {

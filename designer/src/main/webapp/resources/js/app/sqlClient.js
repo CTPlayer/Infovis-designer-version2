@@ -15,7 +15,8 @@ require.config({
         "underscore": "lib/underscore/underscore-min",
         "bootpag": "lib/bootpag/jquery.bootpag.min",
         "confirmModal": "lib/confirm/confirm-bootstrap",
-        "jquery-steps" : "lib/jquery.steps/jquery.steps.min"
+        "jquery-steps" : "lib/jquery.steps/jquery.steps.min",
+        "jquery-confirm": "lib/confirm/jquery-confirm.min"
     },
     shim : {
         "ztree" : { "deps" :['jquery'] },
@@ -77,7 +78,8 @@ require([
     'DT-bootstrap',
     'bootpag',
     'confirmModal',
-    'jquery-steps'],
+    'jquery-steps',
+    'jquery-confirm'],
     function($,bootstrap,jquery_ui,jquery_ayout,ztree,validate,ko,bo,kb,dataTables,DT_bootstrap,bootpag){
     $(function(){
         var outerLayout = $('body').layout({
@@ -592,6 +594,10 @@ require([
                     $(form)[0].reset();
                     $("#saveQuerySqlModal").modal('toggle');
                     $.fn.zTree.init($("#dataListTree"),setting_datalist);
+                    $.dialog({
+                        title: '提示',
+                        content: '保存成功！'
+                    });
                 })
             }
         });

@@ -194,6 +194,23 @@ public class DefaultController {
         return myChartsService.update(myCharts);
     }
 
+    /**
+     * 批量更新图表信息
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/updateChartsInfo")
+    @ResponseBody
+    public Object updateChartsInfo(@RequestBody List<MyCharts> list) throws Exception {
+        Map<String, Object> resMap = new HashMap<>();
+        for(MyCharts myCharts : list){
+            myChartsService.update(myCharts);
+        }
+        resMap.put("success", true);
+        return resMap;
+    }
+
     @RequestMapping("/selectOneChartInfo")
     @ResponseBody
     public Object selectOneChartInfo(MyCharts myCharts) throws Exception {

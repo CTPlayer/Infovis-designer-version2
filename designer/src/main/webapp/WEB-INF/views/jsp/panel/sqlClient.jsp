@@ -29,7 +29,8 @@
     <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/css/themes/flat-blue.css">
     <!--custom ztree css-->
     <link href="resources/css/customZtreeStyle.css" rel="stylesheet">
-
+    <!--jquery-confirm css-->
+    <link href="resources/css/jquery-confirm.min.css" rel="stylesheet">
     <!--steps-->
     <link href="resources/js/lib/jquery.steps/jquery.steps.css" rel="stylesheet">
 

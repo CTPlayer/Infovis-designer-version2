@@ -224,6 +224,9 @@
             text-overflow:ellipsis;
         }
 
+        #dropdown-theme-choose li{
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -291,8 +294,40 @@
                         <li class="panel-default">
                             <a href="#" data-toggle="modal" data-target="#myChart"><span class="icon fa fa-area-chart"></span><span class="title">添加已有图表</span></a>
                         </li>
-                        <li class="panel-default">
-                            <a href="#"><span class="icon fa fa-magic"></span><span class="title">配色设置</span></a>
+                        <li class="panel panel-default dropdown">
+                            <a data-toggle="collapse" href="#dropdown-theme-choose">
+                                <span class="icon fa fa-magic"></span><span class="title">配色设置</span>
+                            </a>
+                            <div id="dropdown-theme-choose" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <ul class="nav navbar-nav">
+                                        <li>
+                                            <div class="vintage"><img src="resources/img/theme-vintage.png" style="height: 30px;" class="col-md-6"/></div>
+                                            <div class="dark"><img src="resources/img/theme-dark.png" style="height: 30px;" class="col-md-6"/></div>
+                                        </li>
+                                        <li>
+                                            <div class="westeros"><img src="resources/img/theme-westeros.png" style="height: 30px;" class="col-md-6"/></div>
+                                            <div class="essos"><img src="resources/img/theme-essos.png" style="height: 30px;" class="col-md-6"/></div>
+                                        </li>
+                                        <li>
+                                            <div class="wonderland"><img src="resources/img/theme-wonderland.png" style="height: 30px;" class="col-md-6"/></div>
+                                            <div class="walden"><img src="resources/img/theme-walden.png" style="height: 30px;" class="col-md-6"/></div>
+                                        </li>
+                                        <li>
+                                            <div class="chalk"><img src="resources/img/theme-chalk.png" style="height: 30px;" class="col-md-6"/></div>
+                                            <div class="infographic"><img src="resources/img/theme-infographic.png" style="height: 30px;" class="col-md-6"/></div>
+                                        </li>
+                                        <li>
+                                            <div class="macarons"><img src="resources/img/theme-macarons.png" style="height: 30px;" class="col-md-6"/></div>
+                                            <div class="roma"><img src="resources/img/theme-roma.png" style="height: 30px;" class="col-md-6"/></div>
+                                        </li>
+                                        <li>
+                                            <div class="shine"><img src="resources/img/theme-shine.png" style="height: 30px;" class="col-md-6"/></div>
+                                            <div class="purple-passion"><img src="resources/img/theme-purple-passion.png" style="height: 30px;" class="col-md-6"/></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </li>
                         <li class="panel panel-default dropdown">
                             <a data-toggle="collapse" href="#dropdown-background-choose">

@@ -36,6 +36,19 @@ require.config({
     waitSeconds: 30
 });
 
+/**
+ * 覆盖Java Echarts默认生成样式
+ */
+function overloadItemStyle(optItem, theme) {
+    for(k in theme) {
+        if(optItem[k] && (typeof theme[k] !== 'object')){
+            delete optItem[k];
+        } else if(typeof theme[k] == 'object') {
+            overloadItemStyle(optItem, theme[k]);
+        }
+    }
+}
+
 require(['jquery','domReady'], function ($,domReady) {
     domReady(function () {
         //This function is called once the DOM is ready.
@@ -264,6 +277,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             var engine = infovis.init(allOptions || {});
 
             window.isSave = true;   //记录页面是否有改动
+            window.isSaveTheme = false;  //是否保存图表主题
 
             var order  = 0;
             //给order赋值，用来在已有面板中继续添加图标时能接着前面已有图表的order顺序
@@ -535,11 +549,17 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                 var containers = $(".grid-stack").children();
                 var chartIds = [];          //保存图表id
                 var containerIds = [];           //保存容器id
+                var chartsInfo = [];        //保存图表option和chartId
                 for(var i=0;i<containers.length;i++) {
                     var chartId = $(containers[i]).children().attr("chartId");
                     var containerId = $(containers[i]).children().attr("id");
                     chartIds.push(chartId);
                     containerIds.push(containerId);
+
+                    if(window.isSaveTheme == true && $("#"+containerId).attr('charttype').indexOf('text') < 0){
+                        var instance = engine.chart.getInstanceByDom(document.getElementById(containerId));
+                        chartsInfo.push({'id' : chartId, 'jsCode' : JSON.stringify(instance.getOption())});
+                    }
                 }
                 
                 $.ajax({
@@ -547,6 +567,15 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                    url: "panelChartsWrapper/updateWrapper",
                    data: "chartIds="+chartIds+"&containerIds="+containerIds+"&exportId="+exportId
                 });
+
+                if(chartsInfo.length > 0){
+                    $.ajax({
+                        type: 'POST',
+                        contentType: "application/json; charset=utf-8",
+                        url: 'updateChartsInfo',
+                        data: JSON.stringify(chartsInfo)
+                    });
+                }
             };
 
             $("#exportHtml").click(function(){
@@ -594,7 +623,8 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     if(data[i].chartType.indexOf("text") < 0) {
                         var exportChart = engine.chart.init($("#" + ids[i])[0]);
                         if(parseInt(data[i].isRealTime) == 0){
-                            exportChart.setOption(JSON.parse(data[i].jsCode));
+                            var chartOption = JSON.parse(data[i].jsCode);
+                            exportChart.setOption(chartOption);
                             renderMenu.renderMenu($("#"+ids[i]));
                             $("#"+ids[i]).find("#chartTitle").text(data[i].chartName);
                         }else if(parseInt(data[i].isRealTime) == 1){
@@ -637,6 +667,49 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                         }
                     }
                 }
+
+                $("#dropdown-theme-choose").find(".nav").find("div").click(function(){
+                    window.isSaveTheme = true;
+                    for(var i=0;i<cids.length;i++) {
+                        if (data[i].chartType.indexOf("text") < 0) {
+                            engine.chart.dispose($("#" + ids[i])[0]);
+                            var themeName = $(this).attr("class");
+                            var exportChart = engine.chart.init($("#" + ids[i])[0], themeName);
+
+                            if(parseInt(data[i].isRealTime) == 0){
+                                var chartOption = JSON.parse(data[i].jsCode);
+                                overloadItemStyle(chartOption, engine.chart.theme[themeName]);       // 主题与图表option合并
+                                exportChart.setOption(chartOption);
+                                renderMenu.renderMenu($("#"+ids[i]));
+                                $("#"+ids[i]).find("#chartTitle").text(data[i].chartName);
+                            }else if(parseInt(data[i].isRealTime) == 1){
+                                $.ajax({
+                                    async: false,
+                                    type: 'POST',
+                                    contentType: "application/json; charset=utf-8",
+                                    url: 'render',
+                                    data: JSON.stringify({
+                                        'chartType': data[i].chartType,
+                                        'dataRecordId': data[i].sqlRecordingId,
+                                        'builderModel': JSON.parse(data[i].buildModel)
+                                    }),
+                                    success: function(option){
+                                        var newOption = JSON.parse(data[i].jsCode);        // 若本图表选择数据获取模式为实时获取，
+                                        newOption.series = option.series;                  // 在渲染时将数据库中的option中的series部分替换为新生成的option的series部分即可
+                                        overloadItemStyle(newOption, engine.chart.theme[themeName]);       // 主题与图表option合并
+                                        exportChart.setOption(newOption);
+                                        renderMenu.renderMenu($("#"+ids[i]));
+                                        $("#"+ids[i]).find("#chartTitle").text(data[i].chartName);
+                                    },
+                                    error: function(){
+                                        $("#" + ids[i]).text("当前图表渲染失败，请检查数据库连接是否正常。");
+                                        renderMenu.renderFailMenu($("#" + ids[i]));
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
             });
 
             var domId;
