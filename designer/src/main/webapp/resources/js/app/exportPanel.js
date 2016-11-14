@@ -370,6 +370,7 @@ require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'jrange'
                     $(".loader-container").css("display","none");
                     $("#accordion").html("筛选控件加载失败请刷新网页重试！");
                 });
+
                 $(this).unbind("click");
                 $(this).click(function(){
                     $("#accordion").toggle();
