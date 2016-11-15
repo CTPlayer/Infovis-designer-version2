@@ -111,13 +111,13 @@ require(['jquery','validate','bootstrap'], function($,validate){
         rules : {
             panelName : {
                 required : true,
-                maxlength:300
+                maxlength:30
             }
         },
         messages : {
             panelName : {
                 required : "设计面板名称为必填项",
-                maxlength: "最大长度为50个字符"
+                maxlength: "最大长度为30个字符"
             }
         },
         submitHandler : function(form){

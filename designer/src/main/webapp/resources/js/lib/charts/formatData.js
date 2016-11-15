@@ -302,7 +302,7 @@ define(function(){
                     '<form role="form">',
                     '<div class="form-group form-group-sm">',
                     '<label >图标间距&nbsp;&nbsp;</label>',
-                    '<input type="number" class="form-control" data-bind="value: legendItemGap, valueUpdate: \'input\'">',
+                    '<input type="number" min="1" class="form-control" data-bind="value: legendItemGap, valueUpdate: \'input\'">',
                     '</div>',
                     '<div class="form-group form-group-sm">',
                     '<label >图标样式&nbsp;&nbsp;</label>',

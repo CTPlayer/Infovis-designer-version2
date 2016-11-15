@@ -252,6 +252,9 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 self.selectedLegendOrient = ko.observable("纵向");
             }
             self.legendItemGap = ko.observable(legend.itemGap);
+            if(self.legendItemGap <= 0){
+                self.legendItemGap = ko.observable(1);
+            }
             self.legendIcon = ko.observableArray(["rect","circle","roundRect","triangle","diamond","pin","arrow"]);
             self.selectedLegendIcon = ko.observable(legend.icon);
             self.legendFontFamily = ko.observableArray(["SimSun","Microsoft YaHei","sans-serif","SimHei","KaiTi"]);
