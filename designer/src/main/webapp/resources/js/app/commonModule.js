@@ -40,9 +40,19 @@ define(['jquery','knockout','jrange'], function($,ko){
                 'dataRecordId': sqlRecordingId,
                 'builderModel': builderModel
             }),
-            success: function(data){
-                var editChart = engine.chart.init(document.getElementById("editArea"));
-                editChart.setOption(data);
+            success: function(option){
+                var currentChart = engine.chart.getInstanceByDom(document.getElementById("editArea"));
+                var editOption = currentChart.getOption();
+                if(chartType == editOption.series[0].type){
+                    editOption.series[0].data = option.series[0].data;
+                    if('legend' in option){
+                        editOption.legend.data = option.legend.data;
+                    }
+                    currentChart.setOption(editOption);
+                }else {
+                    var editChart = engine.chart.init(document.getElementById("editArea"));
+                    editChart.setOption(option);
+                }
             }
         });
     };

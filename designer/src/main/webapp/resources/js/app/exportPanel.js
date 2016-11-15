@@ -228,9 +228,14 @@ require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'jrange'
                                         contentType: "application/json; charset=utf-8",
                                         url: 'render',
                                         data: JSON.stringify(containerAndModel[i].model),
-                                        success: function(data){
+                                        success: function(option){
                                             var editChart = engine.chart.getInstanceByDom(document.getElementById(id));
-                                            editChart.setOption(data,true);
+                                            var editOption = editChart.getOption();
+                                            editOption.series[0].data = option.series[0].data;
+                                            if('legend' in option){
+                                                editOption.legend.data = option.legend.data;
+                                            }
+                                            editChart.setOption(editOption,true);
                                         }
                                     });
                                 }
@@ -352,10 +357,14 @@ require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'jrange'
                                             contentType: "application/json; charset=utf-8",
                                             url: 'render',
                                             data: JSON.stringify(containerAndModel[chartId].model),
-                                            success: function(data){
+                                            success: function(option){
                                                 var editChart = engine.chart.getInstanceByDom(document.getElementById(id));
-                                                data.title = editChart.getOption().title[0];
-                                                editChart.setOption(data,true);
+                                                var editOption = editChart.getOption();
+                                                editOption.series[0].data = option.series[0].data;
+                                                if('legend' in option){
+                                                    editOption.legend.data = option.legend.data;
+                                                }
+                                                editChart.setOption(editOption,true);
                                             }
                                         });
                                     });
