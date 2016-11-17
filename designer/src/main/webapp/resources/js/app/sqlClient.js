@@ -659,6 +659,7 @@ require([
             $('#addConnectionModal .dbSpan').unbind();
             $('#addConnectionModal .dbSpan').on("click",function(){
                 $('#addConnectionModal select[name="dbType"]').val($(this).attr("dbType"));
+                $('#addConnectionModal select[name="dbType"]').change();
                 $('#addConnectionModal section:eq(0) div').removeClass("selectDB");
                 $(this).parent().addClass("selectDB");
             });
