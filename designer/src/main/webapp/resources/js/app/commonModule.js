@@ -41,18 +41,9 @@ define(['jquery','knockout','jrange'], function($,ko){
                 'builderModel': builderModel
             }),
             success: function(option){
-                var currentChart = engine.chart.getInstanceByDom(document.getElementById("editArea"));
-                var editOption = currentChart.getOption();
-                if(chartType == editOption.series[0].type){
-                    editOption.series[0].data = option.series[0].data;
-                    if('legend' in option){
-                        editOption.legend.data = option.legend.data;
-                    }
-                    currentChart.setOption(editOption);
-                }else {
-                    var editChart = engine.chart.init(document.getElementById("editArea"));
-                    editChart.setOption(option);
-                }
+                engine.chart.dispose(document.getElementById("editArea"));
+                var editChart = engine.chart.init(document.getElementById("editArea"));
+                editChart.setOption(option);
             }
         });
     };
