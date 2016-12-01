@@ -15,6 +15,7 @@
     <!--flat admin-->
     <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/css/style.css">
     <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/css/themes/flat-blue.css">
+    <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/lib/css/bootstrap-switch.min.css">
     <!-- checkbox -->
     <link rel="stylesheet" type="text/css" href="resources/js/lib/flatadmin/lib/css/checkbox3.min.css">
     <!-- Font Icons -->
@@ -34,6 +35,8 @@
     <link href="resources/css/customZtreeStyle.css" rel="stylesheet">
     <!--jRange CSS-->
     <link href="resources/js/lib/jRange/jquery.range.css" rel="stylesheet">
+    <!--bootstrapDatePicker CSS-->
+    <link href="resources/js/lib/bootstrapTimePicker/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <![endif]-->
 </head>
 
@@ -218,6 +221,41 @@
                                 <label for="radio5">
                                     实时
                                 </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">定时更新</label>
+                        <div class="col-sm-10">
+                            <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-small bootstrap-switch-animate bootstrap-switch-off" style="width: 89.3333px;">
+                                <div class="bootstrap-switch-container" style="width: 132px; margin-left: 0px;">
+                                    <input type="checkbox" class="toggle-checkbox" name="my-checkbox" checked="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">触发间隔</label>
+                        <div class="col-sm-10">
+                            <div>
+                                <select class="form-control">
+                                    <option value="day">每天</option>
+                                    <option value="week">每周</option>
+                                    <option value="month">每月</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">触发时间</label>
+                        <div class="col-sm-10">
+                            <div>
+                                <div class="input-group date form_datetime" data-link-field="dtp_input1">
+                                    <input class="form-control" size="16" type="text" name="triggerName" readonly>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
+                                <input type="hidden" id="dtp_input1" value="" /><br/>
                             </div>
                         </div>
                     </div>

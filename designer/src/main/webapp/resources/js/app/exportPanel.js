@@ -77,7 +77,13 @@ require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'jrange'
                                     }),
                                     success: function(option){
                                         var newOption = JSON.parse(data[i].jsCode);
-                                        newOption.series = option.series;
+                                        newOption.series[0].data = option.series[0].data;
+                                        if('legend' in option){
+                                            newOption.legend.data = option.legend.data;
+                                        }
+                                        if('xAxis' in option){
+                                            newOption.xAxis[0].data = option.xAxis[0].data;
+                                        }
                                         exportChart.setOption(newOption);
                                     },
                                     error: function(){
@@ -235,6 +241,9 @@ require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'jrange'
                                             if('legend' in option){
                                                 editOption.legend.data = option.legend.data;
                                             }
+                                            if('xAxis' in option){
+                                                editOption.xAxis[0].data = option.xAxis[0].data;
+                                            }
                                             editChart.setOption(editOption,true);
                                         }
                                     });
@@ -363,6 +372,9 @@ require(['jquery', 'infovis', 'options','CanvasTag','CanvasTagOfImage', 'jrange'
                                                 editOption.series[0].data = option.series[0].data;
                                                 if('legend' in option){
                                                     editOption.legend.data = option.legend.data;
+                                                }
+                                                if('xAxis' in option){
+                                                    editOption.xAxis[0].data = option.xAxis[0].data;
                                                 }
                                                 editChart.setOption(editOption,true);
                                             }

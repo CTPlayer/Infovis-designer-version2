@@ -286,5 +286,4 @@ public class DefaultController {
 
         return TemplateUtil.genJsonStr4Obj(chartOption.transform(chartBuilderParams), true);
     }
-
 }

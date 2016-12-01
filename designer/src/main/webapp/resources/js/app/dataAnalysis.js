@@ -16,19 +16,43 @@ require.config({
         "commonModule" : 'app/commonModule',
         "jrange" : 'lib/jRange/jquery.range',
         "knockout": "lib/knockout/knockout-3.4.0",
+        "datetimepicker": "lib/bootstrapTimePicker/bootstrap-datetimepicker",
+        "dateTimepicker-cn": "lib/bootstrapTimePicker/bootstrap-datetimepicker.zh-CN",
+        "bootstrap-switch": "lib/flatadmin/lib/js/bootstrap-switch.min"
     },
     shim : {
         "bootstrap" : { "deps" :['jquery'] },
         "jquery-ui" : { "deps" :['jquery'] },
         "jqueryMd5" : { "deps" :['jquery'] },
         "metisMenu" : { "deps" :['jquery'] },
-        "ztree" : { "deps" :['jquery'] }
+        "ztree" : { "deps" :['jquery'] },
+        "dateTimepicker-cn" : { "deps" :['jquery'] }
     },
     waitSeconds: 30
 });
 
-require(['jquery', 'options', 'infovis', 'validate', 'knockout'], function($, baseOptions, infovis, validate, ko){
+require(['jquery', 'options', 'infovis', 'validate', 'knockout', 'datetimepicker', 'dateTimepicker-cn', 'bootstrap-switch'], function($, baseOptions, infovis, validate, ko){
     $(function(){
+        //日期格式化方法
+        Date.prototype.Format = function(fmt)
+        {
+            var o = {
+                "M+" : this.getMonth()+1,                 //月份
+                "d+" : this.getDate(),                    //日
+                "h+" : this.getHours(),                   //小时
+                "m+" : this.getMinutes(),                 //分
+                "s+" : this.getSeconds(),                 //秒
+                "q+" : Math.floor((this.getMonth()+3)/3), //季度
+                "S"  : this.getMilliseconds()             //毫秒
+            };
+            if(/(y+)/.test(fmt))
+                fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+            for(var k in o)
+                if(new RegExp("("+ k +")").test(fmt))
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+            return fmt;
+        };
+
         var engine = infovis.init(baseOptions.makeAllOptions() || {});
         var chartId = 0;              //chartId 对应myCharts表的主键，默认是0，即新建图表时，查询参数为0
         var exportId;                 //对应当前的设计面板
@@ -49,6 +73,7 @@ require(['jquery', 'options', 'infovis', 'validate', 'knockout'], function($, ba
         deferred.done(function(data){
             if(data){
                 var editChart = engine.chart.init(document.getElementById("editArea"));
+                window.jobGroup = data.chartType;
                 if(parseInt(data.isRealTime) == 0){
                     editChart.setOption(JSON.parse(data.jsCode));
                 }else if(parseInt(data.isRealTime) == 1){
@@ -73,7 +98,87 @@ require(['jquery', 'options', 'infovis', 'validate', 'knockout'], function($, ba
                 }
                 $("#addChartForm").find(".chartName").val(data.chartName);
                 $("input[name='radio2'][value="+data.isRealTime+"]").attr("checked",true);
+                // 获取当前定时任务信息
+                $.ajax({
+                    type: 'POST',
+                    url: 'myChart/getSchedulerInfo',
+                    data: {
+                        triggerName: chartId,
+                        triggerGroup: data.chartType
+                    },
+                    success: function(info){
+                        if(info.haveJob == true){
+                            $(".toggle-checkbox").bootstrapSwitch('state', true);
+                            $('.form_datetime').find("input").val(info.startTime);
+                            if(info.period == "day"){
+                                $("#addChartForm").find("option").eq(0).attr("selected", true);
+                            }else if(info.period == "week"){
+                                $("#addChartForm").find("option").eq(1).attr("selected", true);
+                            }else if(info.period == "month"){
+                                $("#addChartForm").find("option").eq(2).attr("selected", true);
+                            }
+                        }else {
+                            $(".toggle-checkbox").bootstrapSwitch('state', false);
+                        }
+                    }
+                });
             }
+        });
+
+        $('.toggle-checkbox').bootstrapSwitch({
+            size: "small",
+            onSwitchChange: function(event, state){
+                if(state == true){
+                    $("#addChartForm").find(".form-group").eq(3).css("display", "block");
+                    $("#addChartForm").find(".form-group").eq(4).css("display", "block");
+                    $.ajax({
+                       type: 'POST',
+                       url: 'myChart/resumeJob',
+                       data: {
+                           jobName: chartId,
+                           jobGroup: window.jobGroup
+                       }
+                    });
+                }else if(state == false){
+                    $("#addChartForm").find(".form-group").eq(3).css("display", "none");
+                    $("#addChartForm").find(".form-group").eq(4).css("display", "none");
+                    $.ajax({
+                        type: 'POST',
+                        url: 'myChart/pauseJob',
+                        data: {
+                            jobName: chartId,
+                            jobGroup: window.jobGroup
+                        }
+                    });
+                }
+            }
+        });
+        $('.form_datetime').datetimepicker({
+            format: "yyyy-mm-dd hh:ii:ss",
+            language:  'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
+        var time = new Date().Format("yyyy-MM-dd hh:mm:ss");
+        $('.form_datetime').find("input").val(time);   //设置默认值
+
+        $("#radio4").click(function(){
+            $("#addChartForm").find(".form-group").eq(2).css("display", "block");
+            $("#addChartForm").find(".form-group").eq(3).css("display", "block");
+            $("#addChartForm").find(".form-group").eq(4).css("display", "block");
+            $(".toggle-checkbox").bootstrapSwitch('state', true);
+        });
+
+        $("#radio5").click(function(){
+            $("#addChartForm").find(".form-group").eq(2).css("display", "none");
+            $("#addChartForm").find(".form-group").eq(3).css("display", "none");
+            $("#addChartForm").find(".form-group").eq(4).css("display", "none");
+            $(".toggle-checkbox").bootstrapSwitch('state', false);
         });
 
         $("#addChartModal .btn-success").click(function(){
@@ -103,7 +208,8 @@ require(['jquery', 'options', 'infovis', 'validate', 'knockout'], function($, ba
             },
             submitHandler : function(form){
                 if(chartId == 0){
-                    var deferred = $.ajax({
+                    var paramId;
+                    var deferred01 = $.ajax({
                         type: 'POST',
                         url: 'addCharts',
                         data : {
@@ -115,11 +221,33 @@ require(['jquery', 'options', 'infovis', 'validate', 'knockout'], function($, ba
                             'isRealTime' : $("input:radio:checked").val()
                         }
                     });
-                    deferred.done(function(data){
+                    deferred01.done(function(data){
+                        paramId = data;
                         $(form)[0].reset();
                         $("#addChartModal").modal('toggle');
                         top.window.location = "showPanel.page?exportId="+exportId+"&chartId="+data;
-                    })
+                    });
+
+                    if($(".toggle-checkbox").bootstrapSwitch('state') == true){
+                        var time = $('.form_datetime').find("input").val();
+                        $.when(deferred01).done(function(){
+                            var deferred02 = $.ajax({
+                                type: 'POST',
+                                url: 'myChart/addSchedulerJob',
+                                data: {
+                                    'chartId': paramId,
+                                    'chartType': window.cType,
+                                    'startTime': time,
+                                    'period': $("#addChartForm").find(".form-group").eq(3).find("select").val(),
+                                    'triggerName': paramId,
+                                    'triggerGroup': window.cType
+                                }
+                            });
+                            deferred02.fail(function(){
+                                alert("定时任务设置失败!");
+                            });
+                        });
+                    }
                 }else {
                     var deferred = $.ajax({
                         type: 'POST',
@@ -139,10 +267,20 @@ require(['jquery', 'options', 'infovis', 'validate', 'knockout'], function($, ba
                         $("#addChartModal").modal('toggle');
                         top.window.location = "showPanel.page?exportId="+exportId;
                     })
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'myChart/retScheduleJob',
+                        data: {
+                            'triggerName': chartId,
+                            'triggerGroup': window.jobGroup,
+                            'startTime': $('.form_datetime').find("input").val(),
+                            'period': $("#addChartForm").find(".form-group").eq(3).find("select").val()
+                        }
+                    })
                 }
             }
         });
-
     })
 });
 

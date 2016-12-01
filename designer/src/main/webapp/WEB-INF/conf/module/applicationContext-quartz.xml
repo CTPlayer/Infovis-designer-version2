@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       ">
+
+    <description>quartz配置</description>
+    <bean name="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="dataSource">
+            <ref bean="dataSource"/><!--数据源引用指向，包含集群所需的所有表 -->
+        </property>
+        <!-- applicationContextSchedulerContextKey：
+        是org.springframework.scheduling.quartz.SchedulerFactoryBean这个类中
+        把spring上下文以key/ value的方式存放在了quartz的上下文中了，
+        可以用applicationContextSchedulerContextKey所定义的key得到对应的spring上下文 -->
+        <property name="applicationContextSchedulerContextKey" value="applicationContext" />
+        <!--configLocation：用于指明quartz的配置文件的位置 -->
+        <property name="configLocation" value="classpath:quartz.properties" />
+    </bean>
+</beans>

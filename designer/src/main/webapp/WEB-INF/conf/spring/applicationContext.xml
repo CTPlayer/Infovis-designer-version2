@@ -95,4 +95,5 @@
   <bean class="aop.ApplicationBootstrapListener" />
   
   <import resource="../module/applicationContext-dao.xml" />
+  <import resource="../module/applicationContext-quartz.xml" />
 </beans>
