@@ -48,4 +48,18 @@ public interface SystemDetectedService {
      * @return
      */
     SystemMetaData querySystemMetaDataAsObject();
+
+    /**
+     * <p>
+     * 检测quartz初始化状态
+     * @param appVersion
+     * @return
+     */
+    SystemStatus checkQuartzInitStatus(float appVersion);
+
+    /**
+     * <p>
+     * 初始化quartz核心表
+     */
+    void initQuartzCoreTables();
 }

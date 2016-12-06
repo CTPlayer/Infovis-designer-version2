@@ -47,7 +47,7 @@ public class ApplicationBootstrapListener implements ApplicationListener<Applica
          * </pre>
          */
         if (event.getApplicationContext().getParent() == null) {
-            MybatisHelper.supportColumnMap();
+//            MybatisHelper.supportColumnMap();
             L.info("系统启动, 初始化中...\n 检测是否有新版本");
             // 需要执行的逻辑代码，当spring容器初始化完成后就会执行该方法。
             systemSettingHelper.checkSystemInitStatus();

@@ -646,7 +646,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                 }),
                                 success: function(option){
                                     var newOption = JSON.parse(data[i].jsCode);        // 若本图表选择数据获取模式为实时获取，
-                                    newOption.series[0].data = option.series[0].data;                  // 在渲染时将数据库中的option中的series部分替换为新生成的option的series部分即可
+                                    newOption.series[0].data = option.series[0].data;  // 在渲染时将数据库中的option中的series部分替换为新生成的option的series部分即可
                                     if('legend' in option){
                                         newOption.legend.data = option.legend.data;
                                     }

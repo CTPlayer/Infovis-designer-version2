@@ -141,4 +141,27 @@ public class SystemDetectedServiceImpl implements SystemDetectedService {
     public SystemMetaData querySystemMetaDataAsObject() {
         return systemMetaDataMapper.querySystemMetaDataAsObject();
     }
+
+    @Override
+    public SystemStatus checkQuartzInitStatus(float appVersion) {
+        Connection conn = baseMapper.getSqlSessionTemplate().getConnection();
+        try {
+            DatabaseMetaData metaData = conn.getMetaData();
+            ResultSet tableRs = metaData.getTables(null, "%", "QRTZ_TRIGGERS", TABLE_TYPES);
+            if (!tableRs.next()) {
+                return SystemStatus.NOT_INIT;
+            } else {
+                return SystemStatus.HAS_INIT;
+            }
+        } catch (SQLException e) {
+            throw new AppRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void initQuartzCoreTables() {
+        BaseModel model = new BaseModel();
+        model.setStatmentId(NAME_SPACE + ".initQuartzTables");
+        baseMapper.update(model);
+    }
 }

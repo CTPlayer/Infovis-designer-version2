@@ -69,4 +69,23 @@ public final class SystemSettingHelper {
                 break;
         }
     }
+
+    /**
+     * 检测quartz初始状态
+     */
+    public void checkQuartzInitStatus() {
+        // 选择默认数据源
+        dynamicDataSource.selectDataSource("");
+
+        SystemStatus status = systemDetectedService.checkQuartzInitStatus(appVersion);
+        switch (status) {
+            case NOT_INIT:
+                L.info("创建Quartz应用表");
+                systemDetectedService.initQuartzCoreTables();
+                break;
+            case HAS_INIT:
+                L.info("Quartz应用表已创建");
+                break;
+        }
+    }
 }

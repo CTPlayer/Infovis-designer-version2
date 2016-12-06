@@ -93,6 +93,8 @@
   
   <!-- 注册容器初始化监听 -->
   <bean class="aop.ApplicationBootstrapListener" />
+  <!-- Bean的初始化方法，用来创建quartz所需要的表 -->
+  <bean class="aop.QuartzDbInit" />
   
   <import resource="../module/applicationContext-dao.xml" />
   <import resource="../module/applicationContext-quartz.xml" />
