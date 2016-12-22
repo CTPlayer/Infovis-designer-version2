@@ -544,6 +544,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
 
                         $(".app-container").removeClass("loader");
                         $(".loader-container").css("display","none");
+                        location.reload();
                     },
                     error : function(){
                         $(".app-container").removeClass("loader");
@@ -691,6 +692,16 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                             if(parseInt(data[i].isRealTime) == 0){
                                 var chartOption = JSON.parse(data[i].jsCode);
                                 overloadItemStyle(chartOption, engine.chart.theme[themeName]);       // 主题与图表option合并
+
+                                if(chartOption.series[0].type == 'line' || chartOption.series[0].type == 'bar'){
+                                    chartOption.xAxis[0].axisLine.lineStyle.color = '#999999';
+                                    chartOption.yAxis[0].axisLine.lineStyle.color = '#999999';
+                                    chartOption.xAxis[0].axisTick.lineStyle.color = '#999999';
+                                    chartOption.yAxis[0].axisTick.lineStyle.color = '#999999';
+                                    chartOption.xAxis[0].axisLabel.textStyle.color = '#999999';
+                                    chartOption.yAxis[0].axisLabel.textStyle.color = '#999999';
+                                }
+
                                 exportChart.setOption(chartOption);
                                 renderMenu.renderMenu($("#"+ids[i]));
                                 $("#"+ids[i]).find("#chartTitle").text(data[i].chartName);
@@ -715,6 +726,16 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                                             newOption.xAxis[0].data = option.xAxis[0].data;
                                         }
                                         overloadItemStyle(newOption, engine.chart.theme[themeName]);       // 主题与图表option合并
+
+                                        if(newOption.series[0].type == 'line' || newOption.series[0].type == 'bar') {
+                                            newOption.xAxis[0].axisLine.lineStyle.color = '#999999';
+                                            newOption.yAxis[0].axisLine.lineStyle.color = '#999999';
+                                            newOption.xAxis[0].axisTick.lineStyle.color = '#999999';
+                                            newOption.yAxis[0].axisTick.lineStyle.color = '#999999';
+                                            newOption.xAxis[0].axisLabel.textStyle.color = '#999999';
+                                            newOption.yAxis[0].axisLabel.textStyle.color = '#999999';
+                                        }
+
                                         exportChart.setOption(newOption);
                                         renderMenu.renderMenu($("#"+ids[i]));
                                         $("#"+ids[i]).find("#chartTitle").text(data[i].chartName);
@@ -736,6 +757,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
             });
 
             $("#optionModal").find(".btn-primary").click(function(){
+                $("title").html("*Infovis-Designer");                                     //改动标记
                 var instance = engine.chart.getInstanceByDom(document.getElementById("optionContainer"));
                 engine.chart.getInstanceByDom(document.getElementById(domId)).setOption(instance.getOption());
                 $.ajax({
