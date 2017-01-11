@@ -139,9 +139,10 @@ define(['knockout', 'infovis'],function(ko, infovis){
                 option.tooltip[0].backgroundColor = self.tooltipBackgroundColor();
                 option.tooltip[0].textStyle.color = self.tooltipFontColor();
 
-                if(option.backgroundColor == "rgba(255,255,255,1)"){
-                    option.backgroundColor = "rgba(255,255,255,"+self.backgroundOpacity()*0.01+")";
+                if(JSON.stringify(option.backgroundColor).split(",").length == 4){
+                    option.backgroundColor = option.backgroundColor.split(",")[0]+","+option.backgroundColor.split(",")[1]+","+option.backgroundColor.split(",")[2]+","+self.backgroundOpacity()*0.01+")";
                 }
+
                 option.xAxis[0].axisLabel.rotate = self.xRotate();
 
                 option.yAxis[0].name = self.yAxisContent();

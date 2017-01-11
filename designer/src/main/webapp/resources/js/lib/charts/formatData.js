@@ -144,7 +144,7 @@ define(function(){
                                 '</tr>',
                                 '<tr>',
                                 '<div class="form-group form-group-sm">',
-                                '<label >内容&nbsp;&nbsp;</label>',
+                                '<label >Y轴单位&nbsp;&nbsp;</label>',
                                 '<input class="form-control" data-bind="value: yAxisContent, valueUpdate: \'keyup\'">',
                                 '</div>',
                                 '</tr>',
