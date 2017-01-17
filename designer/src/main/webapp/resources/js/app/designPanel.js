@@ -475,6 +475,7 @@ require(['jquery', 'infovis', 'knockout', 'knockback', 'options', 'formatData', 
                     });
                 }
                 $("#subGroupModal").modal('toggle');
+                $("#subGroupModal").find(".modal-body").html(formatData.resetCanvasTagOfImage());
             });
 
             /**

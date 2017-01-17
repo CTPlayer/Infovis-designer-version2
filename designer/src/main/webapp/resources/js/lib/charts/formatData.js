@@ -420,11 +420,41 @@ define(function(){
 
         return table;
     };
+
+    var resetCanvasTagOfImage = function(){
+        var table = [
+            '<div id="subGroupContainer" style="width:40%;height:410px;float:left;background-color: rgb(238,238,238);overflow: auto">',
+            '<div id="subGroupLoading" class="loader-container text-center color-black" style="display: none;">',
+            '<div><i class="fa fa-spinner fa-pulse fa-3x"></i></div>',
+            '<div>正在加载图片...</div>',
+            '</div>',
+            '</div>',
+            '<div id="subGroupOptionPanel" style="width:50%;height:410px;float:left;margin-left:50px;">',
+            '<ul class="nav nav-tabs" role="tablist">',
+            '<li role="presentation" class="active"><a href="#param" data-toggle="tab">配置项</a></li>',
+            '</ul>',
+            '<div class="col-xs-11" style="height:350px;overflow:auto;margin-top: 10px;" id="subGroupConfig">',
+            '<div>',
+            '<form enctype="multipart/form-data" id="imgFile">',
+            '<input name="imgFile" type="file" />',
+            '<button type="reset" class="btn btn-sm btn-warning" style="margin-left: 10px;float: right">重置</button>',
+            '<button type="button" class="btn btn-sm btn-success" style="float: right">上传</button>',
+            '<p class="help-block">请上传组件图片.</p>',
+            '</form>',
+            '</div>',
+            '<div></div>',
+            '</div>',
+            '</div>'
+        ].join("");
+        
+      return table;  
+    };
                     
 	return {
         tableAndConfigOfBarAndLine : tableAndConfigOfBarAndLine,
         tableAndConfigOfPie : tableAndConfigOfPie,
         tableAndConfigOfText : tableAndConfigOfText,
-        tableAndConfigOfSubGroup : tableAndConfigOfSubGroup
+        tableAndConfigOfSubGroup : tableAndConfigOfSubGroup,
+        resetCanvasTagOfImage : resetCanvasTagOfImage
 	};
 });
